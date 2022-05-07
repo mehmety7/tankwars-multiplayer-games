@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import server.dao.InMemoryDao;
 import server.model.dto.Game;
+import server.model.dto.Tank;
 import server.model.entity.Player;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class GameService {
 
     private InMemoryDao inMemoryDao = InMemoryDao.getInstance();
     private PlayerService playerService = PlayerService.getInstance();
+    private TankService tankService = new TankService();
 
     public Game createGame(Integer playerId, Game game) {
         Player player = playerService.getPlayer(playerId);
@@ -67,6 +69,10 @@ public class GameService {
 
     public Boolean deleteGame(Integer gameId) {
         inMemoryDao.games.remove(gameId);
+        List<Tank> tanksInGame = tankService.getTanksInGame(gameId);
+        for (Tank tank : tanksInGame) {
+            inMemoryDao.tanks.remove(tank.getPlayerId());
+        }
         return Boolean.TRUE;
     }
 
