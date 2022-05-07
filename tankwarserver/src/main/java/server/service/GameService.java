@@ -20,11 +20,16 @@ public class GameService {
     private InMemoryDao inMemoryDao = InMemoryDao.getInstance();
     private PlayerService playerService = PlayerService.getInstance();
 
-    public Game createGame(Integer playerId) {
+    public Game createGame(Integer playerId, Game game) {
         Player player = playerService.getPlayer(playerId);
 
-        Game game = Game.builder().id(playerId).isStarted(Boolean.FALSE).players(new HashMap<>()).build();
-        game.getPlayers().put(player, INITIAL_SCORE_POINT);
+        Map<Player, Integer> map = new HashMap<>();
+        map.put(player, INITIAL_SCORE_POINT);
+
+        game.setPlayers(map);
+        game.setId(playerId);
+        game.setIsStarted(Boolean.FALSE);
+
         inMemoryDao.games.put(playerId, game);
 
         return game;
@@ -36,12 +41,9 @@ public class GameService {
         return inMemoryDao.games.get(gameId);
     }
 
-    // Integer tourNumber;  Float shootingSpeed;  String mapType; Boolean isBoosted; doldrumasi yeterli
-    public Game startGame(Game game) {
-        game.setIsStarted(Boolean.TRUE);
-        game.setPlayers(inMemoryDao.games.get(game.getId()).getPlayers());
-        inMemoryDao.games.put(game.getId(), game);
-        return game;
+    public Boolean startGame(Integer gameId) {
+        inMemoryDao.games.get(gameId).setIsStarted(Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     public Game getGame(Integer gameId) {

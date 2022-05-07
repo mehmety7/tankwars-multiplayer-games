@@ -19,7 +19,6 @@ public class Game {
     private Integer tourNumber;
     private Float shootingSpeed;
     private String mapType;
-    private Boolean isBoosted;
     private Boolean isStarted;
 
 }

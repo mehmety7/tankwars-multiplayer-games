@@ -2,6 +2,7 @@ package server;
 
 import server.model.dto.Tank;
 import server.service.TankService;
+import server.utilization.JsonUtil;
 
 public class MainApplication {
 
@@ -9,7 +10,13 @@ public class MainApplication {
 
         TankService tankService = new TankService();
         tankService.createOrUpdateTank(Tank.builder().playerId(1).build());
-        System.out.println(tankService.getTank(1));
+        Tank tank = tankService.getTank(1);
+
+        String json = JsonUtil.toJson(tank);
+
+        System.out.println(tank);
+        System.out.println(JsonUtil.toJson(tank));
+        System.out.println(JsonUtil.fromJson(json, Tank.class));
 
 
         /*
