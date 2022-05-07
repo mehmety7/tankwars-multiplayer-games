@@ -24,3 +24,6 @@ hs_err_pid*
 replay_pid*
 *.xml
 *.lst
+tankwarserver/target/maven-archiver/pom.properties
+tankwarserver/.idea/sonarlint/issuestore/index.pb
+tankwarserver/tankwarserver.iml
