@@ -10,6 +10,7 @@
 * JG -> Join Game   , This method tells that player `username` joins the game.
 * LG -> Leave Game  , This method tells that player `username` left the game.
 * UG -> Update Game , This method sends the current status of the player during the game. Position of Tank etc.
+* TI -> Tick        , Client received information about other players, update frame
 
 ### Responses
 * OK -> Success
@@ -19,8 +20,7 @@
 
 Message
 ```
-            SHORT   STRING       STRING
-            
+            SHORT   STRING       STRING   
 Hex     -> [ 00 0B | 4C 47 | 42 45 52 4b 45 59 7c 31 32 33 34] 
 Decimal -> [  11   |  LG   |           BERKEY|1234           ]
                                          11 BYTE       
