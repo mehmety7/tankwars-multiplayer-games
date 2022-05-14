@@ -13,38 +13,24 @@ import socket
 """
 
 
-# On linux, test with `nc -l localhost 12312``
 class GameSocket:
     def __init__(self, host, port: int) -> None:
         self.host = host
         self.port = port
         self.sck = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.buffer = None
+        self.buffer = bytes()
 
     def connect(self):
         self.sck.connect((self.host, self.port))
 
-    def send(self, binaryData):
-        self.sck.sendall(binaryData)
+    def send(self, data):
+        self.sck.sendall(data)
 
     def recv(self, bufferSize: int): 
-        self.buffer = self.sck.recv(bufferSize)
+        self.buffer += self.sck.recv(bufferSize)
 
     def data(self):
-        return len(self.buffer), self.buffer
+        return self.buffer
 
-        
-
-def test():
-    s = GameSocket("127.0.0.1", 12313)
-    s.connect()
-    s.send(b"Hello")
-    s.recv(1)
-
-    print(s.buffer)
-    s.recv(2)
-    print(s.buffer)
-    print(s.data())
-
-if __name__ == "__main__":
-    test()
+    def clear_buffer(self):
+        self.buffer = bytes()
