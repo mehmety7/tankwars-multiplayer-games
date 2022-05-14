@@ -2,12 +2,13 @@ package server;
 
 import server.model.dto.Tank;
 import server.service.TankService;
+import server.socket.TcpSocket;
 import server.utilization.JsonUtil;
 
 public class MainApplication {
 
     public static void main(String[] args) {
-
+/*
         TankService tankService = new TankService();
         tankService.createOrUpdateTank(Tank.builder().playerId(1).build());
         Tank tank = tankService.getTank(1);
@@ -17,7 +18,7 @@ public class MainApplication {
         System.out.println(tank);
         System.out.println(JsonUtil.toJson(tank));
         System.out.println(JsonUtil.fromJson(json, Tank.class));
-
+*/
 
         /*
         PlayerDao playerDao = PlayerDao.getInstance();
@@ -39,6 +40,10 @@ public class MainApplication {
 
         playerDao.getDataPersistence().getConnection().close();
         */
+
+        TcpSocket tcpsock = new TcpSocket(12313);
+        tcpsock.readMessage();
+        tcpsock.sendMessage("LG", "BBBBB");
     }
 
 }
