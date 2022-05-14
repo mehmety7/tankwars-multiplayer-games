@@ -20,7 +20,7 @@
 * TR -> Turn Right		, Client requesting it's tank to turn right 90 degrees. Message must contain the id of the client.
 * GF -> Go Forward		, Client requesting it's tank to go forward. Message must contain the id of the client.
 * SH -> Shoot			, Client requesting it's tank to shoot forward. Message must contain the id of the client.
-####Server Commands For Client
+#### Server Commands For Client
 * TI -> Tick        	, Client received information about other players, update frame.
 ### Responses
 * OK -> Success
