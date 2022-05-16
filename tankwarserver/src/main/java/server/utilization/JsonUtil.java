@@ -10,13 +10,13 @@ public class JsonUtil {
     public static String toJson(Object object) {
         GsonBuilder builder = new GsonBuilder();
         builder.serializeNulls();
-        gson = builder.setPrettyPrinting().create();
+        gson = builder.create();
         return gson.toJson(object);
     }
 
     public static <T> T fromJson(String json, Class<T> tClass) {
         GsonBuilder builder = new GsonBuilder();
-        gson = builder.setPrettyPrinting().create();
+        gson = builder.create();
         return gson.fromJson(json, tClass);
     }
 
