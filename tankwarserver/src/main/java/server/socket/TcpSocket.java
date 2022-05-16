@@ -21,6 +21,8 @@ public class TcpSocket {
         protocol = new Protocol();
         try {
             serverSocket = new ServerSocket(port);
+            serverSocket.setReuseAddress(Boolean.TRUE);
+
             socket = serverSocket.accept();
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
@@ -40,7 +42,7 @@ public class TcpSocket {
             e.printStackTrace();
         }
 
-            protocol.setMessageSize(ByteBuffer.wrap(init).order(ByteOrder.BIG_ENDIAN).getShort());
+            protocol.setMessageSize(ByteBuffer.wrap(init).order(ByteOrder.BIG_ENDIAN).getInt());
 
         try {
             int readByteCount = inputStream.read(init);
