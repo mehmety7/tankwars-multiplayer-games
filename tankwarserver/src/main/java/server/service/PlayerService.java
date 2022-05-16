@@ -56,6 +56,16 @@ public class PlayerService {
         return playerService;
     }
 
+    public Player login (Player player) {
+        Player result = playerDao.getPlayer(player.getUsername());
+        if (Objects.nonNull(result)) {
+            if (result.getPassword().equals(HashUtil.hashValue(player.getPassword()))) {
+                return result;
+            }
+        }
+        return result;
+    }
+
 
 
 }
