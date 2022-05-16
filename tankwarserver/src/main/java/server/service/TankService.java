@@ -1,6 +1,7 @@
 package server.service;
 
 import server.dao.InMemoryDao;
+import server.model.dto.Bullet;
 import server.model.dto.Game;
 import server.model.dto.Tank;
 import server.model.entity.Player;
@@ -8,10 +9,12 @@ import server.model.enumerated.FaceOrientation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class TankService {
 
     private InMemoryDao inMemoryDao = InMemoryDao.getInstance();
+    private BulletService bulletService = new BulletService();
 
     public Tank createOrUpdateTank(Tank tank) {
         inMemoryDao.tanks.put(tank.getPlayerId(), tank);
@@ -71,7 +74,25 @@ public class TankService {
     }
 
     public Tank deleteTank(Integer playerId) {
+        bulletService.removeBullets(playerId);
         return inMemoryDao.tanks.remove(playerId);
     }
-
+    /* Tank ateş ettiğinde onun önünde bir mermi oluşturulacak.
+    *  Şimdilik merminin konumunu tankın konumu ile aynı yaptım.
+    *  İlerde bu değiştirilmeli
+    *  Bu arada fonksiyon için daha yaratıcı bir isim bekliyorum.
+    *  Service katmanında shoot demek bana garip geldi :D */
+    public Tank shootBullet(Tank tank){
+        //TODO: Merminin konumunu tankın biraz ilerisinde olacak şekilde ayarla
+        Bullet bullet = Bullet.builder()
+                .playerId(tank.getPlayerId())
+                .bulletId(UUID.randomUUID())
+                .positionX(inMemoryDao.tanks.get(tank.getPlayerId()).getPositionX())
+                .positionY(inMemoryDao.tanks.get(tank.getPlayerId()).getPositionY())
+                .faceOrientation(inMemoryDao.tanks.get(tank.getPlayerId()).getFaceOrientation())
+                .movementSpeed(inMemoryDao.games.get(inMemoryDao.tanks.get(tank.getPlayerId()).getGameId()).getShootingSpeed())
+                .build();
+        bulletService.createOrUpdateBullet(bullet);
+        return tank;
+    }
 }

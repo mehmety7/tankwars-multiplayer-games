@@ -1,9 +1,7 @@
 package server.dao;
 
-import server.model.dto.Game;
-import server.model.dto.Message;
-import server.model.dto.Statistic;
-import server.model.dto.Tank;
+import server.model.dto.*;
+import server.utilization.Pair;
 
 import java.util.*;
 
@@ -13,12 +11,14 @@ public class InMemoryDao {
 
     public Map<Integer, Game> games;
     public Map<Integer, Tank> tanks;
+    public List<Pair<Integer, Bullet>> bullets;
     public List<Statistic> statistics;
     public List<Message> messages;
 
     public InMemoryDao() {
         games = new HashMap<>();
         tanks = new HashMap<>();
+        bullets = new ArrayList<>();
         statistics = new ArrayList<>();
         messages = new ArrayList<>();
     }
