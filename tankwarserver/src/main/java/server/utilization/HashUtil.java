@@ -1,5 +1,8 @@
 package server.utilization;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class HashUtil {
 
     public static String hashValue(String value) {
@@ -10,7 +13,7 @@ public class HashUtil {
 
         MessageDigest md = MessageDigest.getInstance("MD5");
 
-        md.update(passwordToHash.getBytes());
+        md.update(value.getBytes());
 
         byte[] bytes = md.digest();
 
@@ -23,9 +26,9 @@ public class HashUtil {
 
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-        } finally {
-            return hashedValue;
         }
+
+        return hashedValue;
         
     }
 

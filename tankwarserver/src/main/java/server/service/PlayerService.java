@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import server.dao.PlayerDao;
 import server.model.entity.Player;
+import server.utilization.HashUtil;
 
 import java.util.List;
 import java.util.Objects;
@@ -17,6 +18,13 @@ public class PlayerService {
     private static PlayerService playerService;
 
     private PlayerDao playerDao = PlayerDao.getInstance();
+
+    public static PlayerService getInstance() {
+        if (Objects.isNull(playerService)) {
+            playerService = new PlayerService();
+        }
+        return playerService;
+    }
 
     // create basarisiz olursa player id -1 setleniyor
     public Player createPlayer(Player player) {
@@ -47,13 +55,6 @@ public class PlayerService {
 
     public boolean updatePlayerActivate(Integer playerId) {
         return playerDao.updateActive(playerId);
-    }
-
-    public static PlayerService getInstance() {
-        if (Objects.isNull(playerService)) {
-            playerService = new PlayerService();
-        }
-        return playerService;
     }
 
     public Player login (Player player) {
