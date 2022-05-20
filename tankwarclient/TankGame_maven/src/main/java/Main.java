@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args){
-        JFrame window = new JFrame();
+    public static void main(String[] args) {
+        JFrame window = new JFrame("Tank Wars");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setTitle("Tank Game");
@@ -50,7 +50,6 @@ public class Main {
 
 
         //todo  ====================================
-
 
 
         window.add(gamePanel);
