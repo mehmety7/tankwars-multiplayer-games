@@ -26,12 +26,12 @@ public class PlayerService {
         return playerService;
     }
 
-    // create basarisiz olursa player id -1 setleniyor
     public Player createPlayer(Player player) {
         player.setPassword(HashUtil.hashValue(player.getPassword()));
         Integer newPlayerId = playerDao.createPlayer(player);
         if (newPlayerId.equals(CREATE_ERROR_RETURN_VALUE)) {
-            System.out.println("Create player operation is failed");;
+            System.out.println("Create player operation is failed");
+            return null;
         }
         player.setId(newPlayerId);
         return player;
@@ -64,7 +64,7 @@ public class PlayerService {
                 return result;
             }
         }
-        return result;
+        return null;
     }
 
 
