@@ -26,12 +26,12 @@ public class PlayerService {
         return playerService;
     }
 
-    // create basarisiz olursa player id -1 setleniyor
     public Player createPlayer(Player player) {
         player.setPassword(HashUtil.hashValue(player.getPassword()));
         Integer newPlayerId = playerDao.createPlayer(player);
         if (newPlayerId.equals(CREATE_ERROR_RETURN_VALUE)) {
-            System.out.println("Create player operation is failed");;
+            System.out.println("Create player operation is failed");
+            return null;
         }
         player.setId(newPlayerId);
         return player;
@@ -39,10 +39,6 @@ public class PlayerService {
 
     public Player getPlayer(Integer playerId) {
         return playerDao.getPlayer(playerId);
-    }
-
-    public Player getPlayer(String username) {
-        return playerDao.getPlayer(username);
     }
 
     public List<Player> getActivePlayers() {
@@ -58,13 +54,17 @@ public class PlayerService {
     }
 
     public Player login (Player player) {
-        Player result = playerDao.getPlayer(player.getUsername());
+        Player result = getPlayer(player.getUsername());
         if (Objects.nonNull(result)) {
             if (result.getPassword().equals(HashUtil.hashValue(player.getPassword()))) {
-                return result;
+                return Player.builder().id(result.getId()).build();
             }
         }
-        return result;
+        return null;
+    }
+
+    private Player getPlayer(String username) {
+        return Player.builder().id(1).username("user").password(HashUtil.hashValue("password")).isActive(Boolean.TRUE).build();
     }
 
 

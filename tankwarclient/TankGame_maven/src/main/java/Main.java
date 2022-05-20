@@ -1,6 +1,8 @@
 import client.game.GamePanel;
 import client.model.dto.Tank;
+import client.model.entity.Player;
 import client.model.enumerated.FaceOrientation;
+import client.socket.ClientSocket;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         JFrame window = new JFrame("Tank Wars");
+        JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setTitle("Tank Game");
@@ -58,5 +61,9 @@ public class Main {
 
         window.setLocationRelativeTo(null);
         window.setVisible(true);
+        ClientSocket cs = new ClientSocket("localhost", 12345);
+        Player player = Player.builder().username("user").password("password").build();
+        cs.sendMessage("LG", player);
+        System.out.println(cs.response());
     }
 }

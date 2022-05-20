@@ -4,6 +4,6 @@ public interface SocketDataOperation {
 
     Boolean readMessage();
 
-    void sendResponse();
+    void sendResponse(String response);
 
 }
