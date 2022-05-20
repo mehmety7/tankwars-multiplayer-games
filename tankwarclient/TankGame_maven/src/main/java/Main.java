@@ -64,8 +64,8 @@ public class Main {
         window.setVisible(true);
          */
         ClientSocket cs = new ClientSocket("localhost",12345);
-        Player player = Player.builder().id(5).username("user").password("password").build();
-        cs.sendMessage("LGOK", player);
+        Player player = Player.builder().username("user").password("password").build();
+        cs.sendMessage("LG", player);
         System.out.println(cs.response());
     }
 }

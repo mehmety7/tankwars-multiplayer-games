@@ -62,14 +62,14 @@ public class ClientHandler implements Runnable, SocketDataOperation {
 
     @Override
     public Boolean readMessage() {
-        System.out.println(" Sent FROM the client DATA:" + clientSocket.getLocalSocketAddress() + " -> " + protocolFromClient.getMethodType() + protocolFromClient.getMessage());
         String data;
         try {
             data = inputStream.readLine();
-            System.out.println(data);
             if (Objects.nonNull((data))) {
                 protocolFromClient.setMethodType(data.substring(0, 2));
                 protocolFromClient.setMessage(data.substring(2));
+
+                System.out.println(" Sent FROM the client DATA:" + clientSocket.getLocalSocketAddress() + " -> " + protocolFromClient.getMethodType() + protocolFromClient.getMessage());
                 return Boolean.TRUE;
             } else {
                 return Boolean.FALSE;

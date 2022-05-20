@@ -41,10 +41,6 @@ public class PlayerService {
         return playerDao.getPlayer(playerId);
     }
 
-    public Player getPlayer(String username) {
-        return playerDao.getPlayer(username);
-    }
-
     public List<Player> getActivePlayers() {
         return playerDao.getActivePlayers();
     }
@@ -58,13 +54,17 @@ public class PlayerService {
     }
 
     public Player login (Player player) {
-        Player result = playerDao.getPlayer(player.getUsername());
+        Player result = getPlayer(player.getUsername());
         if (Objects.nonNull(result)) {
             if (result.getPassword().equals(HashUtil.hashValue(player.getPassword()))) {
-                return result;
+                return Player.builder().id(result.getId()).build();
             }
         }
         return null;
+    }
+
+    private Player getPlayer(String username) {
+        return Player.builder().id(1).username("user").password(HashUtil.hashValue("password")).isActive(Boolean.TRUE).build();
     }
 
 
