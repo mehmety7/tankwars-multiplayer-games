@@ -2,6 +2,7 @@ package server.socket;
 
 import lombok.Getter;
 import lombok.Setter;
+import server.service.navigator.ServiceOperationNavigator;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,11 +20,13 @@ public class ClientHandler implements Runnable, SocketDataOperation {
     private PrintWriter outputStream = null;
     private Protocol protocolFromClient;
     private Protocol protocolToClient;
+    private ServiceOperationNavigator serviceOperationNavigator;
 
     public ClientHandler(Socket clientSocket) {
         this.protocolFromClient = new Protocol();
         this.protocolToClient = new Protocol();
         this.clientSocket = clientSocket;
+        this.serviceOperationNavigator = ServiceOperationNavigator.getInstance();
         try {
             inputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             outputStream = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -37,9 +40,9 @@ public class ClientHandler implements Runnable, SocketDataOperation {
         try {
             while (readMessage()) {
 
-                // burada servis metodlarına yönlendirme yapılacak (Navigation)
+                String response = serviceOperationNavigator.doOperation(protocolFromClient);
 
-                sendResponse();
+                sendResponse(response);
             }
         } finally {
                 try {
@@ -66,8 +69,7 @@ public class ClientHandler implements Runnable, SocketDataOperation {
             System.out.println(data);
             if (Objects.nonNull((data))) {
                 protocolFromClient.setMethodType(data.substring(0, 2));
-                protocolFromClient.setStatus(data.substring(2, 4));
-                protocolFromClient.setMessage(data.substring(4));
+                protocolFromClient.setMessage(data.substring(2));
                 return Boolean.TRUE;
             } else {
                 return Boolean.FALSE;
@@ -79,11 +81,8 @@ public class ClientHandler implements Runnable, SocketDataOperation {
     }
 
     @Override
-    public void sendResponse() {
-        System.out.println(" Sent TO the client RESPONSE:" + clientSocket.getLocalSocketAddress() + " -> " + protocolToClient.getMethodType() + protocolToClient.getStatus() + protocolToClient.getMessage());
-        protocolToClient.setMethodType(protocolFromClient.getMethodType());
-        protocolToClient.setMessage(protocolFromClient.getMessage());
-        protocolToClient.setStatus(protocolFromClient.getStatus());
-        outputStream.println(protocolToClient.getMethodType() + protocolToClient.getStatus() + protocolToClient.getMessage());
+    public void sendResponse(String response) {
+        System.out.println(" Sent TO the client RESPONSE:" + clientSocket.getLocalSocketAddress() + " -> " + response);
+        outputStream.println(response);
     }
 }
