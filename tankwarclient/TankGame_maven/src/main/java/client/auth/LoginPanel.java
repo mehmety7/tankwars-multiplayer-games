@@ -1,5 +1,8 @@
 package client.auth;
 
+import client.model.entity.Player;
+import client.socket.ClientSocket;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -25,7 +28,12 @@ public class LoginPanel extends JPanel {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                // Bu cs soketi baska yerde acilmali. Muhtemelen client ilk calistigindaki sinifta acmalisiniz
+                // ve diger sayfalarda ulasabilmeli
+                ClientSocket cs = new ClientSocket("localhost", 12345);
+                Player player = Player.builder().username(usernameField.getText()).password(String.valueOf(passwordField.getPassword())).build();
+                cs.sendMessage("LG", player);
+                System.out.println(cs.response());
             }
         });
         signUpButton.addActionListener(new ActionListener() {
