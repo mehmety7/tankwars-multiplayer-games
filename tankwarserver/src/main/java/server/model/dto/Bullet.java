@@ -15,5 +15,5 @@ public class Bullet {
     private Integer positionX;
     private Integer positionY;
     private FaceOrientation faceOrientation;
-    private Float movementSpeed;
+    private Double movementSpeed;
 }
