@@ -1,6 +1,7 @@
 package client.auth;
 
 import client.model.entity.Player;
+import client.services.SingletonSocketService;
 import client.socket.ClientSocket;
 
 import javax.swing.*;
@@ -28,16 +29,18 @@ public class LoginPanel extends JPanel {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Bu cs soketi baska yerde acilmali. Muhtemelen client ilk calistigindaki sinifta acmalisiniz
-                // ve diger sayfalarda ulasabilmeli
-                ClientSocket cs = new ClientSocket("localhost", 12345);
                 Player player = Player.builder().username(usernameField.getText()).password(String.valueOf(passwordField.getPassword())).build();
+                ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
                 cs.sendMessage("LG", player);
                 System.out.println(cs.response());
 
-                //temp code?(sayfa geçişini denemek için yazıldı)
-                CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
-                cardLayout.show(parentPanel, "lobbyPanel");
+                if (cs.response().contains("OK")) {
+                    CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
+                    cardLayout.show(parentPanel, "lobbyPanel");
+                } else {
+                    System.out.println("Wrong credentials");
+                }
+
             }
         });
         signUpButton.addActionListener(new ActionListener() {
@@ -58,8 +61,8 @@ public class LoginPanel extends JPanel {
         //resize textFields
         usernameField.setLayout(new FlowLayout());
         passwordField.setLayout(new FlowLayout());
-        usernameField.setPreferredSize(new Dimension(120,10));
-        passwordField.setPreferredSize(new Dimension(120,10));
+        usernameField.setPreferredSize(new Dimension(120, 10));
+        passwordField.setPreferredSize(new Dimension(120, 10));
 
         this.add(usernameLabel);
         this.add(usernameField);
