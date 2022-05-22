@@ -1,6 +1,6 @@
 package server.service;
 
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import server.dao.PlayerDao;
 import server.model.entity.Player;
@@ -12,7 +12,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class PlayerService {
 
     private static final Integer CREATE_ERROR_RETURN_VALUE = -1;

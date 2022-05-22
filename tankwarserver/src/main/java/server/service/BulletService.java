@@ -1,12 +1,26 @@
 package server.service;
 
+import lombok.NoArgsConstructor;
 import server.dao.InMemoryDao;
 import server.model.dto.Bullet;
 import server.utilization.Pair;
 
+import java.util.Objects;
+
+@NoArgsConstructor
 public class BulletService {
 
-    private InMemoryDao inMemoryDao = InMemoryDao.getInstance();
+    private static BulletService bulletService;
+
+    public static BulletService getInstance() {
+        if (Objects.isNull(bulletService)) {
+            bulletService = new BulletService();
+        }
+
+        return bulletService;
+    }
+
+    private final InMemoryDao inMemoryDao = InMemoryDao.getInstance();
 
     public Bullet createOrUpdateBullet(Bullet bullet){
         inMemoryDao.bullets.forEach((element) -> {

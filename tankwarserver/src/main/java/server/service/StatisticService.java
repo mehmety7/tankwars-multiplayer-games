@@ -1,6 +1,6 @@
 package server.service;
 
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import server.dao.InMemoryDao;
 import server.model.dto.Game;
@@ -9,11 +9,21 @@ import server.model.entity.Player;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class StatisticService {
+
+    public static StatisticService statisticService;
+
+    public static StatisticService getInstance() {
+        if (Objects.isNull(statisticService)) {
+            statisticService = new StatisticService();
+        }
+        return statisticService;
+    }
 
     private InMemoryDao inMemoryDao = InMemoryDao.getInstance();
 

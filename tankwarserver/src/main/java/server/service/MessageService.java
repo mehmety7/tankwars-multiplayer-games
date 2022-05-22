@@ -1,6 +1,6 @@
 package server.service;
 
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import server.dao.InMemoryDao;
 import server.model.dto.Message;
@@ -9,8 +9,17 @@ import java.util.List;
 import java.util.Objects;
 
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class MessageService {
+
+    public static MessageService messageService;
+
+    public static MessageService getInstance() {
+        if (Objects.isNull(messageService)) {
+            messageService = new MessageService();
+        }
+        return messageService;
+    }
 
     private InMemoryDao inMemoryDao = InMemoryDao.getInstance();
     private PlayerService playerService = PlayerService.getInstance();
