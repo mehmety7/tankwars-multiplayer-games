@@ -72,6 +72,29 @@ public class GamePanel extends JPanel implements  Runnable{
         }
     }
 
+    public void updateGameFromServer(){
+
+        //todo socketten tanks i guncelle
+
+        enemyPlayers.clear();
+
+        if(!tanks.contains(currentPlayer.tank)){
+            currentPlayer.isAlive = false;
+        }
+
+        for(int i=0; i<tanks.size();i++){
+            if(tanks.get(i).getPlayerId() != currentPlayerId){
+                tanks.get(i).setPositionX(tanks.get(i).getPositionX()+1);
+                enemyPlayers.add(new EnemyPlayer(this, tanks.get(i)));
+            }else{
+                if(currentPlayer.isAlive){
+                    //todo send server my position
+                }
+
+            }
+        }
+    }
+
 
     public void startGameThread(){
         gameThread = new Thread(this);
@@ -114,11 +137,20 @@ public class GamePanel extends JPanel implements  Runnable{
 
     public void update(){
 
-        for(EnemyPlayer eP : enemyPlayers){
-            eP.update();
+        //todo serverdan gelen SF
+
+
+//        for(EnemyPlayer eP : enemyPlayers){
+//            eP.update();
+//        }
+
+        if(currentPlayer.isAlive){
+            currentPlayer.update(enemyPlayers);
         }
 
-        currentPlayer.update(enemyPlayers);
+        updateGameFromServer();
+
+
 
     }
 
