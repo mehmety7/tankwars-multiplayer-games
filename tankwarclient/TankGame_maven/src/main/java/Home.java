@@ -1,5 +1,7 @@
 import client.auth.LoginPanel;
 import client.auth.SignupPanel;
+import client.lobby.LobbyPanel;
+import client.lobby.NewGamePanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,10 +20,19 @@ public class Home {
          * so that, each one of them can be added to the JPanel
          * having CardLayout.
          */
+        //auth panels
         LoginPanel loginPanel = new LoginPanel(basePanel);
         basePanel.add(loginPanel, "loginPanel");
         SignupPanel signupPanel = new SignupPanel(basePanel);
         basePanel.add(signupPanel, "signupPanel");
+
+        //lobby panels
+        LobbyPanel lobbyPanel = new LobbyPanel(basePanel);
+        basePanel.add(lobbyPanel,"lobbyPanel");
+        NewGamePanel newGamePanel = new NewGamePanel(basePanel);
+        basePanel.add(newGamePanel,"newGamePanel");
+
+
 
         // Adding the basePanel to JFrame.
         frame.add(basePanel, BorderLayout.CENTER);

@@ -34,6 +34,10 @@ public class LoginPanel extends JPanel {
                 Player player = Player.builder().username(usernameField.getText()).password(String.valueOf(passwordField.getPassword())).build();
                 cs.sendMessage("LG", player);
                 System.out.println(cs.response());
+
+                //temp code?(sayfa geçişini denemek için yazıldı)
+                CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
+                cardLayout.show(parentPanel, "lobbyPanel");
             }
         });
         signUpButton.addActionListener(new ActionListener() {
@@ -50,6 +54,12 @@ public class LoginPanel extends JPanel {
         signUpButton.setFocusable(false);
         buttonsPanel.add(loginButton);
         buttonsPanel.add(signUpButton);
+
+        //resize textFields
+        usernameField.setLayout(new FlowLayout());
+        passwordField.setLayout(new FlowLayout());
+        usernameField.setPreferredSize(new Dimension(120,10));
+        passwordField.setPreferredSize(new Dimension(120,10));
 
         this.add(usernameLabel);
         this.add(usernameField);
