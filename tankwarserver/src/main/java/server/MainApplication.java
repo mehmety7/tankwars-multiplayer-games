@@ -6,11 +6,7 @@ import server.model.dto.Tank;
 import server.model.entity.Player;
 import server.model.request.JoinGameRequest;
 import server.model.response.AboutUsResponse;
-import server.service.TankService;
-import server.socket.TcpSocket;
 import server.utilization.JsonUtil;
-
-import java.util.HashMap;
 
 public class MainApplication {
 

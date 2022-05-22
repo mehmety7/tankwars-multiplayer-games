@@ -1,5 +1,9 @@
 package server.utilization;
-import lombok.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 /* Bir tank birden fazla mermiye sahip olabileceğinden,
 *  Birden çok ilişkisini sağlamak adına c++'daki pair classına benzer bir class yazdım. */
 @Getter
