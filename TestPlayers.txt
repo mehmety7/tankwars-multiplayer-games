@@ -1,0 +1,10 @@
+Account1:
+
+	username: player1
+	password: test
+
+Account2:
+
+	username: player2
+	password: test
+
