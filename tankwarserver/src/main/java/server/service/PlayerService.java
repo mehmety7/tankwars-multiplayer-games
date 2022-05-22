@@ -6,7 +6,9 @@ import server.dao.PlayerDao;
 import server.model.entity.Player;
 import server.utilization.HashUtil;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 @Setter
@@ -49,24 +51,52 @@ public class PlayerService {
         return playerDao.deletePlayer(playerId);
     }
 
-    public boolean updatePlayerActivate(Integer playerId) {
+    public Player logout (Player player) {
+        if (playerDao.updateActive(player.getId())) {
+            return player;
+        } else {
+            return Player.builder().build();
+        }
+    }
+
+    private boolean updatePlayerActivate(Integer playerId) {
         return playerDao.updateActive(playerId);
     }
 
     public Player login (Player player) {
-        Player result = getPlayer(player.getUsername());
+        Player result = getDummyPlayer(player.getUsername());
         if (Objects.nonNull(result)) {
             if (result.getPassword().equals(HashUtil.hashValue(player.getPassword()))) {
-                return Player.builder().id(result.getId()).build();
+                return Player.builder().id(result.getId()).username(result.getUsername()).build();
             }
         }
         return null;
     }
 
     private Player getPlayer(String username) {
-        return Player.builder().id(1).username("user").password(HashUtil.hashValue("password")).isActive(Boolean.TRUE).build();
+        return playerDao.getPlayer(username);
     }
 
+    private Player getDummyPlayer(String username) {
+        if (username.toLowerCase(Locale.ROOT).equals("player1")) {
+            return Player.builder().id(1).username("player1").password(HashUtil.hashValue("test")).isActive(Boolean.TRUE).build();
+        } else {
+            return Player.builder().id(2).username("player2").password(HashUtil.hashValue("test")).isActive(Boolean.TRUE).build();
+        }
+    }
 
+    private Player getDummyPlayer(Integer id) {
+        if (id.equals(1)) {
+            return Player.builder().id(1).username("player1").password(HashUtil.hashValue("test")).isActive(Boolean.TRUE).build();
+        } else {
+            return Player.builder().id(2).username("player2").password(HashUtil.hashValue("test")).isActive(Boolean.TRUE).build();
+        }
+    }
+
+    public List<Player> getDummyActivePlayers() {
+        return Arrays.asList(
+                Player.builder().id(1).username("player1").password(HashUtil.hashValue("test")).isActive(Boolean.TRUE).build(),
+                Player.builder().id(2).username("player2").password(HashUtil.hashValue("test")).isActive(Boolean.TRUE).build());
+    }
 
 }
