@@ -85,6 +85,14 @@ public class PlayerService {
         }
     }
 
+    private Player getDummyPlayer(Integer id) {
+        if (id.equals(1)) {
+            return Player.builder().id(1).username("player1").password(HashUtil.hashValue("test")).isActive(Boolean.TRUE).build();
+        } else {
+            return Player.builder().id(2).username("player2").password(HashUtil.hashValue("test")).isActive(Boolean.TRUE).build();
+        }
+    }
+
     public List<Player> getDummyActivePlayers() {
         return Arrays.asList(
                 Player.builder().id(1).username("player1").password(HashUtil.hashValue("test")).isActive(Boolean.TRUE).build(),
