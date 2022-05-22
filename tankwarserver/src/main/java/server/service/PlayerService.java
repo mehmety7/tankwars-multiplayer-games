@@ -30,6 +30,7 @@ public class PlayerService {
 
     public Player createPlayer(Player player) {
         player.setPassword(HashUtil.hashValue(player.getPassword()));
+        player.setIsActive(Boolean.FALSE);
         Integer newPlayerId = playerDao.createPlayer(player);
         if (newPlayerId.equals(CREATE_ERROR_RETURN_VALUE)) {
             System.out.println("Create player operation is failed");
@@ -55,7 +56,7 @@ public class PlayerService {
         if (playerDao.updateActive(player.getId())) {
             return player;
         } else {
-            return Player.builder().build();
+            return null;
         }
     }
 
@@ -80,23 +81,27 @@ public class PlayerService {
     private Player getDummyPlayer(String username) {
         if (username.toLowerCase(Locale.ROOT).equals("player1")) {
             return Player.builder().id(1).username("player1").password(HashUtil.hashValue("test")).isActive(Boolean.TRUE).build();
-        } else {
+        } else if (username.toLowerCase(Locale.ROOT).equals("player2")) {
             return Player.builder().id(2).username("player2").password(HashUtil.hashValue("test")).isActive(Boolean.TRUE).build();
+        } else {
+            return null;
         }
     }
 
     private Player getDummyPlayer(Integer id) {
         if (id.equals(1)) {
             return Player.builder().id(1).username("player1").password(HashUtil.hashValue("test")).isActive(Boolean.TRUE).build();
-        } else {
+        } else if (id.equals(2)) {
             return Player.builder().id(2).username("player2").password(HashUtil.hashValue("test")).isActive(Boolean.TRUE).build();
+        } else {
+            return null;
         }
     }
 
     public List<Player> getDummyActivePlayers() {
         return Arrays.asList(
-                Player.builder().id(1).username("player1").password(HashUtil.hashValue("test")).isActive(Boolean.TRUE).build(),
-                Player.builder().id(2).username("player2").password(HashUtil.hashValue("test")).isActive(Boolean.TRUE).build());
+                Player.builder().id(1).username("player1").isActive(Boolean.TRUE).build(),
+                Player.builder().id(2).username("player2").isActive(Boolean.TRUE).build());
     }
 
 }

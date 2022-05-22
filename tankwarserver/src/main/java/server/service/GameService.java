@@ -22,17 +22,16 @@ public class GameService {
     private PlayerService playerService = PlayerService.getInstance();
     private TankService tankService = new TankService();
 
-    public Game createGame(Integer playerId, Game game) {
-        Player player = playerService.getPlayer(playerId);
+    public Game createGame(Game game) {
+        Player player = playerService.getPlayer(game.getId());
 
         Map<Player, Integer> map = new HashMap<>();
         map.put(player, INITIAL_SCORE_POINT);
 
         game.setPlayers(map);
-        game.setId(playerId);
         game.setIsStarted(Boolean.FALSE);
 
-        inMemoryDao.games.put(playerId, game);
+        inMemoryDao.games.put(game.getId(), game);
 
         return game;
     }
@@ -43,9 +42,15 @@ public class GameService {
         return inMemoryDao.games.get(gameId);
     }
 
-    public Boolean startGame(Integer gameId) {
-        inMemoryDao.games.get(gameId).setIsStarted(Boolean.TRUE);
-        return Boolean.TRUE;
+    public List<Tank> startGame(Integer gameId) {
+        Game game = inMemoryDao.games.get(gameId);
+        game.setIsStarted(Boolean.TRUE);
+
+        if (game.getPlayers().size() < 2) {
+            return null;
+        }
+
+        return tankService.createTanksForNewGame(gameId);
     }
 
     public Game getGame(Integer gameId) {
@@ -64,6 +69,7 @@ public class GameService {
                 lobbies.put(game.getId(), game);
             }
         }
+
         return new ArrayList<>(lobbies.values());
     }
 
