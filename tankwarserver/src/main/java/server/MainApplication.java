@@ -1,9 +1,16 @@
 package server;
 
+import server.model.dto.Game;
+import server.model.dto.Statistic;
 import server.model.dto.Tank;
+import server.model.entity.Player;
+import server.model.request.JoinGameRequest;
+import server.model.response.AboutUsResponse;
 import server.service.TankService;
 import server.socket.TcpSocket;
 import server.utilization.JsonUtil;
+
+import java.util.HashMap;
 
 public class MainApplication {
 
@@ -41,9 +48,12 @@ public class MainApplication {
         playerDao.getDataPersistence().getConnection().close();
         */
 
-        TcpSocket tcpsock = new TcpSocket(12313);
-        tcpsock.readMessage();
-        tcpsock.sendMessage("LG", "BBBBB");
+        System.out.println(JsonUtil.toJson(Game.builder().build()));
+        System.out.println(JsonUtil.toJson(JoinGameRequest.builder().build()));
+        System.out.println(JsonUtil.toJson(Tank.builder().build()));
+        System.out.println(JsonUtil.toJson(Statistic.builder().build()));
+        System.out.println(JsonUtil.toJson(AboutUsResponse.text));
+        System.out.println(JsonUtil.fromJson("{\"username\":\"test\",\"password\":\"pw\"}", Player.class));
     }
 
 }
