@@ -6,10 +6,14 @@ import client.socket.ClientSocket;
 public class SingletonSocketService {
     private static SingletonSocketService socket_instance = null;
 
+    private static final String host = "localhost";
+
+    private static final Integer port = 12345;
+
     public ClientSocket clientSocket;
 
     private SingletonSocketService() {
-        this.clientSocket = new ClientSocket("localhost", 12345);
+        this.clientSocket = new ClientSocket(host, port);
     }
 
     public static SingletonSocketService getInstance() {
