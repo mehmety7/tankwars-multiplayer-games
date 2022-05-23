@@ -41,23 +41,33 @@ public class PlayerService {
     }
 
     public Player getPlayer(Integer playerId) {
-        return playerDao.getPlayer(playerId);
+        return getDummyPlayer(playerId);
+        // return playerDao.getPlayer(playerId);
     }
 
     public List<Player> getActivePlayers() {
-        return playerDao.getActivePlayers();
+        return getDummyActivePlayers();
+        // return playerDao.getActivePlayers();
     }
 
     public boolean deletePlayer(Integer playerId) {
         return playerDao.deletePlayer(playerId);
     }
 
-    public Player logout (Player player) {
-        if (playerDao.updateActive(player.getId())) {
-            return player;
+    public Boolean logout (Player player) {
+        /* if (Boolean.TRUE.equals(playerDao.updateActive(player.getId()))) {
+            return Boolean.TRUE;
+        } */
+
+        Player result = getDummyPlayer(player.getId());
+
+        if (Objects.nonNull(result)) {
+            result.setIsActive(Boolean.FALSE);
+            return Boolean.TRUE;
         } else {
-            return null;
+            return Boolean.FALSE;
         }
+
     }
 
     private boolean updatePlayerActivate(Integer playerId) {
@@ -65,7 +75,7 @@ public class PlayerService {
     }
 
     public Player login (Player player) {
-        Player result = getDummyPlayer(player.getUsername());
+        Player result = getPlayer(player.getUsername());
         if (Objects.nonNull(result)) {
             if (result.getPassword().equals(HashUtil.hashValue(player.getPassword()))) {
                 return Player.builder().id(result.getId()).username(result.getUsername()).build();
@@ -75,7 +85,8 @@ public class PlayerService {
     }
 
     private Player getPlayer(String username) {
-        return playerDao.getPlayer(username);
+        return getDummyPlayer(username);
+        // return playerDao.getPlayer(username);
     }
 
     private Player getDummyPlayer(String username) {
