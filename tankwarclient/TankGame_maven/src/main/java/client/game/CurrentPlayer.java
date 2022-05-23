@@ -21,6 +21,8 @@ public class CurrentPlayer {
     private long lastShot = -9999;
     private boolean fire = false;
 
+    public boolean isAlive = true;
+
     public CurrentPlayer(GamePanel gp, KeyHandler keyHandler) {
         this.gp = gp;
         this.keyHandler = keyHandler;
@@ -42,16 +44,24 @@ public class CurrentPlayer {
 //        System.out.println("X: " + x + "  Y: " + y);
         if (keyHandler.upPressed == true) {
             tank.setFaceOrientation(FaceOrientation.UP);
-            tank.setPositionY(tank.getPositionY()-speed);
+            if(tank.getPositionY() >= 0) {
+                tank.setPositionY(tank.getPositionY() - speed);
+            }
         } else if (keyHandler.downPressed == true) {
             tank.setFaceOrientation(FaceOrientation.DOWN);
-            tank.setPositionY(tank.getPositionY()+speed);
+            if(tank.getPositionY() + gp.tankSize <= gp.screenHeight) {
+                tank.setPositionY(tank.getPositionY() + speed);
+            }
         } else if (keyHandler.leftPressed == true) {
             tank.setFaceOrientation(FaceOrientation.LEFT);
-            tank.setPositionX(tank.getPositionX()-speed);
+            if(tank.getPositionX() >= 0) {
+                tank.setPositionX(tank.getPositionX() - speed);
+            }
         } else if (keyHandler.rightPressed == true) {
             tank.setFaceOrientation(FaceOrientation.RIGHT);
-            tank.setPositionX(tank.getPositionX()+speed);
+            if(tank.getPositionX() + gp.tankSize <= gp.screenWidth) {
+                tank.setPositionX(tank.getPositionX() + speed);
+            }
         } else if (keyHandler.spacePressed == true) {
             if (shotFired()) {
                 fire = true;

@@ -1,5 +1,9 @@
 package server.model.dto;
-import lombok.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import server.model.enumerated.FaceOrientation;
 
 import java.util.UUID;
@@ -15,5 +19,5 @@ public class Bullet {
     private Integer positionX;
     private Integer positionY;
     private FaceOrientation faceOrientation;
-    private Float movementSpeed;
+    private Double movementSpeed;
 }

@@ -17,7 +17,7 @@ public class Game {
     private Integer id;
     private Map<Player, Integer> players; // point
     private Integer tourNumber;
-    private Float shootingSpeed;
+    private Double shootingSpeed;
     private String mapType;
     private Boolean isStarted;
 

@@ -1,5 +1,6 @@
 package server.service;
 
+import lombok.NoArgsConstructor;
 import server.dao.InMemoryDao;
 import server.model.dto.Bullet;
 import server.model.dto.Game;
@@ -9,17 +10,23 @@ import server.model.enumerated.FaceOrientation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
+@NoArgsConstructor
 public class TankService {
 
-    private InMemoryDao inMemoryDao = InMemoryDao.getInstance();
-    private BulletService bulletService = new BulletService();
+    public static TankService tankService;
 
-    public Tank createOrUpdateTank(Tank tank) {
-        inMemoryDao.tanks.put(tank.getPlayerId(), tank);
-        return tank;
+    public static TankService getInstance() {
+        if (Objects.isNull(tankService)) {
+            tankService = new TankService();
+        }
+        return tankService;
     }
+
+    private InMemoryDao inMemoryDao = InMemoryDao.getInstance();
+    private BulletService bulletService = BulletService.getInstance();
 
     public List<Tank> createTanksForNewGame(Integer gameId) {
         Game game = inMemoryDao.games.get(gameId);
@@ -54,9 +61,13 @@ public class TankService {
                     .positionX(newX)
                     .positionY(newY)
                     .build();
-            inMemoryDao.tanks.put(player.getId(), tank);
+            createOrUpdateTank(tank);
         }
         return getTanksInGame(gameId);
+    }
+
+    private void createOrUpdateTank(Tank tank) {
+        inMemoryDao.tanks.put(tank.getPlayerId(), tank);
     }
 
     public Tank getTank(Integer playerId) {

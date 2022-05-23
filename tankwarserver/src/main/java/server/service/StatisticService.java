@@ -1,31 +1,53 @@
 package server.service;
 
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import server.dao.InMemoryDao;
+import server.model.dto.Game;
 import server.model.dto.Statistic;
+import server.model.entity.Player;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class StatisticService {
 
-    private InMemoryDao inMemoryDao = InMemoryDao.getInstance();
-    private PlayerService playerService = PlayerService.getInstance();
+    public static StatisticService statisticService;
 
-    public Boolean addStatistic(Statistic statistic) {
-        for (Statistic iter : inMemoryDao.statistics) {
-            if (iter.getPlayerId().equals(statistic.getPlayerId())) {
-                Integer newPoint = statistic.getScore() + iter.getScore();
-                statistic.setScore(newPoint);
-                inMemoryDao.statistics.remove(iter);
+    public static StatisticService getInstance() {
+        if (Objects.isNull(statisticService)) {
+            statisticService = new StatisticService();
+        }
+        return statisticService;
+    }
+
+    private InMemoryDao inMemoryDao = InMemoryDao.getInstance();
+
+    public Boolean addStatisticsInEndOfGame(Game game) {
+        for (Player player : game.getPlayers().keySet()) {
+            addStatistic(player.getId(), player.getUsername(), game.getPlayers().get(player));
+        }
+
+        return Boolean.TRUE;
+    }
+
+    private void addStatistic(Integer playerId, String username, Integer score) {
+        Boolean isExist = Boolean.FALSE;
+        for (Statistic statistic : inMemoryDao.statistics) {
+            if (statistic.getPlayerId().equals(playerId)) {
+                statistic.setScore(statistic.getScore() + score);
+                isExist = Boolean.TRUE;
             }
         }
-        inMemoryDao.statistics.add(statistic);
-        return Boolean.TRUE;
+
+        if (isExist.equals(Boolean.FALSE)) {
+            Statistic statistic = Statistic.builder().playerId(playerId).playerUserName(username).score(score).build();
+            inMemoryDao.statistics.add(statistic);
+        }
     }
 
     public Statistic getStatistic(Integer playerId) {
@@ -34,7 +56,7 @@ public class StatisticService {
                 return statistic;
             }
         }
-        return Statistic.builder().build();
+        return null;
     }
 
     public List<Statistic> getStatistics() {

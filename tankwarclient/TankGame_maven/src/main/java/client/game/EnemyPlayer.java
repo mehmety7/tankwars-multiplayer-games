@@ -36,7 +36,7 @@ public class EnemyPlayer{
 
     public void update(){
 //        x+=speed;
-
+//        tank.setPositionX(tank.getPositionX()+1);
 
 //        if(keyHandler.upPressed == true){
 //            direction = "up";
