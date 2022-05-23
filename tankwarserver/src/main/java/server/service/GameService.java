@@ -5,7 +5,6 @@ import lombok.Setter;
 import server.dao.InMemoryDao;
 import server.model.dto.Game;
 import server.model.dto.Tank;
-import server.model.entity.Player;
 
 import java.util.*;
 
@@ -25,14 +24,11 @@ public class GameService {
     }
 
     private InMemoryDao inMemoryDao = InMemoryDao.getInstance();
-    private PlayerService playerService = PlayerService.getInstance();
     private TankService tankService = TankService.getInstance();
 
     public Game createGame(Game game) {
-        Player player = playerService.getPlayer(game.getId());
-
-        Map<Player, Integer> map = new HashMap<>();
-        map.put(player, INITIAL_SCORE_POINT);
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(game.getId(), INITIAL_SCORE_POINT);
 
         game.setPlayers(map);
         game.setIsStarted(Boolean.FALSE);
@@ -43,8 +39,7 @@ public class GameService {
     }
 
     public Game joinGame(Integer gameId, Integer playerId) {
-        Player player = playerService.getPlayer(playerId);
-        inMemoryDao.games.get(gameId).getPlayers().put(player, INITIAL_SCORE_POINT);
+        inMemoryDao.games.get(gameId).getPlayers().put(playerId, INITIAL_SCORE_POINT);
         return inMemoryDao.games.get(gameId);
     }
 
@@ -53,7 +48,7 @@ public class GameService {
         game.setIsStarted(Boolean.TRUE);
 
         if (game.getPlayers().size() < 2) {
-            return null;
+            return Collections.emptyList();
         }
 
         return tankService.createTanksForNewGame(gameId);
@@ -89,8 +84,8 @@ public class GameService {
     }
 
     public Boolean updatePlayerPoint(Integer gameId, Integer playerId, Integer point) {
-        Player player = playerService.getPlayer(playerId);
-        inMemoryDao.games.get(gameId).getPlayers().put(player, point);
+        Integer oldScore = inMemoryDao.games.get(gameId).getPlayers().get(playerId);
+        inMemoryDao.games.get(gameId).getPlayers().put(playerId, oldScore + point);
         return Boolean.TRUE;
     }
 

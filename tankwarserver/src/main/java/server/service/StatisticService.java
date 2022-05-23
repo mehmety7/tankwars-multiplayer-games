@@ -7,6 +7,7 @@ import server.model.dto.Game;
 import server.model.dto.Statistic;
 import server.model.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +19,8 @@ public class StatisticService {
 
     public static StatisticService statisticService;
 
+    private PlayerService playerService = PlayerService.getInstance();
+
     public static StatisticService getInstance() {
         if (Objects.isNull(statisticService)) {
             statisticService = new StatisticService();
@@ -28,7 +31,13 @@ public class StatisticService {
     private InMemoryDao inMemoryDao = InMemoryDao.getInstance();
 
     public Boolean addStatisticsInEndOfGame(Game game) {
-        for (Player player : game.getPlayers().keySet()) {
+        List<Player> players = new ArrayList<>();
+
+        for (Integer playerId : game.getPlayers().keySet()) {
+            players.add(playerService.getPlayer(playerId));
+        }
+
+        for (Player player : players) {
             addStatistic(player.getId(), player.getUsername(), game.getPlayers().get(player));
         }
 

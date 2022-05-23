@@ -27,11 +27,20 @@ public class TankService {
 
     private InMemoryDao inMemoryDao = InMemoryDao.getInstance();
     private BulletService bulletService = BulletService.getInstance();
+    private PlayerService playerService = PlayerService.getInstance();
+
 
     public List<Tank> createTanksForNewGame(Integer gameId) {
         Game game = inMemoryDao.games.get(gameId);
         Integer iterator = 1;
-        for (Player player : game.getPlayers().keySet()) {
+
+        List<Player> players = new ArrayList<>();
+
+        for (Integer playerId : game.getPlayers().keySet()) {
+            players.add(playerService.getPlayer(playerId));
+        }
+
+        for (Player player : players) {
             FaceOrientation faceOrientation;
             Integer newX;
             Integer newY;
