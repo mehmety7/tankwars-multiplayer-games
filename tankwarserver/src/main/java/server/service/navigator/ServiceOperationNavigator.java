@@ -26,7 +26,7 @@ public class ServiceOperationNavigator {
 
     public String doOperation(Protocol protocol) {
 
-        if (protocol.getMethodType().equals(MethodType.LG.toString())) {
+        if (isEqual(protocol, MethodType.LG)) {
             Player result = playerService.login(JsonUtil.fromJson(protocol.getMessage(), Player.class));
             if (Objects.nonNull(result)) {
                 return OK + JsonUtil.toJson(result);
@@ -35,7 +35,7 @@ public class ServiceOperationNavigator {
             }
         }
 
-        else if (protocol.getMethodType().equals(MethodType.SU.toString())) {
+        else if (isEqual(protocol, MethodType.SU)) {
             Player result = playerService.createPlayer(JsonUtil.fromJson(protocol.getMessage(), Player.class));
             if (Objects.nonNull(result)) {
                 return OK + JsonUtil.toJson(result);
@@ -44,10 +44,58 @@ public class ServiceOperationNavigator {
             }
         }
 
-        else {
+        else if (isEqual(protocol, MethodType.GU)){
             return OK;
         }
 
+        else if (isEqual(protocol, MethodType.JG)){
+            return OK;
+        }
+
+        else if (isEqual(protocol, MethodType.LT)){
+            return OK;
+        }
+
+        else if (isEqual(protocol, MethodType.CG)){
+            return OK;
+        }
+
+        else if (isEqual(protocol, MethodType.GG)){
+            return OK;
+        }
+
+        else if (isEqual(protocol, MethodType.SG)){
+            return OK;
+        }
+
+        else if (isEqual(protocol, MethodType.AS)){
+            return OK;
+        }
+
+        else if (isEqual(protocol, MethodType.GL)){
+            return OK;
+        }
+
+        else if (isEqual(protocol, MethodType.SF)){
+            return OK;
+        }
+
+        else if (isEqual(protocol, MethodType.UG)){
+            return OK;
+        }
+
+        else if (isEqual(protocol, MethodType.UD)){
+            return OK;
+        }
+
+        else {
+            return FAIL;
+        }
     }
+
+    private boolean isEqual(Protocol protocol, MethodType methodType) {
+        return protocol.getMethodType().equals(methodType.toString());
+    }
+
 
 }
