@@ -1,3 +1,4 @@
+import client.about.AboutUsPanel;
 import client.auth.LoginPanel;
 import client.auth.SignupPanel;
 import client.lobby.LobbyPanel;
@@ -21,6 +22,7 @@ public class Home {
          * having CardLayout.
          */
         //auth panels
+
         LoginPanel loginPanel = new LoginPanel(basePanel);
         basePanel.add(loginPanel, "loginPanel");
         SignupPanel signupPanel = new SignupPanel(basePanel);
@@ -31,6 +33,10 @@ public class Home {
         basePanel.add(lobbyPanel,"lobbyPanel");
         NewGamePanel newGamePanel = new NewGamePanel(basePanel);
         basePanel.add(newGamePanel,"newGamePanel");
+
+        //about us panel
+        AboutUsPanel aboutUsPanel = new AboutUsPanel(basePanel);
+        basePanel.add(aboutUsPanel, "aboutUsPanel");
 
 
 
