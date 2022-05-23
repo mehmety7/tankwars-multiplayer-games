@@ -8,7 +8,9 @@ import server.model.request.JoinGameRequest;
 import server.model.response.AboutUsResponse;
 import server.utilization.JsonUtil;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class MainApplication {
 
