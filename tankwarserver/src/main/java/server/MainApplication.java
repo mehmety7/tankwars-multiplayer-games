@@ -8,6 +8,8 @@ import server.model.request.JoinGameRequest;
 import server.model.response.AboutUsResponse;
 import server.utilization.JsonUtil;
 
+import java.util.*;
+
 public class MainApplication {
 
     public static void main(String[] args) {
@@ -44,6 +46,36 @@ public class MainApplication {
         playerDao.getDataPersistence().getConnection().close();
         */
 
+        String SPLITTER = "}" + ",";
+
+
+        Game game1 = Game.builder().id(1).shootingSpeed(5.0).tourNumber(2).build();
+        game1.setPlayers(new HashMap<>());
+        game1.getPlayers().put(1, 5);
+        Game game2 = Game.builder().id(2).shootingSpeed(5.0).tourNumber(2).build();
+
+
+        String json = JsonUtil.toJson(game1);
+        System.out.println(json);
+        Game game = JsonUtil.fromJson(json, Game.class);
+        System.out.println(JsonUtil.toJson(game));
+        System.out.println(game.getPlayers().getClass());
+
+
+        List<Game> games = Arrays.asList(game1, game2);
+
+        String listJson = JsonUtil.toJson(games);
+
+        List<Game> result = JsonUtil.fromListJson(listJson);
+
+
+        System.out.println(result.get(0));
+        System.out.println(result.get(1));
+
+
+
+
+        System.out.println("---------------------");
         System.out.println(JsonUtil.toJson(Game.builder().build()));
         System.out.println(JsonUtil.toJson(JoinGameRequest.builder().build()));
         System.out.println(JsonUtil.toJson(Tank.builder().build()));
