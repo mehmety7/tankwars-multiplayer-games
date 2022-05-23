@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Message {
 
+    private Integer playerId;
     private String playerUserName;
     private String text;
 
