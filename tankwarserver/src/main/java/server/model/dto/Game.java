@@ -15,7 +15,7 @@ import java.util.Map;
 public class Game {
 
     private Integer id;
-    private Map<Player, Integer> players; // point
+    private Map<Integer, Integer> players; // playerId - point
     private Integer tourNumber;
     private Double shootingSpeed;
     private String mapType;
