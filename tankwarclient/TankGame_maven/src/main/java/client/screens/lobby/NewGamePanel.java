@@ -1,5 +1,11 @@
 package client.screens.lobby;
 
+import client.game.CurrentPlayer;
+import client.model.dto.Game;
+import client.model.entity.Player;
+import client.services.SingletonSocketService;
+import client.socket.ClientSocket;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -54,8 +60,17 @@ public class NewGamePanel extends JPanel {
                 selectedShootSpeed = (float) shootSpeed.getSelectedItem();
                 selectedMapType = (char) mapType.getSelectedItem();
 
-                System.out.println(roomName+" " + selectedTour + " " + selectedShootSpeed
-                        + " "+ selectedMapType);
+                // id Player idsi olmali fakat oyunda su an playerid yok. Client tarafina player koyunca asagidaki idyi player idsi ile degistir
+                Game game = Game.builder().tourNumber(selectedTour).mapType(String.valueOf(selectedMapType)).shootingSpeed(selectedShootSpeed).id(1).build();
+                ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
+                cs.sendMessage("CG", game);
+                if(cs.response().startsWith("OK")) {
+                    System.out.println(cs.response());
+                    // TODO navigate to game room
+                } else {
+                    // TODO show error message
+                }
+                // Remove these lines after filling if-else above
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                 cardLayout.show(parentPanel, "lobbyPanel");
 
