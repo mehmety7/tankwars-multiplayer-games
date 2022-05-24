@@ -1,11 +1,23 @@
 package server.service.navigator;
 
+import server.constants.ConstantsForInnerLogic;
+import server.extensions.GameExtension;
+import server.model.dto.Game;
+import server.model.dto.Statistic;
+import server.model.dto.Tank;
 import server.model.entity.Player;
+import server.model.enumerated.FaceOrientation;
 import server.model.enumerated.MethodType;
+import server.model.request.CreateGameRequest;
+import server.model.request.JoinGameRequest;
+import server.service.GameService;
 import server.service.PlayerService;
+import server.service.StatisticService;
+import server.service.TankService;
 import server.socket.Protocol;
 import server.utilization.JsonUtil;
 
+import java.util.List;
 import java.util.Objects;
 
 public class ServiceOperationNavigator {
@@ -15,7 +27,10 @@ public class ServiceOperationNavigator {
     public static String OK = "OK";
     public static String FAIL = "FL";
 
-    private PlayerService playerService = PlayerService.getInstance();
+    private final PlayerService playerService = PlayerService.getInstance();
+    private final GameService gameService = GameService.getInstance();
+    private final StatisticService statisticService = StatisticService.getInstance();
+    private final TankService tankService = TankService.getInstance();
 
     public static ServiceOperationNavigator getInstance() {
         if (Objects.isNull(serviceOperationNavigator)) {
@@ -45,38 +60,83 @@ public class ServiceOperationNavigator {
         }
 
         else if (isEqual(protocol, MethodType.GU)){
-            return OK;
+            List<Game> unStartedGames = gameService.getAllGames();
+            unStartedGames.removeIf((Game::getIsStarted));
+            if(unStartedGames.size() == 0)
+                return FAIL;
+            return OK + JsonUtil.toJson(unStartedGames);
         }
 
         else if (isEqual(protocol, MethodType.JG)){
-            return OK;
+            JoinGameRequest request = JsonUtil.fromJson(protocol.getMessage(), JoinGameRequest.class);
+            Game beforeJoin = gameService.getGame(request.getGameId());
+            Player player = playerService.getPlayer(request.getPlayerId());
+            if(beforeJoin.getIsStarted())
+                return FAIL;
+            if(!player.getIsActive())
+                return FAIL;
+            Game afterJoin = gameService.joinGame(request.getGameId(), request.getPlayerId());
+            return OK + JsonUtil.toJson(afterJoin);
         }
 
         else if (isEqual(protocol, MethodType.LT)){
-            return OK;
+            Player playerBeforeLogOut = JsonUtil.fromJson(protocol.getMessage(), Player.class);
+            if(!playerBeforeLogOut.getIsActive())
+                return FAIL;
+            if(!playerService.logout(playerBeforeLogOut))
+                return FAIL;
+            Player playerAfterLogOut = playerService.getPlayer(playerBeforeLogOut.getId());
+            return OK + JsonUtil.toJson(playerAfterLogOut);
         }
 
         else if (isEqual(protocol, MethodType.CG)){
-            return OK;
+            CreateGameRequest gameRequest = JsonUtil.fromJson(protocol.getMessage(), CreateGameRequest.class);
+            if(playerService.getPlayer(gameRequest.getId()) == null){
+                return FAIL;
+            }
+            Game createdGame = gameService.createGame(GameExtension.getGameFromRequest(gameRequest));
+            return OK + JsonUtil.toJson(createdGame);
         }
 
         else if (isEqual(protocol, MethodType.GG)){
-            return OK;
+            Game game = JsonUtil.fromJson(protocol.getMessage(), Game.class);
+            Game foundedGame = gameService.getGame(game.getId());
+            if(foundedGame == null)
+                return FAIL;
+            return OK + JsonUtil.toJson(foundedGame);
         }
 
         else if (isEqual(protocol, MethodType.SG)){
-            return OK;
+            Game game = JsonUtil.fromJson(protocol.getMessage(), Game.class);
+            if(gameService.getGame(game.getId()) == null)
+                return FAIL;
+            if(game.getPlayers().size() < ConstantsForInnerLogic.minimumPlayers)
+                return FAIL;
+            List<Tank> tanks = gameService.startGame(game.getId());
+            return OK + JsonUtil.toJson(tanks);
         }
 
         else if (isEqual(protocol, MethodType.AS)){
+            Game game = JsonUtil.fromJson(protocol.getMessage(), Game.class);
+            if(game.getId() == null)
+                return FAIL;
+            if(game.getPlayers() == null || game.getPlayers().size() == 0)
+                return FAIL;
+            if(!statisticService.addStatisticsInEndOfGame(game))
+                return FAIL;
             return OK;
         }
 
         else if (isEqual(protocol, MethodType.GL)){
-            return OK;
+            List<Statistic> statistics = statisticService.getStatistics();
+            if(statistics == null || statistics.size() == 0)
+                return FAIL;
+            return OK + JsonUtil.toJson(statistics);
         }
 
         else if (isEqual(protocol, MethodType.SF)){
+            Tank tank = JsonUtil.fromJson(protocol.getMessage(), Tank.class);
+            tankService.createBullet(tank);
             return OK;
         }
 
