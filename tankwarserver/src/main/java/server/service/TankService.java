@@ -1,6 +1,7 @@
 package server.service;
 
 import lombok.NoArgsConstructor;
+import server.constants.ConstantsForInnerLogic;
 import server.dao.InMemoryDao;
 import server.model.dto.Bullet;
 import server.model.dto.Game;
@@ -102,15 +103,34 @@ public class TankService {
     *  İlerde bu değiştirilmeli
     *  Bu arada fonksiyon için daha yaratıcı bir isim bekliyorum.
     *  Service katmanında shoot demek bana garip geldi :D */
-    public Tank shootBullet(Tank tank){
+    public Tank createBullet(Tank tank){
         //TODO: Merminin konumunu tankın biraz ilerisinde olacak şekilde ayarla
+        int offsetX = 0;
+        int offsetY = 0;
+        switch (tank.getFaceOrientation()){
+            case LEFT:
+                offsetY = 0;
+                offsetX = -1 * ConstantsForInnerLogic.bulletOffset;
+                break;
+            case RIGHT:
+                offsetY = 0;
+                offsetX = ConstantsForInnerLogic.bulletOffset;
+                break;
+            case UP:
+                offsetX = 0;
+                offsetY = -1 * ConstantsForInnerLogic.bulletOffset;
+                break;
+            case DOWN:
+                offsetX = 0;
+                offsetY = ConstantsForInnerLogic.bulletOffset;
+                break;
+        }
         Bullet bullet = Bullet.builder()
-                .playerId(tank.getPlayerId())
+                .tankId(tank.getPlayerId())
                 .bulletId(UUID.randomUUID())
-                .positionX(inMemoryDao.tanks.get(tank.getPlayerId()).getPositionX())
-                .positionY(inMemoryDao.tanks.get(tank.getPlayerId()).getPositionY())
+                .positionX(inMemoryDao.tanks.get(tank.getPlayerId()).getPositionX() + offsetX)
+                .positionY(inMemoryDao.tanks.get(tank.getPlayerId()).getPositionY() + offsetY)
                 .faceOrientation(inMemoryDao.tanks.get(tank.getPlayerId()).getFaceOrientation())
-                .movementSpeed(inMemoryDao.games.get(inMemoryDao.tanks.get(tank.getPlayerId()).getGameId()).getShootingSpeed())
                 .build();
         bulletService.createOrUpdateBullet(bullet);
         return tank;
