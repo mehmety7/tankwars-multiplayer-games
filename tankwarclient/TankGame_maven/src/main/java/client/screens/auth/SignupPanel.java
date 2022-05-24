@@ -1,4 +1,4 @@
-package client.auth;
+package client.screens.auth;
 
 import javax.swing.*;
 import java.awt.*;

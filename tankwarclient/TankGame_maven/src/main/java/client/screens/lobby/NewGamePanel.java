@@ -1,4 +1,4 @@
-package client.lobby;
+package client.screens.lobby;
 
 import client.game.CurrentPlayer;
 import client.model.dto.Game;
