@@ -64,7 +64,13 @@ public class NewGamePanel extends JPanel {
                 Game game = Game.builder().tourNumber(selectedTour).mapType(String.valueOf(selectedMapType)).shootingSpeed(selectedShootSpeed).id(1).build();
                 ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
                 cs.sendMessage("CG", game);
-                // TODO navigate to game room
+                if(cs.response().startsWith("OK")) {
+                    System.out.println(cs.response());
+                    // TODO navigate to game room
+                } else {
+                    // TODO show error message
+                }
+                // Remove these lines after filling if-else above
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                 cardLayout.show(parentPanel, "lobbyPanel");
 
