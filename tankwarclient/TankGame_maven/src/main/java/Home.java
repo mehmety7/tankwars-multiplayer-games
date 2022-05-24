@@ -2,6 +2,7 @@ import client.screens.about.AboutUsPanel;
 import client.screens.auth.LoginPanel;
 import client.screens.auth.SignupPanel;
 import client.screens.endofgame.EndOfGamePanel;
+import client.screens.leadership.LeadershipPanel;
 import client.screens.lobby.LobbyPanel;
 import client.screens.lobby.NewGamePanel;
 
@@ -44,6 +45,11 @@ public class Home {
         basePanel.add(endOfGamePanel, "endOfGamePanel");
         */
 
+        /*
+        //leadership panel
+        LeadershipPanel leadershipPanel = new LeadershipPanel(basePanel);
+        basePanel.add(leadershipPanel, "leadershipPanel");
+        */
         // Adding the basePanel to JFrame.
         frame.add(basePanel, BorderLayout.CENTER);
 
