@@ -1,4 +1,4 @@
-package client.auth;
+package client.screens.auth;
 
 import client.model.entity.Player;
 import client.services.SingletonSocketService;

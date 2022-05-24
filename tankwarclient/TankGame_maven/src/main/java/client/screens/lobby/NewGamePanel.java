@@ -1,4 +1,4 @@
-package client.lobby;
+package client.screens.lobby;
 
 import javax.swing.*;
 import java.awt.*;

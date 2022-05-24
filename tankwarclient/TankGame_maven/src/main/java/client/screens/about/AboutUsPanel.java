@@ -1,4 +1,4 @@
-package client.about;
+package client.screens.about;
 
 import javax.swing.*;
 import java.awt.*;
