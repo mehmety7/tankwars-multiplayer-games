@@ -32,6 +32,19 @@ public class ClientSocket {
         }
     }
 
+    //Get Unstarted Games requesti için data gönderimi yok
+    //Overload yapıldı
+    public <T> void sendMessage(String methodType){
+        String request = methodType;
+        socketWriter.println(request);
+        socketWriter.flush();
+        try {
+            response = socketReader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public String response() {
         return response;
     }
