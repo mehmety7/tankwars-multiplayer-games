@@ -1,6 +1,5 @@
 package server.service;
 
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import server.bean.BeanHandler;
