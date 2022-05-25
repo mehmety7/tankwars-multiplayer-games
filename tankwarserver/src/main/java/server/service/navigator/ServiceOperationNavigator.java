@@ -6,7 +6,6 @@ import server.model.dto.Game;
 import server.model.dto.Statistic;
 import server.model.dto.Tank;
 import server.model.entity.Player;
-import server.model.enumerated.FaceOrientation;
 import server.model.enumerated.MethodType;
 import server.model.request.CreateGameRequest;
 import server.model.request.JoinGameRequest;
@@ -62,7 +61,7 @@ public class ServiceOperationNavigator {
         else if (isEqual(protocol, MethodType.GU)){
             List<Game> unStartedGames = gameService.getAllGames();
             unStartedGames.removeIf((Game::getIsStarted));
-            if(unStartedGames.size() == 0)
+            if(unStartedGames.isEmpty())
                 return FAIL;
             return OK + JsonUtil.toJson(unStartedGames);
         }
@@ -71,9 +70,9 @@ public class ServiceOperationNavigator {
             JoinGameRequest request = JsonUtil.fromJson(protocol.getMessage(), JoinGameRequest.class);
             Game beforeJoin = gameService.getGame(request.getGameId());
             Player player = playerService.getPlayer(request.getPlayerId());
-            if(beforeJoin.getIsStarted())
+            if(Boolean.TRUE.equals(beforeJoin.getIsStarted()))
                 return FAIL;
-            if(!player.getIsActive())
+            if(Boolean.FALSE.equals(player.getIsActive()))
                 return FAIL;
             Game afterJoin = gameService.joinGame(request.getGameId(), request.getPlayerId());
             return OK + JsonUtil.toJson(afterJoin);
@@ -81,9 +80,9 @@ public class ServiceOperationNavigator {
 
         else if (isEqual(protocol, MethodType.LT)){
             Player playerBeforeLogOut = JsonUtil.fromJson(protocol.getMessage(), Player.class);
-            if(!playerBeforeLogOut.getIsActive())
+            if(Objects.nonNull(playerBeforeLogOut.getIsActive()) && Boolean.FALSE.equals(playerBeforeLogOut.getIsActive()))
                 return FAIL;
-            if(!playerService.logout(playerBeforeLogOut))
+            if(Boolean.FALSE.equals(playerService.logout(playerBeforeLogOut)))
                 return FAIL;
             Player playerAfterLogOut = playerService.getPlayer(playerBeforeLogOut.getId());
             return OK + JsonUtil.toJson(playerAfterLogOut);
@@ -91,7 +90,7 @@ public class ServiceOperationNavigator {
 
         else if (isEqual(protocol, MethodType.CG)){
             CreateGameRequest gameRequest = JsonUtil.fromJson(protocol.getMessage(), CreateGameRequest.class);
-            if(playerService.getPlayer(gameRequest.getId()) == null){
+            if(Objects.isNull(playerService.getPlayer(gameRequest.getId()))){
                 return FAIL;
             }
             Game createdGame = gameService.createGame(GameExtension.getGameFromRequest(gameRequest));
@@ -101,7 +100,7 @@ public class ServiceOperationNavigator {
         else if (isEqual(protocol, MethodType.GG)){
             Game game = JsonUtil.fromJson(protocol.getMessage(), Game.class);
             Game foundedGame = gameService.getGame(game.getId());
-            if(foundedGame == null)
+            if(Objects.isNull(foundedGame))
                 return FAIL;
             return OK + JsonUtil.toJson(foundedGame);
         }
