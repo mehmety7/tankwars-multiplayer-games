@@ -2,6 +2,7 @@ package server.socket;
 
 import lombok.Getter;
 import lombok.Setter;
+import server.bean.BeanHandler;
 import server.service.navigator.ServiceOperationNavigator;
 
 import java.io.BufferedReader;
@@ -26,7 +27,7 @@ public class ClientHandler implements Runnable, SocketDataOperation {
         this.protocolFromClient = new Protocol();
         this.protocolToClient = new Protocol();
         this.clientSocket = clientSocket;
-        this.serviceOperationNavigator = ServiceOperationNavigator.getInstance();
+        this.serviceOperationNavigator = BeanHandler.serviceOperationNavigator;
         try {
             inputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             outputStream = new PrintWriter(clientSocket.getOutputStream(), true);

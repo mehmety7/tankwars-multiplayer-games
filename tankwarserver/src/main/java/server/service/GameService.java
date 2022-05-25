@@ -1,7 +1,9 @@
 package server.service;
 
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import server.bean.BeanHandler;
 import server.dao.InMemoryDao;
 import server.model.dto.Game;
 import server.model.dto.Tank;
@@ -9,7 +11,7 @@ import server.model.dto.Tank;
 import java.util.*;
 
 @Setter
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class GameService {
 
     private static final Integer INITIAL_SCORE_POINT = 0;
@@ -18,13 +20,13 @@ public class GameService {
 
     public static GameService getInstance() {
         if (Objects.isNull(gameService)) {
-            gameService = new GameService();
+            gameService = new GameService(BeanHandler.inMemoryDao, BeanHandler.tankService);
         }
         return gameService;
     }
 
-    private InMemoryDao inMemoryDao = InMemoryDao.getInstance();
-    private TankService tankService = TankService.getInstance();
+    private final InMemoryDao inMemoryDao;
+    private final TankService tankService;
 
     public Game createGame(Game game) {
         Map<Integer, Integer> map = new HashMap<>();

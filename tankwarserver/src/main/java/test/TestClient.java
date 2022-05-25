@@ -23,7 +23,7 @@ class TestClient {
 
             Player player = Player.builder().username("player1").password("test").build();
             String data = JsonUtil.toJson(player);
-            String request = "LG" + "OK" + data;
+            String request = "LG" + data;
             System.out.println(request);
 
             while (!"exit".equalsIgnoreCase(request)) {

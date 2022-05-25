@@ -1,5 +1,6 @@
 package server.service.navigator;
 
+import server.bean.BeanHandler;
 import server.constants.ConstantsForInnerLogic;
 import server.extensions.GameExtension;
 import server.model.dto.Game;
@@ -9,10 +10,7 @@ import server.model.entity.Player;
 import server.model.enumerated.MethodType;
 import server.model.request.CreateGameRequest;
 import server.model.request.JoinGameRequest;
-import server.service.GameService;
-import server.service.PlayerService;
-import server.service.StatisticService;
-import server.service.TankService;
+import server.service.*;
 import server.socket.Protocol;
 import server.utilization.JsonUtil;
 
@@ -26,10 +24,12 @@ public class ServiceOperationNavigator {
     public static String OK = "OK";
     public static String FAIL = "FL";
 
-    private final PlayerService playerService = PlayerService.getInstance();
-    private final GameService gameService = GameService.getInstance();
-    private final StatisticService statisticService = StatisticService.getInstance();
-    private final TankService tankService = TankService.getInstance();
+    private final PlayerService playerService = BeanHandler.playerService;
+    private final GameService gameService = BeanHandler.gameService;
+    private final StatisticService statisticService = BeanHandler.statisticService;
+    private final TankService tankService = BeanHandler.tankService;
+    private final MessageService messageService = BeanHandler.messageService;
+    private final BulletService bulletService = BeanHandler.bulletService;
 
     public static ServiceOperationNavigator getInstance() {
         if (Objects.isNull(serviceOperationNavigator)) {
@@ -121,7 +121,7 @@ public class ServiceOperationNavigator {
                 return FAIL;
             if(game.getPlayers() == null || game.getPlayers().size() == 0)
                 return FAIL;
-            if(!statisticService.addStatisticsInEndOfGame(game))
+            if(Boolean.FALSE.equals(statisticService.addStatisticsInEndOfGame(game)))
                 return FAIL;
             return OK;
         }

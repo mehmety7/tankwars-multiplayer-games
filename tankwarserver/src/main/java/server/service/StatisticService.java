@@ -1,7 +1,9 @@
 package server.service;
 
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import server.bean.BeanHandler;
 import server.dao.InMemoryDao;
 import server.model.dto.Game;
 import server.model.dto.Statistic;
@@ -14,21 +16,20 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Setter
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class StatisticService {
 
     public static StatisticService statisticService;
 
-    private PlayerService playerService = PlayerService.getInstance();
-
     public static StatisticService getInstance() {
         if (Objects.isNull(statisticService)) {
-            statisticService = new StatisticService();
+            statisticService = new StatisticService(BeanHandler.inMemoryDao, BeanHandler.playerService);
         }
         return statisticService;
     }
 
-    private InMemoryDao inMemoryDao = InMemoryDao.getInstance();
+    private final InMemoryDao inMemoryDao;
+    private final PlayerService playerService;
 
     public Boolean addStatisticsInEndOfGame(Game game) {
         List<Player> players = new ArrayList<>();

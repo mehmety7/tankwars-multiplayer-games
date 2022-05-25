@@ -1,6 +1,7 @@
 package server.service;
 
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import server.bean.BeanHandler;
 import server.constants.ConstantsForInnerLogic;
 import server.dao.InMemoryDao;
 import server.model.dto.Bullet;
@@ -9,25 +10,24 @@ import server.model.dto.Tank;
 import server.utilization.Pair;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class BulletService {
 
     private static BulletService bulletService;
 
     public static BulletService getInstance() {
         if (Objects.isNull(bulletService)) {
-            bulletService = new BulletService();
+            bulletService = new BulletService(InMemoryDao.getInstance(), BeanHandler.tankService);
         }
 
         return bulletService;
     }
 
-    private final InMemoryDao inMemoryDao = InMemoryDao.getInstance();
-    private final TankService tankService = TankService.getInstance();
+    private final InMemoryDao inMemoryDao;
+    private final TankService tankService;
 
     public Bullet createOrUpdateBullet(Bullet bullet){
         inMemoryDao.bullets.removeIf(bulletPair -> bulletPair.getSecond().getTankId().equals(bullet.getTankId()) && bulletPair.getSecond().getBulletId().equals(bullet.getBulletId()));

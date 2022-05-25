@@ -1,6 +1,8 @@
 package server.service;
 
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import server.bean.BeanHandler;
 import server.constants.ConstantsForInnerLogic;
 import server.dao.InMemoryDao;
 import server.model.dto.Bullet;
@@ -14,21 +16,21 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class TankService {
 
     public static TankService tankService;
 
     public static TankService getInstance() {
         if (Objects.isNull(tankService)) {
-            tankService = new TankService();
+            tankService = new TankService(BeanHandler.inMemoryDao, BeanHandler.bulletService, BeanHandler.playerService);
         }
         return tankService;
     }
 
-    private InMemoryDao inMemoryDao = InMemoryDao.getInstance();
-    private BulletService bulletService = BulletService.getInstance();
-    private PlayerService playerService = PlayerService.getInstance();
+    private final InMemoryDao inMemoryDao;
+    private final BulletService bulletService;
+    private final PlayerService playerService;
 
 
     public List<Tank> createTanksForNewGame(Integer gameId) {

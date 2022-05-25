@@ -37,7 +37,7 @@ public class DataPersistence {
 
     }
 
-    public static DataPersistence getDataPersistence(){
+    public static DataPersistence getInstance(){
         if (Objects.isNull(dataPersistence)) {
             dataPersistence = new DataPersistence();
         }

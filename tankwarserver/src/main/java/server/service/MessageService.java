@@ -2,7 +2,9 @@ package server.service;
 
 import com.mysql.cj.util.StringUtils;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import server.bean.BeanHandler;
 import server.dao.InMemoryDao;
 import server.model.dto.Message;
 import server.model.entity.Player;
@@ -12,20 +14,20 @@ import java.util.List;
 import java.util.Objects;
 
 @Setter
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class MessageService {
 
     public static MessageService messageService;
 
     public static MessageService getInstance() {
         if (Objects.isNull(messageService)) {
-            messageService = new MessageService();
+            messageService = new MessageService(BeanHandler.inMemoryDao, BeanHandler.playerService);
         }
         return messageService;
     }
 
-    private InMemoryDao inMemoryDao = InMemoryDao.getInstance();
-    private PlayerService playerService = PlayerService.getInstance();
+    private final InMemoryDao inMemoryDao;
+    private final PlayerService playerService;
 
     public Boolean createMessage(Message message) {
         if (StringUtils.isEmptyOrWhitespaceOnly(message.getText())) {

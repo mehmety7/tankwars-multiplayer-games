@@ -1,6 +1,7 @@
 package server.dao;
 
 import lombok.Getter;
+import server.bean.BeanHandler;
 import server.model.entity.Player;
 
 import java.sql.PreparedStatement;
@@ -18,7 +19,7 @@ public class PlayerDao {
     private DataPersistence dataPersistence;
 
     private PlayerDao(){
-        dataPersistence = DataPersistence.getDataPersistence();
+        dataPersistence = BeanHandler.dataPersistence;
     }
 
     public static PlayerDao getInstance(){

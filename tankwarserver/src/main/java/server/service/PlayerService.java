@@ -1,7 +1,9 @@
 package server.service;
 
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import server.bean.BeanHandler;
 import server.dao.PlayerDao;
 import server.model.entity.Player;
 import server.utilization.HashUtil;
@@ -12,18 +14,18 @@ import java.util.Locale;
 import java.util.Objects;
 
 @Setter
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class PlayerService {
 
     private static final Integer CREATE_ERROR_RETURN_VALUE = -1;
 
     private static PlayerService playerService;
 
-    private PlayerDao playerDao = PlayerDao.getInstance();
+    private final PlayerDao playerDao;
 
     public static PlayerService getInstance() {
         if (Objects.isNull(playerService)) {
-            playerService = new PlayerService();
+            playerService = new PlayerService(BeanHandler.playerDao);
         }
         return playerService;
     }
