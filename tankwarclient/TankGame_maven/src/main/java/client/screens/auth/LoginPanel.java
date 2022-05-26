@@ -1,8 +1,10 @@
 package client.screens.auth;
 
 import client.model.entity.Player;
+import client.screens.lobby.LobbyPanel;
 import client.services.SingletonSocketService;
 import client.socket.ClientSocket;
+import client.util.JsonUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,6 +37,12 @@ public class LoginPanel extends JPanel {
                 System.out.println(cs.response());
 
                 if (cs.response().contains("OK")) {
+                    Player playerDataFromResponse;
+                    String playerDataString = cs.response().substring(2);
+                    playerDataFromResponse = JsonUtil.fromJson(playerDataString,Player.class);
+                    LobbyPanel lobbyPanel = new LobbyPanel(parentPanel,playerDataFromResponse.getId());
+                    parentPanel.add(lobbyPanel,"lobbyPanel");
+
                     CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                     cardLayout.show(parentPanel, "lobbyPanel");
                 } else {

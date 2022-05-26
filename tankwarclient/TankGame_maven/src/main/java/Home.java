@@ -30,15 +30,14 @@ public class Home {
         SignupPanel signupPanel = new SignupPanel(basePanel);
         basePanel.add(signupPanel, "signupPanel");
 
-        //lobby panels
-        LobbyPanel lobbyPanel = new LobbyPanel(basePanel);
-        basePanel.add(lobbyPanel,"lobbyPanel");
-        NewGamePanel newGamePanel = new NewGamePanel(basePanel);
-        basePanel.add(newGamePanel,"newGamePanel");
+        //lobby panel and newGamePanel removed from here
+        //it's better to use LobbyPanel in LoginPanel
+        //it's better to use newGamePanel in LobbyPanel
 
         //about us panel
         AboutUsPanel aboutUsPanel = new AboutUsPanel(basePanel);
         basePanel.add(aboutUsPanel, "aboutUsPanel");
+
         /*
         //end of game panel
         EndOfGamePanel endOfGamePanel = new EndOfGamePanel(basePanel, 1);
@@ -46,6 +45,7 @@ public class Home {
         */
 
         /*
+
         //leadership panel
         LeadershipPanel leadershipPanel = new LeadershipPanel(basePanel);
         basePanel.add(leadershipPanel, "leadershipPanel");

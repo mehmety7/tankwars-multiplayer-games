@@ -32,6 +32,7 @@ public class ClientSocket {
         }
     }
 
+
     public String response() {
         return response;
     }

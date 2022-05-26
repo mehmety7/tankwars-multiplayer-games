@@ -36,7 +36,7 @@ public class NewGamePanel extends JPanel {
     JButton createGameButton = new JButton("Create Game Room");
     JButton cancelButton = new JButton("Cancel");
 
-    public NewGamePanel(JPanel parentPanel) {
+    public NewGamePanel(JPanel parentPanel, Integer playerId) {
         this.parentPanel = parentPanel;
         GridLayout gridLayout = new GridLayout(6,1);
         setLayout(gridLayout);
@@ -60,8 +60,8 @@ public class NewGamePanel extends JPanel {
                 selectedShootSpeed = (float) shootSpeed.getSelectedItem();
                 selectedMapType = (char) mapType.getSelectedItem();
 
-                // id Player idsi olmali fakat oyunda su an playerid yok. Client tarafina player koyunca asagidaki idyi player idsi ile degistir
-                Game game = Game.builder().tourNumber(selectedTour).mapType(String.valueOf(selectedMapType)).shootingSpeed(selectedShootSpeed).id(1).build();
+                //Player Id'si ile yeni oyun build et
+                Game game = Game.builder().tourNumber(selectedTour).mapType(String.valueOf(selectedMapType)).shootingSpeed(selectedShootSpeed).id(playerId).build();
                 ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
                 cs.sendMessage("CG", game);
                 if(cs.response().startsWith("OK")) {
@@ -69,6 +69,7 @@ public class NewGamePanel extends JPanel {
                     // TODO navigate to game room
                 } else {
                     // TODO show error message
+                    //JOptionPane.showMessageDialog(parentPanel, "Couldn't create a new game");
                 }
                 // Remove these lines after filling if-else above
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
@@ -80,7 +81,7 @@ public class NewGamePanel extends JPanel {
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //cancel creating new game room and return to the mainpage Lobby
+                //cancel creating new game room and return to the main page Lobby
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                 cardLayout.show(parentPanel,"lobbyPanel");
             }
