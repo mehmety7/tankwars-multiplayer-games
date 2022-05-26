@@ -104,7 +104,7 @@ public class LobbyPanel extends JPanel {
                 ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
 
                 //client socket data istiyor sendMessage overload edildi
-                cs.sendMessage("GU");
+                cs.sendMessage("GU",null);
 
                 if(cs.response().contains("OK")){
                     String gamesDataString = cs.response().substring(2);
