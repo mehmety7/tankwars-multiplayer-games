@@ -107,7 +107,7 @@ public class ServiceOperationNavigator {
 
         else if (isEqual(protocol, MethodType.SG)){
             Game game = JsonUtil.fromJson(protocol.getMessage(), Game.class);
-            if(gameService.getGame(game.getId()) == null)
+            if(Objects.isNull(gameService.getGame(game.getId())))
                 return FAIL;
             if(game.getPlayers().size() < ConstantsForInnerLogic.minimumPlayers)
                 return FAIL;
@@ -117,7 +117,7 @@ public class ServiceOperationNavigator {
 
         else if (isEqual(protocol, MethodType.AS)){
             Game game = JsonUtil.fromJson(protocol.getMessage(), Game.class);
-            if(game.getId() == null)
+            if(Objects.isNull(game.getId()))
                 return FAIL;
             if(game.getPlayers() == null || game.getPlayers().size() == 0)
                 return FAIL;
@@ -128,7 +128,7 @@ public class ServiceOperationNavigator {
 
         else if (isEqual(protocol, MethodType.GL)){
             List<Statistic> statistics = statisticService.getStatistics();
-            if(statistics == null || statistics.size() == 0)
+            if(Objects.isNull(statistics) || statistics.isEmpty())
                 return FAIL;
             return OK + JsonUtil.toJson(statistics);
         }
