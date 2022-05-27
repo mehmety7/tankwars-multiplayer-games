@@ -7,6 +7,8 @@ public enum MethodType {
     GU,
     JG,
     LT,
+    CM,
+    GM,
     CG,
     GG,
     SG,

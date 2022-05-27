@@ -4,6 +4,7 @@ import server.bean.BeanHandler;
 import server.constants.ConstantsForInnerLogic;
 import server.extensions.GameExtension;
 import server.model.dto.Game;
+import server.model.dto.Message;
 import server.model.dto.Statistic;
 import server.model.dto.Tank;
 import server.model.entity.Player;
@@ -86,6 +87,22 @@ public class ServiceOperationNavigator {
                 return FAIL;
             Player playerAfterLogOut = playerService.getPlayer(playerBeforeLogOut.getId());
             return OK + JsonUtil.toJson(playerAfterLogOut);
+        }
+
+        else if (isEqual(protocol, MethodType.CM)){
+            Message message = JsonUtil.fromJson(protocol.getMessage(), Message.class);
+            if (messageService.createMessage(message)) {
+                return OK;
+            }
+            return FAIL;
+        }
+
+        else if (isEqual(protocol, MethodType.GM)){
+            List<Message> messages = messageService.getMessages();
+            if (messages.isEmpty()) {
+                return FAIL;
+            }
+            return OK + JsonUtil.toJson(messages);
         }
 
         else if (isEqual(protocol, MethodType.CG)){
