@@ -20,5 +20,5 @@ public class Game {
     private Float shootingSpeed;
     private String mapType;
     private Boolean isStarted;
-
+    
 }
