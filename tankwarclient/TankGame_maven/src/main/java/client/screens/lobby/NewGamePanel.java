@@ -68,8 +68,7 @@ public class NewGamePanel extends JPanel {
                     System.out.println(cs.response());
                     // TODO navigate to game room
                 } else {
-                    // TODO show error message
-                    //JOptionPane.showMessageDialog(parentPanel, "Couldn't create a new game");
+                    JOptionPane.showMessageDialog(parentPanel, "Couldn't create a new game");
                 }
                 // Remove these lines after filling if-else above
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();

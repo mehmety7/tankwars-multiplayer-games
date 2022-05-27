@@ -14,6 +14,7 @@ public class Home {
         JFrame frame = new JFrame("Tank Wars");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
+        frame.setBackground(new Color(237,237,237));
 
         // This JPanel is the base for CardLayout for other JPanels.
         final JPanel basePanel = new JPanel();
@@ -30,10 +31,6 @@ public class Home {
         SignupPanel signupPanel = new SignupPanel(basePanel);
         basePanel.add(signupPanel, "signupPanel");
 
-        //lobby panel and newGamePanel removed from here
-        //it's better to use LobbyPanel in LoginPanel
-        //it's better to use newGamePanel in LobbyPanel
-
         //about us panel
         AboutUsPanel aboutUsPanel = new AboutUsPanel(basePanel);
         basePanel.add(aboutUsPanel, "aboutUsPanel");
@@ -44,12 +41,12 @@ public class Home {
         basePanel.add(endOfGamePanel, "endOfGamePanel");
         */
 
-        /*
+        
 
         //leadership panel
         LeadershipPanel leadershipPanel = new LeadershipPanel(basePanel);
         basePanel.add(leadershipPanel, "leadershipPanel");
-        */
+
         // Adding the basePanel to JFrame.
         frame.add(basePanel, BorderLayout.CENTER);
 
