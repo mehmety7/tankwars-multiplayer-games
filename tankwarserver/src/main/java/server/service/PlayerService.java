@@ -7,10 +7,7 @@ import server.dao.PlayerDao;
 import server.model.entity.Player;
 import server.utilization.HashUtil;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 
 @Setter
 @RequiredArgsConstructor
@@ -21,6 +18,12 @@ public class PlayerService {
     private static PlayerService playerService;
 
     private final PlayerDao playerDao;
+
+    private static final List<Player> testPlayers = Arrays.asList(
+            Player.builder().id(1).username("player1").password(HashUtil.hashValue("test")).isActive(Boolean.FALSE).build(),
+            Player.builder().id(2).username("player2").password(HashUtil.hashValue("test")).isActive(Boolean.FALSE).build(),
+            Player.builder().id(2).username("player3").password(HashUtil.hashValue("test")).isActive(Boolean.FALSE).build()
+    );
 
     public static PlayerService getInstance() {
         if (Objects.isNull(playerService)) {
@@ -46,13 +49,33 @@ public class PlayerService {
         // return playerDao.getPlayer(playerId);
     }
 
+    private Player getPlayer(String username) {
+        return getDummyPlayer(username);
+        // return playerDao.getPlayer(username);
+    }
+
     public List<Player> getActivePlayers() {
         return getDummyActivePlayers();
         // return playerDao.getActivePlayers();
     }
 
+    private boolean updatePlayerActivate(Integer playerId) {
+        return playerDao.updateActive(playerId);
+    }
+
     public boolean deletePlayer(Integer playerId) {
         return playerDao.deletePlayer(playerId);
+    }
+
+    public Player login (Player player) {
+        Player result = getPlayer(player.getUsername());
+        if (Objects.nonNull(result)) {
+            if (result.getPassword().equals(HashUtil.hashValue(player.getPassword()))) {
+                result.setIsActive(Boolean.TRUE);
+                return Player.builder().id(result.getId()).username(result.getUsername()).isActive(result.getIsActive()).build();
+            }
+        }
+        return null;
     }
 
     public Boolean logout (Player player) {
@@ -60,7 +83,7 @@ public class PlayerService {
             return Boolean.TRUE;
         } */
 
-        Player result = getDummyPlayer(player.getId());
+        Player result = getPlayer(player.getId());
 
         if (Objects.nonNull(result)) {
             result.setIsActive(Boolean.FALSE);
@@ -71,49 +94,34 @@ public class PlayerService {
 
     }
 
-    private boolean updatePlayerActivate(Integer playerId) {
-        return playerDao.updateActive(playerId);
-    }
-
-    public Player login (Player player) {
-        Player result = getPlayer(player.getUsername());
-        if (Objects.nonNull(result)) {
-            if (result.getPassword().equals(HashUtil.hashValue(player.getPassword()))) {
-                return Player.builder().id(result.getId()).username(result.getUsername()).build();
+    private Player getDummyPlayer(String username) {
+        for (Player player : testPlayers) {
+            if (player.getUsername().equals(username)) {
+                return player;
             }
         }
         return null;
     }
 
-    private Player getPlayer(String username) {
-        return getDummyPlayer(username);
-        // return playerDao.getPlayer(username);
-    }
-
-    private Player getDummyPlayer(String username) {
-        if (username.toLowerCase(Locale.ROOT).equals("player1")) {
-            return Player.builder().id(1).username("player1").password(HashUtil.hashValue("test")).isActive(Boolean.TRUE).build();
-        } else if (username.toLowerCase(Locale.ROOT).equals("player2")) {
-            return Player.builder().id(2).username("player2").password(HashUtil.hashValue("test")).isActive(Boolean.TRUE).build();
-        } else {
-            return null;
-        }
-    }
-
     private Player getDummyPlayer(Integer id) {
-        if (id.equals(1)) {
-            return Player.builder().id(1).username("player1").password(HashUtil.hashValue("test")).isActive(Boolean.TRUE).build();
-        } else if (id.equals(2)) {
-            return Player.builder().id(2).username("player2").password(HashUtil.hashValue("test")).isActive(Boolean.TRUE).build();
-        } else {
-            return null;
+        for (Player player : testPlayers) {
+            if (player.getId().equals(id)) {
+                return player;
+            }
         }
+        return null;
     }
 
     public List<Player> getDummyActivePlayers() {
-        return Arrays.asList(
-                Player.builder().id(1).username("player1").isActive(Boolean.TRUE).build(),
-                Player.builder().id(2).username("player2").isActive(Boolean.TRUE).build());
+        List<Player> response = new ArrayList<>();
+
+        for (Player player : testPlayers) {
+            if (player.getIsActive()) {
+                response.add(player);
+            }
+        }
+
+        return response;
     }
 
 }

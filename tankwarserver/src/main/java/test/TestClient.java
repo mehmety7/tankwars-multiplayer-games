@@ -21,7 +21,7 @@ class TestClient {
 
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            Player player = Player.builder().username("player1").password("test").build();
+            Player player = Player.builder().username("player3").password("test").build();
             String data = JsonUtil.toJson(player);
             String request = "LG" + data;
             System.out.println(request);
