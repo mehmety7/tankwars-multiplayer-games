@@ -1,17 +1,17 @@
 package server.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Map;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Game {
+public class Game extends BaseDto {
+
+    private static final long serialVersionUID = 1833262976822214071L;
 
     private Integer id;
     private Map<Integer, Integer> players; // playerId - point

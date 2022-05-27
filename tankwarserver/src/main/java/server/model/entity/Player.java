@@ -1,17 +1,16 @@
 package server.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import server.model.dto.BaseDto;
 
 import java.io.Serializable;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Player implements Serializable {
+public class Player extends BaseDto {
 
     private static final long serialVersionUID = -3607242305431758911L;
 

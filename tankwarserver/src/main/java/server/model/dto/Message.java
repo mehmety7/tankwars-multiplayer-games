@@ -1,15 +1,15 @@
 package server.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Message {
+public class Message extends BaseDto {
+
+    private static final long serialVersionUID = -752945020104104902L;
 
     private Integer playerId;
     private String playerUserName;

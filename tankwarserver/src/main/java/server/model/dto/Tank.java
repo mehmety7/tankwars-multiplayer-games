@@ -4,11 +4,13 @@ import lombok.*;
 import server.model.enumerated.FaceOrientation;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
-public class Tank {
+public class Tank extends BaseDto {
+
+    private static final long serialVersionUID = -1189105722430448141L;
 
     private Integer playerId;
     private Integer gameId;
