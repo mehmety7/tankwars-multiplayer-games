@@ -1,9 +1,6 @@
 package client.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import client.model.entity.Player;
 
 import java.util.Map;
@@ -15,9 +12,9 @@ import java.util.Map;
 public class Game {
 
     private Integer id;
-    private Map<Player, Integer> players; // point
+    private Map<Integer, Integer> players; // point
     private Integer tourNumber;
-    private Float shootingSpeed;
+    private Double shootingSpeed;
     private String mapType;
     private Boolean isStarted;
 

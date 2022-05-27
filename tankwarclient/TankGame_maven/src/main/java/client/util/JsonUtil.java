@@ -1,5 +1,6 @@
 package client.util;
 
+import client.model.dto.Game;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -23,13 +24,20 @@ public class JsonUtil {
         gson = builder.create();
         return gson.fromJson(json, tClass);
     }
-
+/*
     public static <T> List<T> fromListJson(String jsonList) {
         GsonBuilder builder = new GsonBuilder();
         gson = builder.create();
 
         Type listType = new TypeToken<ArrayList<T>>() {}.getType();
         return gson.fromJson(jsonList, listType);
+    }
+*/
+
+
+    public static List<Game> fromListJson(String json) {
+        Type listType = new TypeToken<ArrayList<Game>>(){}.getType();
+        return new Gson().fromJson(json, listType);
     }
 
 }

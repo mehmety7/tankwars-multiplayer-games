@@ -33,8 +33,8 @@ public class LobbyPanel extends JPanel {
     //Games List
     List<Game> games = new ArrayList<>();
     List<Game> dummyGames = new ArrayList<>();
-    Game dummyGame1 = Game.builder().tourNumber(1).mapType("a").shootingSpeed(1.5f).id(2).build();
-    Game dummyGame2 = Game.builder().tourNumber(2).mapType("b").shootingSpeed(1f).id(3).build();Integer joinedGameRoomId;
+    Game dummyGame1 = Game.builder().tourNumber(1).mapType("a").shootingSpeed(1.5d).id(2).build();
+    Game dummyGame2 = Game.builder().tourNumber(2).mapType("b").shootingSpeed(1d).id(3).build();Integer joinedGameRoomId;
 
     public LobbyPanel(JPanel parentPanel, Integer playerId) {
         this.parentPanel = parentPanel;
@@ -116,7 +116,11 @@ public class LobbyPanel extends JPanel {
                 if(cs.response().contains("OK")){
                     String gamesDataString = cs.response().substring(2);
                     games.clear();
-                    games =  JsonUtil.fromListJson(gamesDataString);
+                    List<Game> games =  JsonUtil.fromListJson(gamesDataString);
+                    System.out.println(games.get(0));
+                    System.out.println(games.size());
+                    System.out.println(games.get(0).getId());
+                    System.out.println();
                 }else {
                     System.out.println("No available game or response error");
                     //JOptionPane.showMessageDialog(parentPanel, "No game or Response error");

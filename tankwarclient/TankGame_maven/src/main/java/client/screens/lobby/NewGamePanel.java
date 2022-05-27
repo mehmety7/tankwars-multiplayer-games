@@ -21,7 +21,7 @@ public class NewGamePanel extends JPanel {
     JTextField roomNameField = new JTextField();
     String roomName;
     int selectedTour;
-    float selectedShootSpeed;
+    double selectedShootSpeed;
     char selectedMapType;
 
     //ComboBoxes
@@ -57,7 +57,7 @@ public class NewGamePanel extends JPanel {
 
                 //get comboBox values
                 selectedTour = (int) tourNumber.getSelectedItem();
-                selectedShootSpeed = (float) shootSpeed.getSelectedItem();
+                selectedShootSpeed = (double) shootSpeed.getSelectedItem();
                 selectedMapType = (char) mapType.getSelectedItem();
 
                 //Player Id'si ile yeni oyun build et
