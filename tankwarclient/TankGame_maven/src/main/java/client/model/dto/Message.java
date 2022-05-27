@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Message {
 
+    private Integer playerId;   //Mesaj gönderirken gerekiyor builderda yoktu, ekledim
     private String playerUserName;
     private String text;
 
