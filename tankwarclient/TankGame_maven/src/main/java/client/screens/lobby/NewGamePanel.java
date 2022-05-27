@@ -29,7 +29,7 @@ public class NewGamePanel extends JPanel {
 
     //ComboBox values
     final Integer tourNumberValues[] = {1,2,3};
-    final Float shootSpeedValues[] = {1f, 1.5f, 2f};
+    final Double shootSpeedValues[] = {1d, 1.5d, 2d};
     final Character[] mapTypeValues = {'a','b','c'};
 
     //Buttons
