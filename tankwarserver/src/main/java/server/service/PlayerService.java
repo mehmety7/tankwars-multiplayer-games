@@ -22,7 +22,7 @@ public class PlayerService {
     private static final List<Player> testPlayers = Arrays.asList(
             Player.builder().id(1).username("player1").password(HashUtil.hashValue("test")).isActive(Boolean.FALSE).build(),
             Player.builder().id(2).username("player2").password(HashUtil.hashValue("test")).isActive(Boolean.FALSE).build(),
-            Player.builder().id(2).username("player3").password(HashUtil.hashValue("test")).isActive(Boolean.FALSE).build()
+            Player.builder().id(3).username("player3").password(HashUtil.hashValue("test")).isActive(Boolean.FALSE).build()
     );
 
     public static PlayerService getInstance() {

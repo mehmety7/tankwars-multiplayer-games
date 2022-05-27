@@ -9,7 +9,7 @@ import server.service.navigator.ServiceOperationNavigator;
 
 public class BeanHandler {
 
-    public static final DataPersistence dataPersistence = DataPersistence.getInstance();
+    public static final DataPersistence dataPersistence = null;
     public static final InMemoryDao inMemoryDao = InMemoryDao.getInstance();
     public static final PlayerDao playerDao = PlayerDao.getInstance();
 
