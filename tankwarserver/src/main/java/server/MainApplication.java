@@ -4,6 +4,7 @@ import server.model.dto.Game;
 import server.model.dto.Statistic;
 import server.model.dto.Tank;
 import server.model.entity.Player;
+import server.model.enumerated.FaceOrientation;
 import server.model.request.JoinGameRequest;
 import server.model.response.AboutUsResponse;
 import server.utilization.JsonUtil;
@@ -15,68 +16,58 @@ import java.util.List;
 public class MainApplication {
 
     public static void main(String[] args) {
-/*
-        TankService tankService = new TankService();
-        tankService.createOrUpdateTank(Tank.builder().playerId(1).build());
-        Tank tank = tankService.getTank(1);
 
-        String json = JsonUtil.toJson(tank);
+        HashMap<Integer, Integer> players = new HashMap<>();
+        players.put(1,1);
+        players.put(2,1);
+        players.put(3,1);
 
-        System.out.println(tank);
-        System.out.println(JsonUtil.toJson(tank));
-        System.out.println(JsonUtil.fromJson(json, Tank.class));
-*/
+        HashMap<Integer, Integer> players2 = new HashMap<>();
+        players2.put(1,1);
+        players2.put(2,1);
+        players2.put(3,1);
 
-        /*
-        PlayerDao playerDao = PlayerDao.getInstance();
+        System.out.println("---------------------");
+        System.out.println("Test with Game List");
+        System.out.println("---------------------");
 
-        System.out.println(playerDao.createPlayer(Player.builder().username("adam").password("smith").build()));
-
-        List<Player> players = playerDao.getActivePlayers();
-        System.out.println(players.get(0).getUsername());
-
-        Player player = playerDao.getPlayer(2);
-        System.out.println(player.getUsername());
-
-        Player player1 = playerDao.getPlayer("adam");
-        System.out.println(player1.getPassword());
-
-        playerDao.updateActive(3);
-
-        playerDao.deletePlayer(6);
-
-        playerDao.getDataPersistence().getConnection().close();
-        */
-
-        String SPLITTER = "}" + ",";
-
-
-        Game game1 = Game.builder().id(1).shootingSpeed(5.0).tourNumber(2).build();
-        game1.setPlayers(new HashMap<>());
-        game1.getPlayers().put(1, 5);
-        Game game2 = Game.builder().id(2).shootingSpeed(5.0).tourNumber(2).build();
-
-
-        String json = JsonUtil.toJson(game1);
-        System.out.println(json);
-        Game game = JsonUtil.fromJson(json, Game.class);
-        System.out.println(JsonUtil.toJson(game));
-        System.out.println(game.getPlayers().getClass());
-
-
+        Game game1 = Game.builder().id(1).players(players).shootingSpeed(5.0).tourNumber(2).mapType("a").build();
+        Game game2 = Game.builder().id(2).players(players2).shootingSpeed(5.0).tourNumber(2).mapType("b").build();
         List<Game> games = Arrays.asList(game1, game2);
 
-        String listJson = JsonUtil.toJson(games);
+        String gamesJsonList = JsonUtil.toJson(games);
+        System.out.println(gamesJsonList);
 
-        List<Game> result = JsonUtil.fromListJson(listJson);
-
-
-        System.out.println(result.get(0));
-        System.out.println(result.get(1));
-
-
+        List<Game> result = JsonUtil.fromListJson(gamesJsonList, Game[].class);
+        for (Game game : result) {
+            System.out.println(game);
+        }
 
 
+        System.out.println("---------------------");
+        System.out.println("Test with Tank List");
+        System.out.println("---------------------");
+
+        Tank tank1 = Tank.builder().gameId(1).playerId(2).faceOrientation(FaceOrientation.DOWN).build();
+        Tank tank2 = Tank.builder().gameId(1).playerId(3).faceOrientation(FaceOrientation.UP).build();
+        List<Tank> tanks = Arrays.asList(tank1, tank2);
+
+        String tanksJsonList = JsonUtil.toJson(tanks);
+        System.out.println(tanks);
+
+        List<Tank> result2 = JsonUtil.fromListJson(tanksJsonList, Tank[].class);
+        for (Tank tank : result2) {
+            System.out.println(tank);
+        }
+
+
+
+
+
+
+
+        System.out.println("---------------------");
+        System.out.println("Old Trails");
         System.out.println("---------------------");
         System.out.println(JsonUtil.toJson(Game.builder().build()));
         System.out.println(JsonUtil.toJson(JoinGameRequest.builder().build()));

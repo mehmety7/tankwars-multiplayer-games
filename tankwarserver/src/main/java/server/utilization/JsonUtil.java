@@ -3,9 +3,11 @@ package server.utilization;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import server.model.dto.BaseDto;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class JsonUtil {
@@ -24,12 +26,13 @@ public class JsonUtil {
         return gson.fromJson(json, tClass);
     }
 
-    public static <T> List<T> fromListJson(String jsonList) {
+    public static <T> List<T> fromListJson(String jsonList, Class<T[]> classList) {
         GsonBuilder builder = new GsonBuilder();
         gson = builder.create();
 
-        Type listType = new TypeToken<ArrayList<T>>() {}.getType();
-        return gson.fromJson(jsonList, listType);
+        final T[] jsonToObject = new Gson().fromJson(jsonList, classList);
+
+        return Arrays.asList(jsonToObject);
     }
 
 }
