@@ -116,7 +116,7 @@ public class LobbyPanel extends JPanel {
                 if(cs.response().contains("OK")){
                     String gamesDataString = cs.response().substring(2);
                     games.clear();
-                    List<Game> games =  JsonUtil.fromListJson(gamesDataString);
+                    games =  JsonUtil.fromListJson(gamesDataString);
                 }else {
                     System.out.println("No available game or response error");
                     //JOptionPane.showMessageDialog(parentPanel, "No game or Response error");
