@@ -147,6 +147,14 @@ public class ServiceOperationNavigator {
             return OK;
         }
 
+        else if (isEqual(protocol, MethodType.GP)){
+            Player player = playerService.getPlayer(JsonUtil.fromJson(protocol.getMessage(), Player.class).getId());
+            if (Objects.isNull(player)) {
+                return FAIL;
+            }
+            return OK + JsonUtil.toJson(player);
+        }
+
         else {
             return FAIL;
         }
