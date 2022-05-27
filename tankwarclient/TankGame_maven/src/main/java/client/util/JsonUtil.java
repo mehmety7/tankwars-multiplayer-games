@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class JsonUtil {
@@ -33,11 +34,15 @@ public class JsonUtil {
         return gson.fromJson(jsonList, listType);
     }
 */
+    public static <T> List<T> fromListJson(String jsonList, Class<T[]> classList) {
+        GsonBuilder builder = new GsonBuilder();
+        gson = builder.create();
 
+        final T[] jsonToObject = new Gson().fromJson(jsonList, classList);
 
-    public static List<Game> fromListJson(String json) {
-        Type listType = new TypeToken<ArrayList<Game>>(){}.getType();
-        return new Gson().fromJson(json, listType);
+        return Arrays.asList(jsonToObject);
     }
+
+
 
 }

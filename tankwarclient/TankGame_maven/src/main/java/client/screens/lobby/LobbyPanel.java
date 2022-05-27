@@ -36,7 +36,6 @@ public class LobbyPanel extends JPanel {
     JLabel gameTitleLabel = new JLabel("TankWars Games");
 
     //Games List
-    List<Game> games = new ArrayList<>();
     List<Game> dummyGames = new ArrayList<>();
     Game dummyGame1 = Game.builder().tourNumber(1).mapType("a").shootingSpeed(1.5d).id(2).build();
     Game dummyGame2 = Game.builder().tourNumber(2).mapType("b").shootingSpeed(1d).id(3).build();Integer joinedGameRoomId;
@@ -118,38 +117,41 @@ public class LobbyPanel extends JPanel {
 
                 if(cs.response().contains("OK")){
                     String gamesDataString = cs.response().substring(2);
-                    games.clear();
                     gameRooms.removeAll();
-                    games =  JsonUtil.fromListJson(gamesDataString);
+                    //games.clear();
+                    List <Game> games =  JsonUtil.fromListJson(gamesDataString, Game[].class);
                     System.out.println("games\n" + games);
                     //System.out.println(games.size());
                     //System.out.println(games.get(0).getId());
                     System.out.println();
+
+                    for(Game game : games){
+                        String gameInfoString = String.format("Tour:%d Speed:%.1f Map:%s",game.getTourNumber(),
+                                game.getShootingSpeed(),game.getMapType());
+                        Integer gameId = game.getId();
+                        JLabel gameInfo = new JLabel(gameInfoString);
+                        JButton joinButton = new JButton("JOİN"+gameId);
+                        JPanel gameComponent = new JPanel(new FlowLayout());
+                        gameComponent.setSize(new Dimension(150,30));
+                        gameComponent.add(gameInfo);
+                        gameComponent.add(joinButton);
+                        joinButton.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                //cs.sendMessage("JG",{ne yazacam aw}); --> gameId ve playerId gidecek
+                                System.out.println(gameId);
+                            }
+                        });
+
+                        gameRooms.add(gameComponent);
+                    }
+
                 }else {
                     System.out.println("No available game or response error");
                     //JOptionPane.showMessageDialog(parentPanel, "No game or Response error");
                 }
 
-                for(int i=0;i<games.size();i++){
-                    String gameInfoString = String.format("Tour:%d Speed:%.1f Map:%s",games.get(i).getTourNumber(),
-                            games.get(i).getShootingSpeed(),games.get(i).getMapType());
-                    Integer gameId = games.get(i).getId();
-                    JLabel gameInfo = new JLabel(gameInfoString);
-                    JButton joinButton = new JButton("JOİN"+gameId);
-                    JPanel gameComponent = new JPanel(new FlowLayout());
-                    gameComponent.setSize(new Dimension(150,30));
-                    gameComponent.add(gameInfo);
-                    gameComponent.add(joinButton);
-                    joinButton.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            //cs.sendMessage("JG",{ne yazacam aw}); --> gameId ve playerId gidecek
-                            System.out.println(gameId);
-                        }
-                    });
 
-                    gameRooms.add(gameComponent);
-                }
 
 
                 //Refreshing page
