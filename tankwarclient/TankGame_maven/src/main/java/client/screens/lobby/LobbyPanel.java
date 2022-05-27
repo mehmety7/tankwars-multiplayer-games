@@ -1,6 +1,7 @@
 package client.screens.lobby;
 
 import client.model.dto.Game;
+import client.model.dto.Message;
 import client.model.entity.Player;
 import client.services.SingletonSocketService;
 import client.socket.ClientSocket;
@@ -10,12 +11,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LobbyPanel extends JPanel {
     JPanel parentPanel = new JPanel();
 
+    //Panels
     JPanel buttonsPanel = new JPanel();
+    JPanel gameRooms = new JPanel(new GridLayout(0,1));
+    JPanel chat = new JPanel(new GridLayout(0,1));
 
     //Buttons
     JButton newGameButton = new JButton("New Game");
@@ -29,10 +36,9 @@ public class LobbyPanel extends JPanel {
     JLabel gameTitleLabel = new JLabel("TankWars Games");
 
     //Games List
-    List<Game> games;
-    Game dummyGame1 = Game.builder().tourNumber(1).mapType("a").shootingSpeed(1.5f).id(2).build();
-    Game dummyGame2 = Game.builder().tourNumber(2).mapType("b").shootingSpeed(1f).id(3).build();
-
+    List<Game> dummyGames = new ArrayList<>();
+    Game dummyGame1 = Game.builder().tourNumber(1).mapType("a").shootingSpeed(1.5d).id(2).build();
+    Game dummyGame2 = Game.builder().tourNumber(2).mapType("b").shootingSpeed(1d).id(3).build();Integer joinedGameRoomId;
 
     public LobbyPanel(JPanel parentPanel, Integer playerId) {
         this.parentPanel = parentPanel;
@@ -102,26 +108,86 @@ public class LobbyPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 //TODO refresh lobby panel, get active games
                 ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
-
-                //client socket data istiyor sendMessage overload edildi
                 cs.sendMessage("GU",null);
+                System.out.println("SERVER RESPONSE (GU) "+cs.response());
+
+                //dummyGames listesi
+                dummyGames.add(dummyGame1);
+                dummyGames.add(dummyGame2);
 
                 if(cs.response().contains("OK")){
                     String gamesDataString = cs.response().substring(2);
-                    games = JsonUtil.fromListJson(gamesDataString);
+                    gameRooms.removeAll();
+                    //games.clear();
+                    List <Game> games =  JsonUtil.fromListJson(gamesDataString, Game[].class);
+                    System.out.println("games\n" + games);
+                    //System.out.println(games.size());
+                    //System.out.println(games.get(0).getId());
+                    System.out.println();
+
+                    for(Game game : games){
+                        String gameInfoString = String.format("Tour:%d Speed:%.1f Map:%s",game.getTourNumber(),
+                                game.getShootingSpeed(),game.getMapType());
+                        Integer gameId = game.getId();
+                        JLabel gameInfo = new JLabel(gameInfoString);
+                        JButton joinButton = new JButton("JOİN"+gameId);
+                        JPanel gameComponent = new JPanel(new FlowLayout());
+                        gameComponent.setSize(new Dimension(150,30));
+                        gameComponent.add(gameInfo);
+                        gameComponent.add(joinButton);
+                        joinButton.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                //cs.sendMessage("JG",{ne yazacam aw}); --> gameId ve playerId gidecek
+                                System.out.println(gameId);
+                            }
+                        });
+
+                        gameRooms.add(gameComponent);
+                    }
+
                 }else {
                     System.out.println("No available game or response error");
                     //JOptionPane.showMessageDialog(parentPanel, "No game or Response error");
                 }
 
+
+
+
                 //Refreshing page
-                /*
-                * revalidate();
-                * repaint();
-                */
+                 //revalidate();
+                 //repaint();
+                gameRooms.updateUI();
 
             }
         });
+
+        gameRooms.setPreferredSize(new Dimension(300,200));
+        gameRooms.setBackground(Color.ORANGE);
+
+        chat.setBackground(Color.cyan);
+        chat.setSize(new Dimension(200,200));
+        JTextField chatInput = new JTextField("Type Message");
+        chatInput.setSize(new Dimension(200,30));
+        chatInput.setBackground(Color.yellow);
+        chatInput.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {}
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode()== KeyEvent.VK_ENTER){
+                    ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
+                    Message message = Message.builder().playerId(playerId).playerUserName("Burak").text(chatInput.getText()).build();
+                    //cs.sendMessage("CM",message); //--> server tarafında eklenmemiş
+                    System.out.println("CHAT INPUT "+chatInput.getText());
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {}
+        });
+        chat.add(chatInput);
 
         //Customize Buttons
         newGameButton.setBackground(Color.BLUE);
@@ -140,7 +206,7 @@ public class LobbyPanel extends JPanel {
         logoutButton.setForeground(Color.WHITE);
         logoutButton.setFocusable(false);
 
-        refreshButton.setForeground(Color.BLUE);
+        refreshButton.setBackground(Color.BLUE);
         refreshButton.setForeground(Color.WHITE);
         refreshButton.setFocusable(false);
 
@@ -155,6 +221,7 @@ public class LobbyPanel extends JPanel {
 
         this.add(gameTitleLabel);
         this.add(buttonsPanel);
-
+        this.add(gameRooms);
+        this.add(chat);
     }
 }
