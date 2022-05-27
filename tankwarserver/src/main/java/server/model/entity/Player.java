@@ -3,8 +3,6 @@ package server.model.entity;
 import lombok.*;
 import server.model.dto.BaseDto;
 
-import java.io.Serializable;
-
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
