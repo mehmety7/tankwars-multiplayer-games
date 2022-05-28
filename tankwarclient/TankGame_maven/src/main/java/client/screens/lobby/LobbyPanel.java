@@ -146,6 +146,17 @@ public class LobbyPanel extends JPanel {
                     JOptionPane.showMessageDialog(parentPanel, "No game or Response error");
                 }
 
+                cs.sendMessage("GM",null);
+                if(cs.response().contains("OK")){
+                    String messagesDataString = cs.response().substring(2);
+
+                    List <Message> messages =  JsonUtil.fromListJson(messagesDataString, Message[].class);
+                    System.out.println("games\n" + messages);
+                    System.out.println();
+                }else {
+                    System.out.println("No available message or response error");
+                    JOptionPane.showMessageDialog(parentPanel, "No message or Response error");
+                }
                 gameRooms.updateUI();
 
             }
