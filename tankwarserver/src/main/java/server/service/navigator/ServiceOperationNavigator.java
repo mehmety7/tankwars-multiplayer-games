@@ -164,12 +164,21 @@ public class ServiceOperationNavigator {
             return OK;
         }
 
-        else if (isEqual(protocol, MethodType.GP)){
+
+        else if (isEqual(protocol, MethodType.GP)) {
             Player player = playerService.getPlayer(JsonUtil.fromJson(protocol.getMessage(), Player.class).getId());
             if (Objects.isNull(player)) {
                 return FAIL;
             }
             return OK + JsonUtil.toJson(player);
+        }
+
+        else if(isEqual(protocol, MethodType.AG)) {
+            List<Player> playerList = playerService.getActivePlayers();
+            if(playerList == null || playerList.isEmpty()) {
+                return FAIL;
+            }
+            return OK + JsonUtil.toJson(playerList);
         }
 
         else {

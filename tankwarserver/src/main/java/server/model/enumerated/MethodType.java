@@ -17,5 +17,6 @@ public enum MethodType {
     SF,
     UG,
     UD,
-    GP
+    GP,
+    AG
 }

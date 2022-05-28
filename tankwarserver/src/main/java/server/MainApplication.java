@@ -7,6 +7,8 @@ import server.model.entity.Player;
 import server.model.enumerated.FaceOrientation;
 import server.model.request.JoinGameRequest;
 import server.model.response.AboutUsResponse;
+import server.service.navigator.ServiceOperationNavigator;
+import server.socket.Protocol;
 import server.utilization.JsonUtil;
 
 import java.util.Arrays;
@@ -39,9 +41,15 @@ public class MainApplication {
         System.out.println(gamesJsonList);
 
         List<Game> result = JsonUtil.fromListJson(gamesJsonList, Game[].class);
+        System.out.println(result.get(0).getId());
         for (Game game : result) {
             System.out.println(game);
         }
+
+        Protocol prot = new Protocol();
+        prot.setMethodType("AG");
+        String f = ServiceOperationNavigator.getInstance().doOperation(prot);
+        System.out.println(f);
 
 
         System.out.println("---------------------");
@@ -56,6 +64,7 @@ public class MainApplication {
         System.out.println(tanks);
 
         List<Tank> result2 = JsonUtil.fromListJson(tanksJsonList, Tank[].class);
+        System.out.println(result2.get(0).getPlayerId());
         for (Tank tank : result2) {
             System.out.println(tank);
         }
