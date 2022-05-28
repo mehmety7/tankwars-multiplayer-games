@@ -11,7 +11,7 @@ public class InMemoryDao {
 
     public Map<Integer, Game> games;
     public Map<Integer, Tank> tanks;
-    public List<Pair<Integer, Bullet>> bullets;
+    public List<Pair<Integer, Bullet>> bullets; //integer burada gameID olmalı. Bulletlarda zaten tankID yani playerID var.
     public List<Statistic> statistics;
     public List<Message> messages;
 

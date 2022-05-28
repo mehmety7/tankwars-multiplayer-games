@@ -77,7 +77,7 @@ public class TankService {
         return getTanksInGame(gameId);
     }
 
-    private void createOrUpdateTank(Tank tank) {
+    public void createOrUpdateTank(Tank tank) {
         inMemoryDao.tanks.put(tank.getPlayerId(), tank);
     }
 
@@ -96,7 +96,7 @@ public class TankService {
     }
 
     public Tank deleteTank(Integer playerId) {
-        bulletService.removeBullets(playerId);
+        bulletService.removeBulletsForPlayer(playerId);
         return inMemoryDao.tanks.remove(playerId);
     }
     /* Tank ateş ettiğinde onun önünde bir mermi oluşturulacak.
@@ -105,7 +105,6 @@ public class TankService {
     *  Bu arada fonksiyon için daha yaratıcı bir isim bekliyorum.
     *  Service katmanında shoot demek bana garip geldi :D */
     public Tank createBullet(Tank tank){
-        //TODO: Merminin konumunu tankın biraz ilerisinde olacak şekilde ayarla
         int offsetX = 0;
         int offsetY = 0;
         switch (tank.getFaceOrientation()){

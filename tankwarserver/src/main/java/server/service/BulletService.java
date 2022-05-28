@@ -12,6 +12,7 @@ import server.utilization.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class BulletService {
@@ -35,8 +36,12 @@ public class BulletService {
         return bullet;
     }
 
-    public void removeBullets(Integer playerId){
-        inMemoryDao.bullets.removeIf(bulletPair -> bulletPair.getFirst().equals(playerId));
+    public void removeBulletsForPlayer(Integer playerId){
+        inMemoryDao.bullets.removeIf(bulletPair -> bulletPair.getSecond().getTankId().equals(playerId));
+    }
+
+    public void removeBulletsForGame(Integer gameId){
+        inMemoryDao.bullets.removeIf(integerBulletPair -> integerBulletPair.getFirst().equals(gameId));
     }
 
     private boolean isTankGotHit(Bullet bullet, Tank tank){
@@ -76,5 +81,13 @@ public class BulletService {
             }
         }));
         return hittedTankList;
+    }
+
+    public List<Bullet> getBullets(Integer gameId){
+        return inMemoryDao.bullets
+                .stream()
+                .filter(integerBulletPair -> integerBulletPair.getFirst().equals(gameId))
+                .map(Pair::getSecond)
+                .collect(Collectors.toList());
     }
 }

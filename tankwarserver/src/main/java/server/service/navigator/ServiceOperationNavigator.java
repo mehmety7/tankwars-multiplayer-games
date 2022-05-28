@@ -11,12 +11,15 @@ import server.model.entity.Player;
 import server.model.enumerated.MethodType;
 import server.model.request.CreateGameRequest;
 import server.model.request.JoinGameRequest;
+import server.model.request.UpdateGameRequest;
+import server.model.response.UpdateGameResponse;
 import server.service.*;
 import server.socket.Protocol;
 import server.utilization.JsonUtil;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ServiceOperationNavigator {
 
@@ -157,10 +160,23 @@ public class ServiceOperationNavigator {
         }
 
         else if (isEqual(protocol, MethodType.UG)){
-            return OK;
+            UpdateGameRequest gameRequest = JsonUtil.fromJson(protocol.getMessage(), UpdateGameRequest.class);
+            if(gameService.getGame(gameRequest.getGameId()).getIsStarted().equals(Boolean.FALSE))
+                return FAIL;
+            UpdateGameResponse response = UpdateGameResponse.builder()
+                    .players(gameService.getGame(gameRequest.getGameId())
+                            .getPlayers()
+                            .keySet()
+                            .stream()
+                            .map(playerService::getPlayer)
+                            .collect(Collectors.toList()))
+                    .bullets(bulletService.getBullets(gameRequest.getGameId()))
+                    .build();
+            return OK + JsonUtil.toJson(response);
         }
 
         else if (isEqual(protocol, MethodType.UD)){
+            tankService.createOrUpdateTank(JsonUtil.fromJson(protocol.getMessage(), Tank.class));
             return OK;
         }
 
