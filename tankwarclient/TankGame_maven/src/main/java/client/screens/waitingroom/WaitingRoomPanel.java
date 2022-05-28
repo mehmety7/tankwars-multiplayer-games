@@ -31,9 +31,12 @@ public class WaitingRoomPanel extends JPanel {
     JButton startGameBtn = new JButton("Start the Game");
 
     public WaitingRoomPanel(JPanel parentPanel, Integer playerId, Integer gameId) {
-
         this.waitingRoomService = new WaitingRoomService();
         this.currentGame = waitingRoomService.getGame(gameId);
+
+        if (gameId.equals(playerId)) {
+            backToLobbyBtn.setText("Close the Room!");
+        }
 
 
         this.parentPanel = parentPanel;
@@ -71,11 +74,16 @@ public class WaitingRoomPanel extends JPanel {
             public void run() {
                 currentGame = waitingRoomService.getGame(gameId);
                 if (currentGame == null) {
+                    t.cancel();
                     CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                     cardLayout.show(parentPanel, "lobbyPanel");
                 }
+                playersPanel.removeAll();
+                addToPlayersPanel();
+                playersPanel.revalidate();
+                playersPanel.repaint();
             }
-        }, 0, 2000);
+        }, 0, 1000);
     }
 
     private void addToMainPanel() {
@@ -88,7 +96,7 @@ public class WaitingRoomPanel extends JPanel {
         bodyPanel.add(playersPanel);
         bodyPanel.add(Box.createHorizontalStrut(75));
         bodyPanel.add(gameDetailPanel);
-        addToPlayersPanel();
+//        addToPlayersPanel();
         addToGameDetailPanel();
     }
 
