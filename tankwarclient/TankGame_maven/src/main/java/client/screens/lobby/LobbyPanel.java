@@ -3,7 +3,7 @@ package client.screens.lobby;
 import client.model.dto.Game;
 import client.model.dto.Message;
 import client.model.entity.Player;
-import client.model.request.JoinGameRequest;
+import client.model.request.PlayerGameRequest;
 import client.screens.leadership.LeadershipPanel;
 import client.screens.waitingroom.WaitingRoomPanel;
 import client.services.SingletonSocketService;
@@ -143,8 +143,8 @@ public class LobbyPanel extends JPanel {
                         joinButton.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                JoinGameRequest joinGameRequest = JoinGameRequest.builder().gameId(gameId).playerId(playerId).build();
-                                cs.sendMessage("JG",joinGameRequest);
+                                PlayerGameRequest playerGameRequest = PlayerGameRequest.builder().gameId(gameId).playerId(playerId).build();
+                                cs.sendMessage("JG", playerGameRequest);
                                 System.out.println(gameId);
                                 WaitingRoomPanel waitingRoomPanel = new WaitingRoomPanel(parentPanel, playerId, gameId);
                                 parentPanel.add(waitingRoomPanel, "waitingRoomPanel");
