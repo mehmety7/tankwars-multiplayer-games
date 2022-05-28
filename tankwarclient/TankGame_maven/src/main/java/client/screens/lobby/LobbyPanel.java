@@ -83,7 +83,7 @@ public class LobbyPanel extends JPanel {
                 Player player = Player.builder().id(playerId).build();
                 cs.sendMessage("LT",player);
 
-                if(cs.response().contains("OK")){
+                if(cs.response().startsWith("OK")){
                     CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                     cardLayout.show(parentPanel, "loginPanel");
                 }else {
@@ -103,7 +103,7 @@ public class LobbyPanel extends JPanel {
                 cs.sendMessage("GU",null);
                 System.out.println("SERVER RESPONSE (GU) "+cs.response());
 
-                if(cs.response().contains("OK")){
+                if(cs.response().startsWith("OK")){
                     String gamesDataString = cs.response().substring(2);
                     gameRooms.removeAll();
                     List <Game> games =  JsonUtil.fromListJson(gamesDataString, Game[].class);
