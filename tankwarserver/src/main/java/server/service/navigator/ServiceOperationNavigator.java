@@ -126,8 +126,8 @@ public class ServiceOperationNavigator {
         }
 
         else if (isEqual(protocol, MethodType.SG)){
-            Game game = JsonUtil.fromJson(protocol.getMessage(), Game.class);
-            if(Objects.isNull(gameService.getGame(game.getId())))
+            Game game = gameService.getGame(JsonUtil.fromJson(protocol.getMessage(), Game.class).getId());
+            if(Objects.isNull(game))
                 return FAIL;
             if(game.getPlayers().size() < ConstantsForInnerLogic.minimumPlayers)
                 return FAIL;
