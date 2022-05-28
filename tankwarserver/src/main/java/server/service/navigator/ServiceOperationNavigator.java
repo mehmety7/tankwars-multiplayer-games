@@ -1,5 +1,6 @@
 package server.service.navigator;
 
+import lombok.RequiredArgsConstructor;
 import server.bean.BeanHandler;
 import server.constants.ConstantsForInnerLogic;
 import server.extensions.GameExtension;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public class ServiceOperationNavigator {
 
     private static ServiceOperationNavigator serviceOperationNavigator;
@@ -28,16 +30,18 @@ public class ServiceOperationNavigator {
     public static String OK = "OK";
     public static String FAIL = "FL";
 
-    private final PlayerService playerService = BeanHandler.playerService;
-    private final GameService gameService = BeanHandler.gameService;
-    private final StatisticService statisticService = BeanHandler.statisticService;
-    private final TankService tankService = BeanHandler.tankService;
-    private final MessageService messageService = BeanHandler.messageService;
-    private final BulletService bulletService = BeanHandler.bulletService;
+    private final PlayerService playerService;
+    private final TankService tankService;
+    private final GameService gameService;
+    private final StatisticService statisticService;
+    private final MessageService messageService;
 
     public static ServiceOperationNavigator getInstance() {
         if (Objects.isNull(serviceOperationNavigator)) {
-            serviceOperationNavigator = new ServiceOperationNavigator();
+            serviceOperationNavigator =
+                    new ServiceOperationNavigator(BeanHandler.playerService, BeanHandler.tankService,
+                            BeanHandler.gameService, BeanHandler.statisticService,
+                            BeanHandler.messageService);
         }
         return serviceOperationNavigator;
     }
@@ -181,7 +185,7 @@ public class ServiceOperationNavigator {
                             .stream()
                             .map(tankService::getTank)
                             .collect(Collectors.toList()))
-                    .bullets(bulletService.getBullets(game.getId()))
+                    .bullets(tankService.getBullets(game.getId()))
                     .build();
             return OK + JsonUtil.toJson(response);
         }
