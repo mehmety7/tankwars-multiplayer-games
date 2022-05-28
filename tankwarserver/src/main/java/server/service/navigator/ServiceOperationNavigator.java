@@ -192,11 +192,11 @@ public class ServiceOperationNavigator {
         }
 
         else if(isEqual(protocol, MethodType.AG)) {
-            List<Player> playerList = playerService.getActivePlayers();
-            if(playerList == null || playerList.isEmpty()) {
+            List<Player> players = playerService.getActivePlayers();
+            if(players.isEmpty()) {
                 return FAIL;
             }
-            return OK + JsonUtil.toJson(playerList);
+            return OK + JsonUtil.toJson(players);
         }
 
         else {
