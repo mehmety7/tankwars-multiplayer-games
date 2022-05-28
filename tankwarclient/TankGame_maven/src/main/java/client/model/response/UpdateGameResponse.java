@@ -1,7 +1,7 @@
 package client.model.response;
 
 import client.model.dto.Bullet;
-import client.model.entity.Player;
+import client.model.dto.Tank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class UpdateGameResponse {
-    private List<Player> players;
+    private List<Tank> tanks;
     private List<Bullet> bullets;
 }
