@@ -1,35 +1,35 @@
 package client.screens.waitingroom;
 
 import client.model.dto.Game;
-import client.services.SingletonSocketService;
-import client.socket.ClientSocket;
+import client.services.WaitingRoomService;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class WaitingRoomPanel extends JPanel {
+    WaitingRoomService waitingRoomService;
+    Game currentGame;
     JPanel parentPanel;
     Integer playerId;
     Integer gameId;
     JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-
     JPanel bodyPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
     JPanel playersPanel = new JPanel();
     JPanel gameDetailPanel = new JPanel();
     JLabel waitingRoomTitle = new JLabel();
+    JLabel isStartStatusLabel = new JLabel();
     JButton backToLobbyBtn = new JButton("Back to Lobby");
     JButton startGameBtn = new JButton("Start the Game");
 
     public WaitingRoomPanel(JPanel parentPanel, Integer playerId, Integer gameId) {
-        ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
-        cs.sendMessage("GG", new Game(gameId, null, null, null, null, null));
-        System.out.println("Server response: " + cs.response());
+        this.waitingRoomService = new WaitingRoomService();
+        this.currentGame = waitingRoomService.getGame(gameId);
+
 
         this.parentPanel = parentPanel;
         this.playerId = playerId;
@@ -46,7 +46,11 @@ public class WaitingRoomPanel extends JPanel {
         startGameBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                if (waitingRoomService.isStartGame(gameId)) {
+                    waitingRoomService.startGame(gameId);
+                } else {
+                    isStartStatusLabel.setText("You can not start the game!");
+                }
             }
         });
 
@@ -73,12 +77,14 @@ public class WaitingRoomPanel extends JPanel {
     private void addToGameDetailPanel() {
         gameDetailPanel.setLayout(new BoxLayout(gameDetailPanel, BoxLayout.Y_AXIS));
         gameDetailPanel.add(startGameBtn);
+        gameDetailPanel.add(isStartStatusLabel);
     }
 
     private void addToPlayersPanel() {
         playersPanel.setLayout(new BoxLayout(playersPanel, BoxLayout.Y_AXIS));
-        List<String> mockPlayers = new ArrayList<>(List.of("test1", "test2", "test3"));
-        for (String player : mockPlayers) {
+        List<String> players = getUsernames();
+        System.out.println(players);
+        for (String player : players) {
             JLabel playerLabel = new JLabel(player);
             playerLabel.setBackground(Color.BLUE);
             playerLabel.setOpaque(true);
@@ -101,5 +107,11 @@ public class WaitingRoomPanel extends JPanel {
     private void setWaitingRoomTitle() {
         waitingRoomTitle.setText("Game-" + gameId + " Waiting Room");
         waitingRoomTitle.setFont(new Font("Verdana", Font.PLAIN, 24));
+    }
+
+    private List<String> getUsernames() {
+        Map<Integer, Integer> players = currentGame.getPlayers();
+        List<Integer> playerIds = players.keySet().stream().toList();
+        return this.waitingRoomService.getUsernames(playerIds);
     }
 }

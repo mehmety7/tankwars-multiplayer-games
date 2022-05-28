@@ -22,8 +22,8 @@ public class LobbyPanel extends JPanel {
 
     //Panels
     JPanel buttonsPanel = new JPanel();
-    JPanel gameRooms = new JPanel(new GridLayout(0,1));
-    JPanel chat = new JPanel(new GridLayout(0,1));
+    JPanel gameRooms = new JPanel(new GridLayout(0, 1));
+    JPanel chat = new JPanel(new GridLayout(0, 1));
 
     //Buttons
     JButton newGameButton = new JButton("New Game");
@@ -39,11 +39,12 @@ public class LobbyPanel extends JPanel {
     //Games List
     List<Game> dummyGames = new ArrayList<>();
     Game dummyGame1 = Game.builder().tourNumber(1).mapType("a").shootingSpeed(1.5d).id(2).build();
-    Game dummyGame2 = Game.builder().tourNumber(2).mapType("b").shootingSpeed(1d).id(3).build();Integer joinedGameRoomId;
+    Game dummyGame2 = Game.builder().tourNumber(2).mapType("b").shootingSpeed(1d).id(3).build();
+    Integer joinedGameRoomId;
 
     public LobbyPanel(JPanel parentPanel, Integer playerId) {
         this.parentPanel = parentPanel;
-        GridLayout gridLayout = new GridLayout(4,2);
+        GridLayout gridLayout = new GridLayout(4, 2);
         setLayout(gridLayout);
         gridLayout.setHgap(20);
         gridLayout.setVgap(10);
@@ -54,11 +55,11 @@ public class LobbyPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 //TODO bu kısım bitti gibi?
                 //Lobby ekranına gelen player datası içindeki playerIdyi newGamePanelına ilet
-                NewGamePanel newGamePanel = new NewGamePanel(parentPanel,playerId);
-                parentPanel.add(newGamePanel,"newGamePanel");
+                NewGamePanel newGamePanel = new NewGamePanel(parentPanel, playerId);
+                parentPanel.add(newGamePanel, "newGamePanel");
 
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
-                cardLayout.show(parentPanel,"newGamePanel");
+                cardLayout.show(parentPanel, "newGamePanel");
             }
         });
 
@@ -68,7 +69,7 @@ public class LobbyPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
-                cardLayout.show(parentPanel,"leadershipPanel");
+                cardLayout.show(parentPanel, "leadershipPanel");
             }
         });
 
@@ -78,7 +79,7 @@ public class LobbyPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 //TODO statik sayfa Home'dan ulaşılabilir bitti gibi?
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
-                cardLayout.show(parentPanel,"aboutUsPanel");
+                cardLayout.show(parentPanel, "aboutUsPanel");
             }
         });
 
@@ -89,12 +90,12 @@ public class LobbyPanel extends JPanel {
                 //TODO perform LogOut
                 ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
                 Player player = Player.builder().id(playerId).build();
-                cs.sendMessage("LT",player);
+                cs.sendMessage("LT", player);
 
-                if(cs.response().contains("OK")){
+                if (cs.response().contains("OK")) {
                     CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                     cardLayout.show(parentPanel, "loginPanel");
-                }else {
+                } else {
                     System.out.println("LogOut response hatası");
                     //TODO GUI warning message
                     //JOptionPane.showMessageDialog(parentPanel,"LogOut Error");
@@ -109,31 +110,31 @@ public class LobbyPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 //TODO refresh lobby panel, get active games
                 ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
-                cs.sendMessage("GU",null);
-                System.out.println("SERVER RESPONSE (GU) "+cs.response());
+                cs.sendMessage("GU", null);
+                System.out.println("SERVER RESPONSE (GU) " + cs.response());
 
                 //dummyGames listesi
                 dummyGames.add(dummyGame1);
                 dummyGames.add(dummyGame2);
 
-                if(cs.response().contains("OK")){
+                if (cs.response().contains("OK")) {
                     String gamesDataString = cs.response().substring(2);
                     gameRooms.removeAll();
                     //games.clear();
-                    List <Game> games =  JsonUtil.fromListJson(gamesDataString, Game[].class);
+                    List<Game> games = JsonUtil.fromListJson(gamesDataString, Game[].class);
                     System.out.println("games\n" + games);
                     //System.out.println(games.size());
                     //System.out.println(games.get(0).getId());
                     System.out.println();
 
-                    for(Game game : games){
-                        String gameInfoString = String.format("Tour:%d Speed:%.1f Map:%s",game.getTourNumber(),
-                                game.getShootingSpeed(),game.getMapType());
+                    for (Game game : games) {
+                        String gameInfoString = String.format("Tour:%d Speed:%.1f Map:%s", game.getTourNumber(),
+                                game.getShootingSpeed(), game.getMapType());
                         Integer gameId = game.getId();
                         JLabel gameInfo = new JLabel(gameInfoString);
-                        JButton joinButton = new JButton("JOİN"+gameId);
+                        JButton joinButton = new JButton("JOİN" + gameId);
                         JPanel gameComponent = new JPanel(new FlowLayout());
-                        gameComponent.setSize(new Dimension(150,30));
+                        gameComponent.setSize(new Dimension(150, 30));
                         gameComponent.add(gameInfo);
                         gameComponent.add(joinButton);
                         joinButton.addActionListener(new ActionListener() {
@@ -152,46 +153,46 @@ public class LobbyPanel extends JPanel {
                         gameRooms.add(gameComponent);
                     }
 
-                }else {
+                } else {
                     System.out.println("No available game or response error");
                     //JOptionPane.showMessageDialog(parentPanel, "No game or Response error");
                 }
 
 
-
-
                 //Refreshing page
-                 //revalidate();
-                 //repaint();
+                //revalidate();
+                //repaint();
                 gameRooms.updateUI();
 
             }
         });
 
-        gameRooms.setPreferredSize(new Dimension(300,200));
+        gameRooms.setPreferredSize(new Dimension(300, 200));
         gameRooms.setBackground(Color.ORANGE);
 
         chat.setBackground(Color.cyan);
-        chat.setSize(new Dimension(200,200));
+        chat.setSize(new Dimension(200, 200));
         JTextField chatInput = new JTextField("Type Message");
-        chatInput.setSize(new Dimension(200,30));
+        chatInput.setSize(new Dimension(200, 30));
         chatInput.setBackground(Color.yellow);
         chatInput.addKeyListener(new KeyListener() {
             @Override
-            public void keyTyped(KeyEvent e) {}
+            public void keyTyped(KeyEvent e) {
+            }
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode()== KeyEvent.VK_ENTER){
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
                     Message message = Message.builder().playerId(playerId).playerUserName("Burak").text(chatInput.getText()).build();
                     //cs.sendMessage("CM",message); //--> server tarafında eklenmemiş
-                    System.out.println("CHAT INPUT "+chatInput.getText());
+                    System.out.println("CHAT INPUT " + chatInput.getText());
                 }
             }
 
             @Override
-            public void keyReleased(KeyEvent e) {}
+            public void keyReleased(KeyEvent e) {
+            }
         });
         chat.add(chatInput);
 
@@ -216,7 +217,7 @@ public class LobbyPanel extends JPanel {
         refreshButton.setForeground(Color.WHITE);
         refreshButton.setFocusable(false);
 
-        gameTitleLabel.setFont(new Font("Verdana", Font.PLAIN,24));
+        gameTitleLabel.setFont(new Font("Verdana", Font.PLAIN, 24));
 
         //Add buttons to the buttonsPanel
         buttonsPanel.add(newGameButton);
