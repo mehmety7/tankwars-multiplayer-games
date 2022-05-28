@@ -1,8 +1,8 @@
 package client.screens.waitingroom;
 
 import client.model.dto.Game;
+import client.model.dto.Tank;
 import client.services.WaitingRoomService;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -10,10 +10,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class WaitingRoomPanel extends JPanel {
     WaitingRoomService waitingRoomService;
+    Timer t = new Timer();
     Game currentGame;
+    List<Tank> tanks;
     JPanel parentPanel;
     Integer playerId;
     Integer gameId;
@@ -27,6 +31,7 @@ public class WaitingRoomPanel extends JPanel {
     JButton startGameBtn = new JButton("Start the Game");
 
     public WaitingRoomPanel(JPanel parentPanel, Integer playerId, Integer gameId) {
+
         this.waitingRoomService = new WaitingRoomService();
         this.currentGame = waitingRoomService.getGame(gameId);
 
@@ -39,15 +44,18 @@ public class WaitingRoomPanel extends JPanel {
         backToLobbyBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
-                cardLayout.show(parentPanel, "lobbyPanel");
+                if (waitingRoomService.returnToLobby(gameId, playerId)) {
+                    t.cancel();
+                    CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
+                    cardLayout.show(parentPanel, "lobbyPanel");
+                }
             }
         });
         startGameBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (waitingRoomService.isStartGame(gameId, playerId)) {
-                    waitingRoomService.startGame(gameId);
+                    tanks = waitingRoomService.startGame(gameId);
                 } else {
                     isStartStatusLabel.setText("You can not start the game!");
                 }
@@ -58,6 +66,16 @@ public class WaitingRoomPanel extends JPanel {
         addToHeaderPanel();
         addToBodyPanel();
         setWaitingRoomTitle();
+        this.t.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                currentGame = waitingRoomService.getGame(gameId);
+                if (currentGame == null) {
+                    CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
+                    cardLayout.show(parentPanel, "lobbyPanel");
+                }
+            }
+        }, 0, 2000);
     }
 
     private void addToMainPanel() {
