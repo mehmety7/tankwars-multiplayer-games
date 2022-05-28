@@ -22,9 +22,11 @@ public class LeadershipPanel extends JPanel {
     JLabel heading = new JLabel("Leaderships");
     JButton backButton = new JButton("Back to lobby");
     JTable scoreTable = new JTable();
+
+    String[] columnNames = {"Player", "Total Score"};
     DefaultTableModel model = new DefaultTableModel();
     JScrollPane scrollPane;
-    String[] columnNames = {"Player", "Total Score"};
+
 
     List<Statistic> listOfStatistics;
 
@@ -49,7 +51,7 @@ public class LeadershipPanel extends JPanel {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        model.setColumnIdentifiers(columnNames);
+
         scoreTable.setModel(model);
         scrollPane = new JScrollPane(scoreTable);
 
@@ -62,7 +64,6 @@ public class LeadershipPanel extends JPanel {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //TODO perform LogOut
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                 cardLayout.show(parentPanel, "lobbyPanel");
             }
