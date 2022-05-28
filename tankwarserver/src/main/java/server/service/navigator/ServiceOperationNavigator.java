@@ -161,16 +161,18 @@ public class ServiceOperationNavigator {
 
         else if (isEqual(protocol, MethodType.UG)){
             UpdateGameRequest gameRequest = JsonUtil.fromJson(protocol.getMessage(), UpdateGameRequest.class);
-            if(gameService.getGame(gameRequest.getGameId()).getIsStarted().equals(Boolean.FALSE))
+
+            Game game = gameService.getGame(gameRequest.getGameId());
+            if(Objects.isNull(game) || game.getIsStarted().equals(Boolean.FALSE))
                 return FAIL;
             UpdateGameResponse response = UpdateGameResponse.builder()
-                    .players(gameService.getGame(gameRequest.getGameId())
+                    .tanks(game
                             .getPlayers()
                             .keySet()
                             .stream()
-                            .map(playerService::getPlayer)
+                            .map(tankService::getTank)
                             .collect(Collectors.toList()))
-                    .bullets(bulletService.getBullets(gameRequest.getGameId()))
+                    .bullets(bulletService.getBullets(game.getId()))
                     .build();
             return OK + JsonUtil.toJson(response);
         }
