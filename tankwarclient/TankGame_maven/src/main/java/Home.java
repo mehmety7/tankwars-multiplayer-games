@@ -1,10 +1,7 @@
 import client.screens.about.AboutUsPanel;
 import client.screens.auth.LoginPanel;
 import client.screens.auth.SignupPanel;
-import client.screens.endofgame.EndOfGamePanel;
 import client.screens.leadership.LeadershipPanel;
-import client.screens.lobby.LobbyPanel;
-import client.screens.lobby.NewGamePanel;
 
 import javax.swing.*;
 import java.awt.*;

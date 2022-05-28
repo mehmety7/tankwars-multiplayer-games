@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import server.model.dto.Bullet;
 import server.model.dto.Tank;
-import server.model.entity.Player;
 
 import java.util.List;
 

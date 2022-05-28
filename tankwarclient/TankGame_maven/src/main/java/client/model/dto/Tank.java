@@ -1,9 +1,7 @@
 package client.model.dto;
 
-import lombok.*;
 import client.model.enumerated.FaceOrientation;
-
-import java.awt.image.BufferedImage;
+import lombok.*;
 
 @Data
 @Builder

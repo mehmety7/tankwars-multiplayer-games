@@ -1,8 +1,6 @@
 import client.game.GamePanel;
 import client.model.dto.Tank;
-import client.model.entity.Player;
 import client.model.enumerated.FaceOrientation;
-import client.socket.ClientSocket;
 
 import javax.swing.*;
 import java.util.ArrayList;

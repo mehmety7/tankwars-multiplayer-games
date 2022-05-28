@@ -1,7 +1,9 @@
 package client.model.dto;
 
-import lombok.*;
-import client.model.entity.Player;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 

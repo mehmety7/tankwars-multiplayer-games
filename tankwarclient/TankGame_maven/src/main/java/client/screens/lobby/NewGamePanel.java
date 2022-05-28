@@ -1,8 +1,6 @@
 package client.screens.lobby;
 
-import client.game.CurrentPlayer;
 import client.model.dto.Game;
-import client.model.entity.Player;
 import client.services.SingletonSocketService;
 import client.socket.ClientSocket;
 
