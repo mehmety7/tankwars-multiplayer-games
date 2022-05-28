@@ -1,16 +1,14 @@
 package server.service.navigator;
 
+import lombok.RequiredArgsConstructor;
 import server.bean.BeanHandler;
 import server.constants.ConstantsForInnerLogic;
 import server.extensions.GameExtension;
-import server.model.dto.Game;
-import server.model.dto.Message;
-import server.model.dto.Statistic;
-import server.model.dto.Tank;
+import server.model.dto.*;
 import server.model.entity.Player;
 import server.model.enumerated.MethodType;
 import server.model.request.CreateGameRequest;
-import server.model.request.JoinGameRequest;
+import server.model.request.PlayerGameRequest;
 import server.model.request.UpdateGameRequest;
 import server.model.response.UpdateGameResponse;
 import server.service.*;
@@ -21,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public class ServiceOperationNavigator {
 
     private static ServiceOperationNavigator serviceOperationNavigator;
@@ -28,16 +27,18 @@ public class ServiceOperationNavigator {
     public static String OK = "OK";
     public static String FAIL = "FL";
 
-    private final PlayerService playerService = BeanHandler.playerService;
-    private final GameService gameService = BeanHandler.gameService;
-    private final StatisticService statisticService = BeanHandler.statisticService;
-    private final TankService tankService = BeanHandler.tankService;
-    private final MessageService messageService = BeanHandler.messageService;
-    private final BulletService bulletService = BeanHandler.bulletService;
+    private final PlayerService playerService;
+    private final TankService tankService;
+    private final GameService gameService;
+    private final StatisticService statisticService;
+    private final MessageService messageService;
 
     public static ServiceOperationNavigator getInstance() {
         if (Objects.isNull(serviceOperationNavigator)) {
-            serviceOperationNavigator = new ServiceOperationNavigator();
+            serviceOperationNavigator =
+                    new ServiceOperationNavigator(BeanHandler.playerService, BeanHandler.tankService,
+                            BeanHandler.gameService, BeanHandler.statisticService,
+                            BeanHandler.messageService);
         }
         return serviceOperationNavigator;
     }
@@ -71,7 +72,7 @@ public class ServiceOperationNavigator {
         }
 
         else if (isEqual(protocol, MethodType.JG)){
-            JoinGameRequest request = JsonUtil.fromJson(protocol.getMessage(), JoinGameRequest.class);
+            PlayerGameRequest request = JsonUtil.fromJson(protocol.getMessage(), PlayerGameRequest.class);
             Game beforeJoin = gameService.getGame(request.getGameId());
             Player player = playerService.getPlayer(request.getPlayerId());
             if(Boolean.TRUE.equals(beforeJoin.getIsStarted()))
@@ -83,7 +84,7 @@ public class ServiceOperationNavigator {
         }
 
         else if(isEqual(protocol, MethodType.RL)) {
-            JoinGameRequest request = JsonUtil.fromJson(protocol.getMessage(), JoinGameRequest.class);
+            PlayerGameRequest request = JsonUtil.fromJson(protocol.getMessage(), PlayerGameRequest.class);
             Boolean result = gameService.leaveGame(request.getGameId(), request.getPlayerId());
             if(Boolean.FALSE.equals(result)) {
                 return FAIL;
@@ -92,18 +93,19 @@ public class ServiceOperationNavigator {
         }
 
         else if (isEqual(protocol, MethodType.LT)){
-            Player playerBeforeLogOut = JsonUtil.fromJson(protocol.getMessage(), Player.class);
-            if(Objects.nonNull(playerBeforeLogOut.getIsActive()) && Boolean.FALSE.equals(playerBeforeLogOut.getIsActive()))
+            PlayerGameRequest request = JsonUtil.fromJson(protocol.getMessage(), PlayerGameRequest.class);
+            if (Boolean.FALSE.equals(playerService.logout(request.getPlayerId())))
                 return FAIL;
-            if(Boolean.FALSE.equals(playerService.logout(playerBeforeLogOut)))
-                return FAIL;
-            Player playerAfterLogOut = playerService.getPlayer(playerBeforeLogOut.getId());
-            return OK + JsonUtil.toJson(playerAfterLogOut);
+            if (Objects.nonNull(request.getGameId())) {
+                tankService.deleteTank(request.getPlayerId());
+                gameService.leaveGame(request.getGameId(), request.getPlayerId());
+            }
+            return OK;
         }
 
         else if (isEqual(protocol, MethodType.CM)){
             Message message = JsonUtil.fromJson(protocol.getMessage(), Message.class);
-            if (messageService.createMessage(message)) {
+            if (Boolean.TRUE.equals(messageService.createMessage(message))) {
                 return OK;
             }
             return FAIL;
@@ -164,7 +166,9 @@ public class ServiceOperationNavigator {
 
         else if (isEqual(protocol, MethodType.SF)){
             Tank tank = JsonUtil.fromJson(protocol.getMessage(), Tank.class);
-            tankService.createBullet(tank);
+            Bullet bullet = tankService.createBullet(tank);
+            tankService.tanksThatGotHit(tank.getGameId(), bullet);
+            tankService.removeBullet(bullet);
             return OK;
         }
 
@@ -181,7 +185,7 @@ public class ServiceOperationNavigator {
                             .stream()
                             .map(tankService::getTank)
                             .collect(Collectors.toList()))
-                    .bullets(bulletService.getBullets(game.getId()))
+                    .bullets(tankService.getBullets(game.getId()))
                     .build();
             return OK + JsonUtil.toJson(response);
         }

@@ -22,7 +22,7 @@ public class ClientSocket {
     }
 
     public <T> void sendMessage(String methodType, T data) {
-        String request = methodType + JsonUtil.toJson(data);
+        String request = data != null ? methodType + JsonUtil.toJson(data) : methodType ;
         socketWriter.println(request);
         socketWriter.flush();
         try {

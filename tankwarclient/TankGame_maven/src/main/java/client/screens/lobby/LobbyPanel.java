@@ -3,7 +3,8 @@ package client.screens.lobby;
 import client.model.dto.Game;
 import client.model.dto.Message;
 import client.model.entity.Player;
-import client.model.request.JoinGameRequest;
+import client.model.request.PlayerGameRequest;
+import client.screens.leadership.LeadershipPanel;
 import client.screens.waitingroom.WaitingRoomPanel;
 import client.services.SingletonSocketService;
 import client.socket.ClientSocket;
@@ -15,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LobbyPanel extends JPanel {
@@ -36,6 +38,8 @@ public class LobbyPanel extends JPanel {
 
     //Labels
     JLabel gameTitleLabel = new JLabel("TankWars Games");
+    JLabel activePlayersLabel = new JLabel("Active Players");
+    JPanel activePlayerPanel = new JPanel();
 
     public LobbyPanel(JPanel parentPanel, Integer playerId) {
         this.parentPanel = parentPanel;
@@ -43,6 +47,8 @@ public class LobbyPanel extends JPanel {
         setLayout(null);
         gridLayout.setHgap(20);
         gridLayout.setVgap(10);
+
+        String[] columnNames = { "Player", "Total Score"};
 
         //open New Game
         newGameButton.addActionListener(new ActionListener() {
@@ -61,6 +67,9 @@ public class LobbyPanel extends JPanel {
         leadershipButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //leadership panel
+                LeadershipPanel leadershipPanel = new LeadershipPanel(parentPanel);
+                parentPanel.add(leadershipPanel, "leadershipPanel");
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                 cardLayout.show(parentPanel, "leadershipPanel");
             }
@@ -104,6 +113,7 @@ public class LobbyPanel extends JPanel {
                 cs.sendMessage("GU", null);
                 System.out.println("SERVER RESPONSE (GU) " + cs.response());
 
+                //get games
                 if(cs.response().startsWith("OK")){
                     String gamesDataString = cs.response().substring(2);
                     gameRooms.removeAll();
@@ -133,8 +143,8 @@ public class LobbyPanel extends JPanel {
                         joinButton.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                JoinGameRequest joinGameRequest = JoinGameRequest.builder().gameId(gameId).playerId(playerId).build();
-                                cs.sendMessage("JG",joinGameRequest);
+                                PlayerGameRequest playerGameRequest = PlayerGameRequest.builder().gameId(gameId).playerId(playerId).build();
+                                cs.sendMessage("JG", playerGameRequest);
                                 System.out.println(gameId);
                                 WaitingRoomPanel waitingRoomPanel = new WaitingRoomPanel(parentPanel, playerId, gameId);
                                 parentPanel.add(waitingRoomPanel, "waitingRoomPanel");
@@ -152,6 +162,7 @@ public class LobbyPanel extends JPanel {
                     JOptionPane.showMessageDialog(parentPanel, "No game or Response error");
                 }
 
+                //get messages
                 cs.sendMessage("GM",null);
                 if(cs.response().contains("OK")){
                     String messagesDataString = cs.response().substring(2);
@@ -163,9 +174,45 @@ public class LobbyPanel extends JPanel {
                     System.out.println("No available message or response error");
                     JOptionPane.showMessageDialog(parentPanel, "No message or Response error");
                 }
+
+                //get active players
+                cs.sendMessage("AG",null);
+                if(cs.response().contains("OK")){
+                    String gamesDataString = cs.response().substring(2);
+                    List <Player> activePlayersList =  JsonUtil.fromListJson(gamesDataString, Player[].class);
+                    List<List<String>> activeData = new ArrayList<>();
+                    activePlayerPanel.removeAll();
+                    activePlayerPanel.setLayout(new BoxLayout(activePlayerPanel,BoxLayout.Y_AXIS));
+
+                    for(Player player: activePlayersList){
+                        List<String> oneData = new ArrayList<>();
+                        oneData.add(player.getUsername());
+                        oneData.add(player.getIsActive().toString());
+                        activeData.add(oneData);
+
+                    }
+                    String[][] tmp = activeData.stream().map(l-> l.toArray(String[]::new)).toArray(String[][]::new);
+                    JTable activePlayers = new JTable(tmp, columnNames);
+                    activePlayerPanel.setBounds(475, 120, 200, 250);
+                    activePlayerPanel.setBackground(Color.yellow);
+                    activePlayers.setEnabled(false);
+                    activePlayers.getTableHeader().setReorderingAllowed(false);
+
+                    JScrollPane scrollPane = new JScrollPane(activePlayers);
+                    activePlayerPanel.add(activePlayersLabel);
+                    activePlayerPanel.add(scrollPane);
+                    System.out.println(activeData);
+                }else {
+                    System.out.println("No available active players or error");
+                    JOptionPane.showMessageDialog(parentPanel, "No available active players or Response error");
+                }
+                activePlayerPanel.updateUI();
                 gameRooms.updateUI();
 
-            }
+            };
+
+
+
         });
 
         gameRooms.setBounds(15,110,450,520);
@@ -235,5 +282,6 @@ public class LobbyPanel extends JPanel {
         this.add(gameRooms);
         this.add(chat);
         this.add(chatInput);
+        this.add(activePlayerPanel);
     }
 }

@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Bullet {
-    private Integer playerId;
+    private Integer tankId;
     private UUID bulletId;
     private Integer positionX;
     private Integer positionY;

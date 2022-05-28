@@ -35,18 +35,6 @@ public class PlayerService {
         return playerService;
     }
 
-    public Player createPlayer(Player player) {
-        player.setPassword(HashUtil.hashValue(player.getPassword()));
-        player.setIsActive(Boolean.FALSE);
-        Integer newPlayerId = playerDao.createPlayer(player);
-        if (newPlayerId.equals(CREATE_ERROR_RETURN_VALUE)) {
-            System.out.println("Create player operation is failed");
-            return null;
-        }
-        player.setId(newPlayerId);
-        return player;
-    }
-
     public Player getPlayer(Integer playerId) {
         return getDummyPlayer(playerId);
         // return playerDao.getPlayer(playerId);
@@ -62,14 +50,6 @@ public class PlayerService {
         // return playerDao.getActivePlayers();
     }
 
-    private boolean updatePlayerActivate(Integer playerId) {
-        return playerDao.updateActive(playerId);
-    }
-
-    public boolean deletePlayer(Integer playerId) {
-        return playerDao.deletePlayer(playerId);
-    }
-
     public Player login (Player player) {
         Player result = getPlayer(player.getUsername());
         if (Objects.nonNull(result)) {
@@ -81,12 +61,12 @@ public class PlayerService {
         return null;
     }
 
-    public Boolean logout (Player player) {
+    public Boolean logout (Integer playerId) {
         /* if (Boolean.TRUE.equals(playerDao.updateActive(player.getId()))) {
             return Boolean.TRUE;
         } */
 
-        Player result = getPlayer(player.getId());
+        Player result = getPlayer(playerId);
 
         if (Objects.nonNull(result)) {
             result.setIsActive(Boolean.FALSE);
@@ -125,6 +105,29 @@ public class PlayerService {
         }
 
         return response;
+    }
+
+    public Player createPlayer(Player player) {
+        player.setPassword(HashUtil.hashValue(player.getPassword()));
+        player.setIsActive(Boolean.FALSE);
+        //Integer newPlayerId = playerDao.createPlayer(player);
+        Integer newPlayerId = 0;
+        if (newPlayerId.equals(CREATE_ERROR_RETURN_VALUE)) {
+            System.out.println("Create player operation is failed");
+            return null;
+        }
+        player.setId(newPlayerId);
+        return player;
+    }
+
+    private boolean updatePlayerActivate(Integer playerId) {
+        // return playerDao.updateActive(playerId);
+        return true;
+    }
+
+    public boolean deletePlayer(Integer playerId) {
+        // return playerDao.deletePlayer(playerId);
+        return true;
     }
 
 }

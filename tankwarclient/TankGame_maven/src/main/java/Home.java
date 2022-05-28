@@ -38,11 +38,7 @@ public class Home {
         basePanel.add(endOfGamePanel, "endOfGamePanel");
         */
 
-        
 
-        //leadership panel
-        LeadershipPanel leadershipPanel = new LeadershipPanel(basePanel);
-        basePanel.add(leadershipPanel, "leadershipPanel");
 
         // Adding the basePanel to JFrame.
         frame.add(basePanel, BorderLayout.CENTER);

@@ -1,4 +1,4 @@
-package server.model.request;
+package client.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class JoinGameRequest {
+public class PlayerGameRequest {
 
     private Integer gameId;
     private Integer playerId;

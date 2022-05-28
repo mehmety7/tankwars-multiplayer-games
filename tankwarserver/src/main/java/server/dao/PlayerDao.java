@@ -1,6 +1,7 @@
 package server.dao;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import server.bean.BeanHandler;
 import server.model.entity.Player;
 
@@ -13,18 +14,16 @@ import java.util.List;
 import java.util.Objects;
 
 @Getter
+@RequiredArgsConstructor
 public class PlayerDao {
 
     private static PlayerDao playerDao;
-    private DataPersistence dataPersistence;
 
-    private PlayerDao(){
-        dataPersistence = BeanHandler.dataPersistence;
-    }
+    private final DataPersistence dataPersistence;
 
     public static PlayerDao getInstance(){
         if (Objects.isNull(playerDao)){
-            playerDao = new PlayerDao();
+            playerDao = new PlayerDao(BeanHandler.dataPersistence);
         }
         return playerDao;
     }
