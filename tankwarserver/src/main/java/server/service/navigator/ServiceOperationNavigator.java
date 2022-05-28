@@ -75,7 +75,7 @@ public class ServiceOperationNavigator {
             PlayerGameRequest request = JsonUtil.fromJson(protocol.getMessage(), PlayerGameRequest.class);
             Game beforeJoin = gameService.getGame(request.getGameId());
             Player player = playerService.getPlayer(request.getPlayerId());
-            if(Boolean.TRUE.equals(beforeJoin.getIsStarted()))
+            if(Objects.isNull(beforeJoin) || Boolean.TRUE.equals(beforeJoin.getIsStarted()))
                 return FAIL;
             if(Boolean.FALSE.equals(player.getIsActive()))
                 return FAIL;

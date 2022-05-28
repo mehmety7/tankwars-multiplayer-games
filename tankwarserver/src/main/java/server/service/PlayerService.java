@@ -22,7 +22,7 @@ public class PlayerService {
 
     private final PlayerDao playerDao;
 
-    private static final List<Player> testPlayers = Arrays.asList(
+    private static List<Player> testPlayers = Arrays.asList(
             Player.builder().id(1).username("player1").password(HashUtil.hashValue("test")).isActive(Boolean.FALSE).build(),
             Player.builder().id(2).username("player2").password(HashUtil.hashValue("test")).isActive(Boolean.FALSE).build(),
             Player.builder().id(3).username("player3").password(HashUtil.hashValue("test")).isActive(Boolean.FALSE).build()
@@ -55,6 +55,7 @@ public class PlayerService {
         if (Objects.nonNull(result)) {
             if (result.getPassword().equals(HashUtil.hashValue(player.getPassword()))) {
                 result.setIsActive(Boolean.TRUE);
+                testPlayers.set(result.getId()-1, result);
                 return Player.builder().id(result.getId()).username(result.getUsername()).isActive(result.getIsActive()).build();
             }
         }
@@ -70,6 +71,7 @@ public class PlayerService {
 
         if (Objects.nonNull(result)) {
             result.setIsActive(Boolean.FALSE);
+            testPlayers.set(result.getId()-1, result);
             return Boolean.TRUE;
         } else {
             return Boolean.FALSE;
