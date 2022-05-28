@@ -136,7 +136,7 @@ public class ServiceOperationNavigator {
             Game game = JsonUtil.fromJson(protocol.getMessage(), Game.class);
             if(Objects.isNull(game.getId()))
                 return FAIL;
-            if(game.getPlayers() == null || game.getPlayers().size() == 0)
+            if(game.getPlayers() == null || game.getPlayers().isEmpty())
                 return FAIL;
             if(Boolean.FALSE.equals(statisticService.addStatisticsInEndOfGame(game)))
                 return FAIL;
