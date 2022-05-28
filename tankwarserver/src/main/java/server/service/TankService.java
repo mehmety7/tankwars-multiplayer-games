@@ -104,7 +104,7 @@ public class TankService {
         return inMemoryDao.tanks.remove(playerId);
     }
 
-    public Tank createBullet(Tank tank){
+    public Bullet createBullet(Tank tank){
         int offsetX = 0;
         int offsetY = 0;
         switch (tank.getFaceOrientation()){
@@ -133,7 +133,7 @@ public class TankService {
                 .faceOrientation(inMemoryDao.tanks.get(tank.getPlayerId()).getFaceOrientation())
                 .build();
         createOrUpdateBullet(bullet);
-        return tank;
+        return bullet;
     }
 
     public Bullet createOrUpdateBullet(Bullet bullet){
@@ -178,15 +178,24 @@ public class TankService {
         return false;
     }
 
-    public List<Tank> tanksThatGotHit(Game game, Bullet bullet){
+    public void tanksThatGotHit(Integer gameId, Bullet bullet){
         List<Tank> hittedTankList = new ArrayList<>();
-        List<Tank> allTanks = tankService.getTanksInGame(game.getId());
+        List<Tank> allTanks = tankService.getTanksInGame(gameId);
         allTanks.forEach((tank -> {
             if(isTankGotHit(bullet, tank)){
+                tank.setHealth(tank.getHealth() - ConstantsForInnerLogic.bulletDamage);
+                if(tank.getHealth() < 0)
+                    tank.setHealth(0);
                 hittedTankList.add(tank);
             }
         }));
-        return hittedTankList;
+        hittedTankList.forEach(tank -> {
+            if(tank.getHealth() == 0){
+                deleteTank(tank.getPlayerId());
+            } else {
+                createOrUpdateTank(tank);
+            }
+        });
     }
 
     public List<Bullet> getBullets(Integer gameId){
@@ -196,4 +205,9 @@ public class TankService {
                 .map(Pair::getSecond)
                 .collect(Collectors.toList());
     }
+
+    public void removeBullet(Bullet bullet){
+        inMemoryDao.bullets.remove(new Pair<>(bullet.getTankId(), bullet));
+    }
+
 }
