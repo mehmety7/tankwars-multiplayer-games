@@ -46,7 +46,7 @@ public class WaitingRoomPanel extends JPanel {
         startGameBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (waitingRoomService.isStartGame(gameId)) {
+                if (waitingRoomService.isStartGame(gameId, playerId)) {
                     waitingRoomService.startGame(gameId);
                 } else {
                     isStartStatusLabel.setText("You can not start the game!");

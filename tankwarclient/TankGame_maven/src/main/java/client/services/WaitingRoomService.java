@@ -1,6 +1,7 @@
 package client.services;
 
 import client.model.dto.Game;
+import client.model.dto.Tank;
 import client.model.entity.Player;
 import client.screens.waitingroom.WaitingRoomPanel;
 import client.socket.ClientSocket;
@@ -29,14 +30,19 @@ public class WaitingRoomService {
         return usernames;
     }
 
-    public boolean isStartGame(Integer gameId) {
-        cs.sendMessage("SG", new Game(gameId, null, null, null, null, null));
+    public boolean isStartGame(Integer gameId, Integer playerId) {
+        cs.sendMessage("SG", Game.builder().id(gameId).build());
+        System.out.println("Response Status: " + cs.response());
         String responseStatus = cs.response().substring(0, 2);
-        if (responseStatus.equals("FL"))
+        if (responseStatus.equals("FL") || !gameId.equals(playerId))
             return false;
         return true;
     }
 
     public void startGame(Integer gameId) {
+        cs.sendMessage("SG", Game.builder().id(gameId).build());
+        String response = cs.response().substring(2);
+        List<Tank> tanks = JsonUtil.fromListJson(response, Tank[].class);
+        System.out.println("tanks: " + tanks);
     }
 }
