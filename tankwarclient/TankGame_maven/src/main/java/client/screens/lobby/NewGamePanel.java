@@ -1,6 +1,7 @@
 package client.screens.lobby;
 
 import client.model.dto.Game;
+import client.screens.waitingroom.WaitingRoomPanel;
 import client.services.SingletonSocketService;
 import client.socket.ClientSocket;
 
@@ -23,12 +24,12 @@ public class NewGamePanel extends JPanel {
     char selectedMapType;
 
     //ComboBoxes
-    JComboBox tourNumber,mapType,shootSpeed;
+    JComboBox tourNumber, mapType, shootSpeed;
 
     //ComboBox values
-    final Integer tourNumberValues[] = {1,2,3};
+    final Integer tourNumberValues[] = {1, 2, 3};
     final Double shootSpeedValues[] = {1d, 1.5d, 2d};
-    final Character[] mapTypeValues = {'a','b','c'};
+    final Character[] mapTypeValues = {'a', 'b', 'c'};
 
     //Buttons
     JButton createGameButton = new JButton("Create Game Room");
@@ -36,7 +37,7 @@ public class NewGamePanel extends JPanel {
 
     public NewGamePanel(JPanel parentPanel, Integer playerId) {
         this.parentPanel = parentPanel;
-        GridLayout gridLayout = new GridLayout(6,1);
+        GridLayout gridLayout = new GridLayout(6, 1);
         setLayout(gridLayout);
         gridLayout.setHgap(20);
         gridLayout.setVgap(10);
@@ -62,15 +63,19 @@ public class NewGamePanel extends JPanel {
                 Game game = Game.builder().tourNumber(selectedTour).mapType(String.valueOf(selectedMapType)).shootingSpeed(selectedShootSpeed).id(playerId).build();
                 ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
                 cs.sendMessage("CG", game);
-                if(cs.response().startsWith("OK")) {
+                if (cs.response().startsWith("OK")) {
                     System.out.println(cs.response());
                     // TODO navigate to game room
+                    WaitingRoomPanel waitingRoomPanel = new WaitingRoomPanel(parentPanel, playerId, game.getId());
+                    parentPanel.add(waitingRoomPanel, "waitingRoomPanel");
+                    CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
+                    cardLayout.show(parentPanel, "waitingRoomPanel");
                 } else {
                     JOptionPane.showMessageDialog(parentPanel, "Couldn't create a new game");
                 }
                 // Remove these lines after filling if-else above
-                CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
-                cardLayout.show(parentPanel, "lobbyPanel");
+//                CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
+//                cardLayout.show(parentPanel, "lobbyPanel");
 
             }
         });
@@ -80,7 +85,7 @@ public class NewGamePanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 //cancel creating new game room and return to the main page Lobby
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
-                cardLayout.show(parentPanel,"lobbyPanel");
+                cardLayout.show(parentPanel, "lobbyPanel");
             }
         });
 
