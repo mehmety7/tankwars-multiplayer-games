@@ -11,7 +11,7 @@ import server.model.dto.Tank;
 import server.model.entity.Player;
 import server.model.enumerated.MethodType;
 import server.model.request.CreateGameRequest;
-import server.model.request.JoinGameRequest;
+import server.model.request.PlayerGameRequest;
 import server.model.request.UpdateGameRequest;
 import server.model.response.UpdateGameResponse;
 import server.service.*;
@@ -75,7 +75,7 @@ public class ServiceOperationNavigator {
         }
 
         else if (isEqual(protocol, MethodType.JG)){
-            JoinGameRequest request = JsonUtil.fromJson(protocol.getMessage(), JoinGameRequest.class);
+            PlayerGameRequest request = JsonUtil.fromJson(protocol.getMessage(), PlayerGameRequest.class);
             Game beforeJoin = gameService.getGame(request.getGameId());
             Player player = playerService.getPlayer(request.getPlayerId());
             if(Boolean.TRUE.equals(beforeJoin.getIsStarted()))
@@ -87,7 +87,7 @@ public class ServiceOperationNavigator {
         }
 
         else if(isEqual(protocol, MethodType.RL)) {
-            JoinGameRequest request = JsonUtil.fromJson(protocol.getMessage(), JoinGameRequest.class);
+            PlayerGameRequest request = JsonUtil.fromJson(protocol.getMessage(), PlayerGameRequest.class);
             Boolean result = gameService.leaveGame(request.getGameId(), request.getPlayerId());
             if(Boolean.FALSE.equals(result)) {
                 return FAIL;
@@ -96,18 +96,19 @@ public class ServiceOperationNavigator {
         }
 
         else if (isEqual(protocol, MethodType.LT)){
-            Player playerBeforeLogOut = JsonUtil.fromJson(protocol.getMessage(), Player.class);
-            if(Objects.nonNull(playerBeforeLogOut.getIsActive()) && Boolean.FALSE.equals(playerBeforeLogOut.getIsActive()))
+            PlayerGameRequest request = JsonUtil.fromJson(protocol.getMessage(), PlayerGameRequest.class);
+            if (Boolean.FALSE.equals(playerService.logout(request.getPlayerId())))
                 return FAIL;
-            if(Boolean.FALSE.equals(playerService.logout(playerBeforeLogOut)))
-                return FAIL;
-            Player playerAfterLogOut = playerService.getPlayer(playerBeforeLogOut.getId());
-            return OK + JsonUtil.toJson(playerAfterLogOut);
+            if (Objects.nonNull(request.getGameId())) {
+                tankService.deleteTank(request.getPlayerId());
+                gameService.leaveGame(request.getGameId(), request.getPlayerId());
+            }
+            return OK;
         }
 
         else if (isEqual(protocol, MethodType.CM)){
             Message message = JsonUtil.fromJson(protocol.getMessage(), Message.class);
-            if (messageService.createMessage(message)) {
+            if (Boolean.TRUE.equals(messageService.createMessage(message))) {
                 return OK;
             }
             return FAIL;

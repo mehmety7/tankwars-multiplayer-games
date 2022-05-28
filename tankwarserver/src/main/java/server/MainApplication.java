@@ -6,7 +6,7 @@ import server.model.dto.Statistic;
 import server.model.dto.Tank;
 import server.model.entity.Player;
 import server.model.enumerated.FaceOrientation;
-import server.model.request.JoinGameRequest;
+import server.model.request.PlayerGameRequest;
 import server.model.response.AboutUsResponse;
 import server.model.response.UpdateGameResponse;
 import server.service.navigator.ServiceOperationNavigator;
@@ -92,7 +92,7 @@ public class MainApplication {
         System.out.println("Old Trails");
         System.out.println("---------------------");
         System.out.println(JsonUtil.toJson(Game.builder().build()));
-        System.out.println(JsonUtil.toJson(JoinGameRequest.builder().build()));
+        System.out.println(JsonUtil.toJson(PlayerGameRequest.builder().build()));
         System.out.println(JsonUtil.toJson(Tank.builder().build()));
         System.out.println(JsonUtil.toJson(Statistic.builder().build()));
         System.out.println(JsonUtil.toJson(AboutUsResponse.text));
