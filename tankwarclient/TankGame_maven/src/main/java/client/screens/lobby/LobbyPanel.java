@@ -24,6 +24,7 @@ public class LobbyPanel extends JPanel {
     JPanel gameRooms = new JPanel();
     JPanel chat = new JPanel(new GridLayout(0,1));
 
+
     //Buttons
     JButton newGameButton = new JButton("New Game");
     JButton leadershipButton = new JButton("LeaderShip");
@@ -47,11 +48,11 @@ public class LobbyPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //Lobby ekranına gelen player datası içindeki playerIdyi newGamePanelına ilet
-                NewGamePanel newGamePanel = new NewGamePanel(parentPanel,playerId);
-                parentPanel.add(newGamePanel,"newGamePanel");
+                NewGamePanel newGamePanel = new NewGamePanel(parentPanel, playerId);
+                parentPanel.add(newGamePanel, "newGamePanel");
 
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
-                cardLayout.show(parentPanel,"newGamePanel");
+                cardLayout.show(parentPanel, "newGamePanel");
             }
         });
 
@@ -60,7 +61,7 @@ public class LobbyPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
-                cardLayout.show(parentPanel,"leadershipPanel");
+                cardLayout.show(parentPanel, "leadershipPanel");
             }
         });
 
@@ -69,7 +70,7 @@ public class LobbyPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
-                cardLayout.show(parentPanel,"aboutUsPanel");
+                cardLayout.show(parentPanel, "aboutUsPanel");
             }
         });
 
@@ -80,12 +81,12 @@ public class LobbyPanel extends JPanel {
                 //TODO perform LogOut
                 ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
                 Player player = Player.builder().id(playerId).build();
-                cs.sendMessage("LT",player);
+                cs.sendMessage("LT", player);
 
                 if(cs.response().startsWith("OK")){
                     CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                     cardLayout.show(parentPanel, "loginPanel");
-                }else {
+                } else {
                     System.out.println("LogOut response hatası");
                     JOptionPane.showMessageDialog(parentPanel,"LogOut Error");
                 }
@@ -99,8 +100,8 @@ public class LobbyPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
 
                 ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
-                cs.sendMessage("GU",null);
-                System.out.println("SERVER RESPONSE (GU) "+cs.response());
+                cs.sendMessage("GU", null);
+                System.out.println("SERVER RESPONSE (GU) " + cs.response());
 
                 if(cs.response().startsWith("OK")){
                     String gamesDataString = cs.response().substring(2);
@@ -109,9 +110,9 @@ public class LobbyPanel extends JPanel {
                     System.out.println("games\n" + games);
                     System.out.println();
 
-                    for(Game game : games){
-                        String gameInfoString = String.format("Tour:%d Speed:%.1f Map:%s",game.getTourNumber(),
-                                game.getShootingSpeed(),game.getMapType());
+                    for (Game game : games) {
+                        String gameInfoString = String.format("Tour:%d Speed:%.1f Map:%s", game.getTourNumber(),
+                                game.getShootingSpeed(), game.getMapType());
                         Integer gameId = game.getId();
                         JLabel gameInfo = new JLabel(gameInfoString);
                         gameInfo.setSize(new Dimension(370,50));
@@ -134,13 +135,18 @@ public class LobbyPanel extends JPanel {
                                 JoinGameRequest joinGameRequest = JoinGameRequest.builder().gameId(gameId).playerId(playerId).build();
                                 cs.sendMessage("JG",joinGameRequest);
                                 System.out.println(gameId);
+                                WaitingRoomPanel waitingRoomPanel = new WaitingRoomPanel(parentPanel, playerId, gameId);
+                                parentPanel.add(waitingRoomPanel, "waitingRoomPanel");
+
+                                CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
+                                cardLayout.show(parentPanel, "waitingRoomPanel");
                             }
                         });
 
                         gameRooms.add(gameComponent);
                     }
 
-                }else {
+                } else {
                     System.out.println("No available game or response error");
                     JOptionPane.showMessageDialog(parentPanel, "No game or Response error");
                 }
@@ -161,7 +167,6 @@ public class LobbyPanel extends JPanel {
             }
         });
 
-
         gameRooms.setBounds(15,110,450,520);
         gameRooms.setBackground(new Color(216,229,241));
 
@@ -173,11 +178,12 @@ public class LobbyPanel extends JPanel {
         chatInput.setBackground(new Color(226,221,235));
         chatInput.addKeyListener(new KeyListener() {
             @Override
-            public void keyTyped(KeyEvent e) {}
+            public void keyTyped(KeyEvent e) {
+            }
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode()== KeyEvent.VK_ENTER){
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
                     Message message = Message.builder().playerId(playerId).playerUserName("Burak").text(chatInput.getText()).build();
                     cs.sendMessage("CM",message);
@@ -186,7 +192,8 @@ public class LobbyPanel extends JPanel {
             }
 
             @Override
-            public void keyReleased(KeyEvent e) {}
+            public void keyReleased(KeyEvent e) {
+            }
         });
 
         //Customize Buttons
