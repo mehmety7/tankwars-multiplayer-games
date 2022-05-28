@@ -3,6 +3,7 @@ package client.screens.lobby;
 import client.model.dto.Game;
 import client.model.dto.Message;
 import client.model.entity.Player;
+import client.screens.waitingroom.WaitingRoomPanel;
 import client.services.SingletonSocketService;
 import client.socket.ClientSocket;
 import client.util.JsonUtil;
@@ -140,6 +141,11 @@ public class LobbyPanel extends JPanel {
                             public void actionPerformed(ActionEvent e) {
                                 //cs.sendMessage("JG",{ne yazacam aw}); --> gameId ve playerId gidecek
                                 System.out.println(gameId);
+                                WaitingRoomPanel waitingRoomPanel = new WaitingRoomPanel(parentPanel, playerId, gameId);
+                                parentPanel.add(waitingRoomPanel, "waitingRoomPanel");
+
+                                CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
+                                cardLayout.show(parentPanel, "waitingRoomPanel");
                             }
                         });
 

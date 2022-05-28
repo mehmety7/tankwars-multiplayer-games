@@ -2,6 +2,7 @@ package client.screens.auth;
 
 import client.model.entity.Player;
 import client.screens.lobby.LobbyPanel;
+import client.screens.waitingroom.WaitingRoomPanel;
 import client.services.SingletonSocketService;
 import client.socket.ClientSocket;
 import client.util.JsonUtil;
