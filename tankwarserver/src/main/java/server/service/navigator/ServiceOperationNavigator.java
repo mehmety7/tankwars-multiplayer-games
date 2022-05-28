@@ -82,6 +82,15 @@ public class ServiceOperationNavigator {
             return OK + JsonUtil.toJson(afterJoin);
         }
 
+        else if(isEqual(protocol, MethodType.RL)) {
+            JoinGameRequest request = JsonUtil.fromJson(protocol.getMessage(), JoinGameRequest.class);
+            Boolean result = gameService.leaveGame(request.getGameId(), request.getPlayerId());
+            if(Boolean.FALSE.equals(result)) {
+                return FAIL;
+            }
+            return OK;
+        }
+
         else if (isEqual(protocol, MethodType.LT)){
             Player playerBeforeLogOut = JsonUtil.fromJson(protocol.getMessage(), Player.class);
             if(Objects.nonNull(playerBeforeLogOut.getIsActive()) && Boolean.FALSE.equals(playerBeforeLogOut.getIsActive()))

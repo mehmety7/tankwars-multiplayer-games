@@ -44,6 +44,18 @@ public class GameService {
         return inMemoryDao.games.get(gameId);
     }
 
+    public Boolean leaveGame(Integer gameId, Integer playerId) {
+        if (gameId.equals(playerId)) {
+            inMemoryDao.games.remove(gameId);
+            return Boolean.TRUE;
+        }
+        Integer e = inMemoryDao.games.get(gameId).getPlayers().remove(playerId);
+        if (Objects.isNull(e)){
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
+
     public List<Tank> startGame(Integer gameId) {
         Game game = inMemoryDao.games.get(gameId);
         game.setIsStarted(Boolean.TRUE);

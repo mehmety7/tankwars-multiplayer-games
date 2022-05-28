@@ -6,6 +6,7 @@ public enum MethodType {
     SU,
     GU,
     JG,
+    RL,
     LT,
     CM,
     GM,
@@ -19,4 +20,5 @@ public enum MethodType {
     UD,
     GP,
     AG
+
 }
