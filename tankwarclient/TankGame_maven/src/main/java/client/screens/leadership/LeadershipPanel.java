@@ -1,9 +1,11 @@
 package client.screens.leadership;
 
 
+import client.model.dto.Game;
 import client.model.dto.Statistic;
 import client.services.SingletonSocketService;
 import client.socket.ClientSocket;
+import client.util.JsonUtil;
 
 
 import javax.swing.*;
@@ -35,6 +37,7 @@ public class LeadershipPanel extends JPanel {
 
         if (cs.response().contains("OK")) {
             listOfStatistics = new ArrayList<Statistic>();
+            listOfStatistics = JsonUtil.fromListJson(cs.response().substring(2), Statistic[].class);
             for (int i = 0; i < listOfStatistics.size(); i++) {
                 model.addRow(new Object[] { listOfStatistics.get(i).getPlayerUserName(),
                         listOfStatistics.get(i).getScore() });
