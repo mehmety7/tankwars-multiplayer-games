@@ -61,12 +61,12 @@ public class PlayerService {
         return null;
     }
 
-    public Boolean logout (Player player) {
+    public Boolean logout (Integer playerId) {
         /* if (Boolean.TRUE.equals(playerDao.updateActive(player.getId()))) {
             return Boolean.TRUE;
         } */
 
-        Player result = getPlayer(player.getId());
+        Player result = getPlayer(playerId);
 
         if (Objects.nonNull(result)) {
             result.setIsActive(Boolean.FALSE);
