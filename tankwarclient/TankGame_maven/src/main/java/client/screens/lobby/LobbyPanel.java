@@ -4,6 +4,7 @@ import client.model.dto.Game;
 import client.model.dto.Message;
 import client.model.entity.Player;
 import client.model.request.JoinGameRequest;
+import client.screens.waitingroom.WaitingRoomPanel;
 import client.services.SingletonSocketService;
 import client.socket.ClientSocket;
 import client.util.JsonUtil;
