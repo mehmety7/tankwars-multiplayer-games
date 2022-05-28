@@ -1,11 +1,12 @@
 package client.model.dto;
 
-import lombok.*;
 import client.model.enumerated.FaceOrientation;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
-/* Tanklar ateş ederken mermilerin çarptığı yere göre serverin aksiyon alması gerek,
- *  Bu yüzden bir mermi sınıfı oluşturdum.*/
 @Data
 @Builder
 @NoArgsConstructor
@@ -16,5 +17,4 @@ public class Bullet {
     private Integer positionX;
     private Integer positionY;
     private FaceOrientation faceOrientation;
-    private Float movementSpeed;
 }

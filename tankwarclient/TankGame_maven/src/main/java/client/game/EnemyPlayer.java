@@ -1,7 +1,7 @@
 package client.game;
 
-import client.game.GamePanel;
 import client.model.dto.Tank;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;

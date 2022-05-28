@@ -11,12 +11,15 @@ import server.model.entity.Player;
 import server.model.enumerated.MethodType;
 import server.model.request.CreateGameRequest;
 import server.model.request.JoinGameRequest;
+import server.model.request.UpdateGameRequest;
+import server.model.response.UpdateGameResponse;
 import server.service.*;
 import server.socket.Protocol;
 import server.utilization.JsonUtil;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ServiceOperationNavigator {
 
@@ -136,7 +139,7 @@ public class ServiceOperationNavigator {
             Game game = JsonUtil.fromJson(protocol.getMessage(), Game.class);
             if(Objects.isNull(game.getId()))
                 return FAIL;
-            if(game.getPlayers() == null || game.getPlayers().size() == 0)
+            if(game.getPlayers() == null || game.getPlayers().isEmpty())
                 return FAIL;
             if(Boolean.FALSE.equals(statisticService.addStatisticsInEndOfGame(game)))
                 return FAIL;
@@ -157,19 +160,43 @@ public class ServiceOperationNavigator {
         }
 
         else if (isEqual(protocol, MethodType.UG)){
-            return OK;
+            UpdateGameRequest gameRequest = JsonUtil.fromJson(protocol.getMessage(), UpdateGameRequest.class);
+
+            Game game = gameService.getGame(gameRequest.getGameId());
+            if(Objects.isNull(game) || game.getIsStarted().equals(Boolean.FALSE))
+                return FAIL;
+            UpdateGameResponse response = UpdateGameResponse.builder()
+                    .tanks(game
+                            .getPlayers()
+                            .keySet()
+                            .stream()
+                            .map(tankService::getTank)
+                            .collect(Collectors.toList()))
+                    .bullets(bulletService.getBullets(game.getId()))
+                    .build();
+            return OK + JsonUtil.toJson(response);
         }
 
         else if (isEqual(protocol, MethodType.UD)){
+            tankService.createOrUpdateTank(JsonUtil.fromJson(protocol.getMessage(), Tank.class));
             return OK;
         }
 
-        else if (isEqual(protocol, MethodType.GP)){
+
+        else if (isEqual(protocol, MethodType.GP)) {
             Player player = playerService.getPlayer(JsonUtil.fromJson(protocol.getMessage(), Player.class).getId());
             if (Objects.isNull(player)) {
                 return FAIL;
             }
             return OK + JsonUtil.toJson(player);
+        }
+
+        else if(isEqual(protocol, MethodType.AG)) {
+            List<Player> players = playerService.getActivePlayers();
+            if(players.isEmpty()) {
+                return FAIL;
+            }
+            return OK + JsonUtil.toJson(players);
         }
 
         else {

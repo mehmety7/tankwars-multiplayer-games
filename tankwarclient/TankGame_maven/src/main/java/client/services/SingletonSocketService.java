@@ -1,6 +1,5 @@
 package client.services;
 
-import client.model.entity.Player;
 import client.socket.ClientSocket;
 
 public class SingletonSocketService {
