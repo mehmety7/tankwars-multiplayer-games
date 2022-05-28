@@ -35,6 +35,10 @@ public class LeadershipPanel extends JPanel {
 
         if (cs.response().contains("OK")) {
             listOfStatistics = new ArrayList<Statistic>();
+            for (int i = 0; i < listOfStatistics.size(); i++) {
+                model.addRow(new Object[] { listOfStatistics.get(i).getPlayerUserName(),
+                        listOfStatistics.get(i).getScore() });
+            }
         } else {
             System.out.println("Failed getting statistics");
         }
@@ -51,12 +55,6 @@ public class LeadershipPanel extends JPanel {
         scoreTable.setEnabled(false);
         scoreTable.getTableHeader().setReorderingAllowed(false);
 
-        if (listOfStatistics != null) {
-            for (int i = 0; i < listOfStatistics.size(); i++) {
-                model.addRow(new Object[] { listOfStatistics.get(i).getPlayerUserName(),
-                        listOfStatistics.get(i).getScore() });
-            }
-        }
 
         backButton.addActionListener(new ActionListener() {
             @Override
