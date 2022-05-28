@@ -1,5 +1,6 @@
 package server;
 
+import server.model.dto.Bullet;
 import server.model.dto.Game;
 import server.model.dto.Statistic;
 import server.model.dto.Tank;
@@ -7,6 +8,7 @@ import server.model.entity.Player;
 import server.model.enumerated.FaceOrientation;
 import server.model.request.JoinGameRequest;
 import server.model.response.AboutUsResponse;
+import server.model.response.UpdateGameResponse;
 import server.service.navigator.ServiceOperationNavigator;
 import server.socket.Protocol;
 import server.utilization.JsonUtil;
@@ -69,10 +71,21 @@ public class MainApplication {
             System.out.println(tank);
         }
 
+        System.out.println("---------------------");
+        System.out.println("Update Game Response Json Operation Test");
+        System.out.println("---------------------");
 
+        Bullet bullet1 = Bullet.builder().tankId(1).positionX(10).positionY(10).faceOrientation(FaceOrientation.UP).build();
+        Bullet bullet2 = Bullet.builder().tankId(2).positionX(10).positionY(10).faceOrientation(FaceOrientation.UP).build();
+        List<Bullet> bullets = Arrays.asList(bullet1, bullet2);
 
+        UpdateGameResponse updateGameResponse = new UpdateGameResponse(tanks, bullets);
 
+        String uGResponseJsonList = JsonUtil.toJson(updateGameResponse);
+        System.out.println(uGResponseJsonList);
 
+        UpdateGameResponse deserializeUGR = JsonUtil.fromJson(uGResponseJsonList, UpdateGameResponse.class);
+        System.out.println(deserializeUGR);
 
 
         System.out.println("---------------------");
