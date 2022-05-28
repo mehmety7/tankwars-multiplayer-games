@@ -2,7 +2,9 @@ package test;
 
 
 import server.model.dto.Game;
+import server.model.entity.Player;
 import server.service.GameService;
+import server.service.PlayerService;
 import server.service.navigator.ServiceOperationNavigator;
 import server.socket.Protocol;
 import server.utilization.JsonUtil;
@@ -18,7 +20,13 @@ public class TestServices {
         gameService.joinGame(1,2);
         Protocol protocol = Protocol.builder().message(JsonUtil.toJson(Game.builder().id(1).build())).methodType("SG").build();
         String response = serviceOperationNavigator.doOperation(protocol);
-        System.out.println(response);
+
+
+        PlayerService playerService = PlayerService.getInstance();
+        playerService.login(Player.builder().username("player1").password("test").build());
+        System.out.println(playerService.getPlayer(1).getIsActive());
+        playerService.logout(1);
+        System.out.println(playerService.getPlayer(1).getIsActive());
 
     }
 

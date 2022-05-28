@@ -1,6 +1,14 @@
 package client.game;
 
+import client.model.dto.Bullet;
 import client.model.dto.Tank;
+import client.model.entity.Player;
+import client.model.request.UpdateGameRequest;
+import client.model.response.UpdateGameResponse;
+import client.screens.lobby.LobbyPanel;
+import client.services.SingletonSocketService;
+import client.socket.ClientSocket;
+import client.util.JsonUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +40,7 @@ public class GamePanel extends JPanel implements  Runnable{
 
     //todo =================================================================
     List<Tank> tanks;
-
+    List<Bullet> bullets;
 
     public List<EnemyPlayer> enemyPlayers = new ArrayList<EnemyPlayer>();
     public CurrentPlayer currentPlayer = new CurrentPlayer(this, keyHandler);;
@@ -76,11 +84,27 @@ public class GamePanel extends JPanel implements  Runnable{
 
         //todo socketten tanks i guncelle
 
+        ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
+        UpdateGameRequest updateGameRequest = new UpdateGameRequest();
+        updateGameRequest.setGameId(currentPlayer.tank.getGameId());
+        cs.sendMessage("UG", updateGameRequest);
+        System.out.println(cs.response());
+
+        if (cs.response().contains("OK")) {
+            UpdateGameResponse updateGameResponse;
+            String playerDataString = cs.response().substring(2);
+            updateGameResponse = JsonUtil.fromJson(playerDataString,UpdateGameResponse.class);
+            tanks = updateGameResponse.getTanks();
+            bullets = updateGameResponse.getBullets();
+        } else {
+            System.out.println("UG  failed");
+        }
+
         enemyPlayers.clear();
 
-        if(!tanks.contains(currentPlayer.tank)){
-            currentPlayer.isAlive = false;
-        }
+//        if(!tanks.contains(currentPlayer.tank)){//todo bu calisir mi?
+//            currentPlayer.isAlive = false;
+//        }
 
         for(int i=0; i<tanks.size();i++){
             if(tanks.get(i).getPlayerId() != currentPlayerId){
@@ -88,12 +112,36 @@ public class GamePanel extends JPanel implements  Runnable{
                 enemyPlayers.add(new EnemyPlayer(this, tanks.get(i)));
             }else{
                 if(currentPlayer.isAlive){
-                    //todo send server my position
+                    currentPlayer.isAlive = false;
                 }
 
             }
         }
     }
+
+    public void bulletTrackFromServer(Graphics2D g2, Bullet bullet) {
+        g2.setColor(Color.GREEN);
+
+        switch (bullet.getFaceOrientation()) {
+            case UP:
+                g2.drawLine(bullet.getPositionX()+tankSize/2, bullet.getPositionY()+tankSize/2, bullet.getPositionX()+tankSize/2, 0);
+                break;
+            case DOWN:
+                g2.drawLine(bullet.getPositionX()+tankSize/2, bullet.getPositionY()+tankSize/2, bullet.getPositionX()+tankSize/2, screenHeight);
+                break;
+            case LEFT:
+                g2.drawLine(bullet.getPositionX()+tankSize/2, bullet.getPositionY()+tankSize/2, 0, bullet.getPositionY()+tankSize/2);
+                break;
+            case RIGHT:
+                g2.drawLine(bullet.getPositionX()+tankSize/2, bullet.getPositionY()+tankSize/2, screenWidth, bullet.getPositionY()+tankSize/2);
+                break;
+
+
+        }
+
+        g2.setColor(Color.WHITE);
+    }
+
 
 
     public void startGameThread(){
@@ -144,11 +192,23 @@ public class GamePanel extends JPanel implements  Runnable{
 //            eP.update();
 //        }
 
+        updateGameFromServer();
+
         if(currentPlayer.isAlive){
             currentPlayer.update(enemyPlayers);
+            //todo send server my position
+            ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
+            cs.sendMessage("UD", currentPlayer.tank);
+            System.out.println(cs.response());
+
+            if (cs.response().contains("OK")) {
+
+            } else {
+                System.out.println("UD failed");
+            }
         }
 
-        updateGameFromServer();
+
 
 
 
@@ -164,6 +224,14 @@ public class GamePanel extends JPanel implements  Runnable{
         for(EnemyPlayer eP : enemyPlayers){
             eP.draw(g2);
         }
+
+        for(Bullet bullet : bullets){
+            bulletTrackFromServer(g2, bullet);
+        }
+        bullets.clear();
+
+
+
         g2.dispose();
     }
 }

@@ -3,6 +3,8 @@ package client.game;
 
 import client.model.dto.Tank;
 import client.model.enumerated.FaceOrientation;
+import client.services.SingletonSocketService;
+import client.socket.ClientSocket;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -63,9 +65,25 @@ public class CurrentPlayer {
                 tank.setPositionX(tank.getPositionX() + speed);
             }
         } else if (keyHandler.spacePressed == true) {
+
             if (shotFired()) {
+
                 fire = true;
-                checkFiringLine(enemyPlayers);
+
+//                checkFiringLine(enemyPlayers);
+
+                //TODO send bullet to server
+
+                ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
+                cs.sendMessage("SF", this.tank);
+                System.out.println(cs.response());
+
+                if (cs.response().contains("OK")) {
+                    System.out.println("Enemy hit");
+                } else {
+                    System.out.println("Shot missed");
+                }
+
             }
         }
     }
@@ -149,6 +167,7 @@ public class CurrentPlayer {
         g2.drawImage(image, tank.getPositionX(), tank.getPositionY(), gp.tankSize, gp.tankSize, null);
 
         if(fire) {
+            //TODO draw bullet
             bulletTrack(g2);
 
             long currentTime = System.currentTimeMillis();

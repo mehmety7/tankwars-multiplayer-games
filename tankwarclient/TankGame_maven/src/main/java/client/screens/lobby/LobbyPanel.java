@@ -11,6 +11,7 @@ import client.socket.ClientSocket;
 import client.util.JsonUtil;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +19,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LobbyPanel extends JPanel {
     JPanel parentPanel = new JPanel();
@@ -48,7 +50,7 @@ public class LobbyPanel extends JPanel {
         gridLayout.setHgap(20);
         gridLayout.setVgap(10);
 
-        String[] columnNames = { "Player", "Total Score"};
+        String columnName = "Player Username";
 
         //open New Game
         newGameButton.addActionListener(new ActionListener() {
@@ -90,8 +92,8 @@ public class LobbyPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 //TODO perform LogOut
                 ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
-                Player player = Player.builder().id(playerId).build();
-                cs.sendMessage("LT", player);
+                PlayerGameRequest request = PlayerGameRequest.builder().playerId(playerId).build();
+                cs.sendMessage("LT", request);
 
                 if(cs.response().startsWith("OK")){
                     CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
@@ -159,7 +161,7 @@ public class LobbyPanel extends JPanel {
 
                 } else {
                     System.out.println("No available game or response error");
-                    JOptionPane.showMessageDialog(parentPanel, "No game or Response error");
+                    // JOptionPane.showMessageDialog(parentPanel, "No game or Response error");
                 }
 
                 //get messages
@@ -172,7 +174,7 @@ public class LobbyPanel extends JPanel {
                     System.out.println();
                 }else {
                     System.out.println("No available message or response error");
-                    JOptionPane.showMessageDialog(parentPanel, "No message or Response error");
+                    // JOptionPane.showMessageDialog(parentPanel, "No message or Response error");
                 }
 
                 //get active players
@@ -180,19 +182,18 @@ public class LobbyPanel extends JPanel {
                 if(cs.response().contains("OK")){
                     String gamesDataString = cs.response().substring(2);
                     List <Player> activePlayersList =  JsonUtil.fromListJson(gamesDataString, Player[].class);
-                    List<List<String>> activeData = new ArrayList<>();
+                    List<String> activeData = new ArrayList<>();
                     activePlayerPanel.removeAll();
                     activePlayerPanel.setLayout(new BoxLayout(activePlayerPanel,BoxLayout.Y_AXIS));
 
                     for(Player player: activePlayersList){
-                        List<String> oneData = new ArrayList<>();
-                        oneData.add(player.getUsername());
-                        oneData.add(player.getIsActive().toString());
-                        activeData.add(oneData);
+                        activeData.add(player.getUsername());
 
                     }
-                    String[][] tmp = activeData.stream().map(l-> l.toArray(String[]::new)).toArray(String[][]::new);
-                    JTable activePlayers = new JTable(tmp, columnNames);
+                    String[] tmp = activeData.stream().toArray(String[]::new);
+                    DefaultTableModel model = new DefaultTableModel();
+                    model.addColumn(columnName, tmp);
+                    JTable activePlayers = new JTable(model);
                     activePlayerPanel.setBounds(475, 120, 200, 250);
                     activePlayerPanel.setBackground(Color.yellow);
                     activePlayers.setEnabled(false);
@@ -204,7 +205,7 @@ public class LobbyPanel extends JPanel {
                     System.out.println(activeData);
                 }else {
                     System.out.println("No available active players or error");
-                    JOptionPane.showMessageDialog(parentPanel, "No available active players or Response error");
+                    // JOptionPane.showMessageDialog(parentPanel, "No available active players or Response error");
                 }
                 activePlayerPanel.updateUI();
                 gameRooms.updateUI();

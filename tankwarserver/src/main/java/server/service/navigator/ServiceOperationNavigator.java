@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import server.bean.BeanHandler;
 import server.constants.ConstantsForInnerLogic;
 import server.extensions.GameExtension;
-import server.model.dto.Game;
-import server.model.dto.Message;
-import server.model.dto.Statistic;
-import server.model.dto.Tank;
+import server.model.dto.*;
 import server.model.entity.Player;
 import server.model.enumerated.MethodType;
 import server.model.request.CreateGameRequest;
@@ -78,7 +75,7 @@ public class ServiceOperationNavigator {
             PlayerGameRequest request = JsonUtil.fromJson(protocol.getMessage(), PlayerGameRequest.class);
             Game beforeJoin = gameService.getGame(request.getGameId());
             Player player = playerService.getPlayer(request.getPlayerId());
-            if(Boolean.TRUE.equals(beforeJoin.getIsStarted()))
+            if(Objects.isNull(beforeJoin) || Boolean.TRUE.equals(beforeJoin.getIsStarted()))
                 return FAIL;
             if(Boolean.FALSE.equals(player.getIsActive()))
                 return FAIL;
@@ -169,7 +166,9 @@ public class ServiceOperationNavigator {
 
         else if (isEqual(protocol, MethodType.SF)){
             Tank tank = JsonUtil.fromJson(protocol.getMessage(), Tank.class);
-            tankService.createBullet(tank);
+            Bullet bullet = tankService.createBullet(tank);
+            tankService.tanksThatGotHit(tank.getGameId(), bullet);
+            tankService.removeBullet(bullet);
             return OK;
         }
 
