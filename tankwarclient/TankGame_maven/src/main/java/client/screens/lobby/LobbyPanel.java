@@ -49,7 +49,7 @@ public class LobbyPanel extends JPanel {
     JLabel activePlayersLabel = new JLabel("Active Players");
     JPanel activePlayerPanel = new JPanel();
     Window activeWindow = javax.swing.FocusManager.getCurrentManager().getActiveWindow();
-    public LobbyPanel(JPanel parentPanel, Integer playerId) {
+    public LobbyPanel(JPanel parentPanel, Integer playerId,String playerUsername) {
         this.parentPanel = parentPanel;
         GridLayout gridLayout = new GridLayout(4,2);
         setLayout(null);
@@ -169,6 +169,7 @@ public class LobbyPanel extends JPanel {
                         joinButton.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
+                                t.cancel();
                                 PlayerGameRequest playerGameRequest = PlayerGameRequest.builder().gameId(gameId).playerId(playerId).build();
                                 cs.sendMessage("JG", playerGameRequest);
                                 System.out.println(gameId);
@@ -279,7 +280,7 @@ public class LobbyPanel extends JPanel {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
-                    Message message = Message.builder().playerId(playerId).playerUserName("Burak").text(chatInput.getText()).build();
+                    Message message = Message.builder().playerId(playerId).playerUserName(playerUsername).text(chatInput.getText()).build();
                     cs.sendMessage("CM",message);
                     System.out.println("CHAT INPUT "+chatInput.getText());
                     chatInput.setText("");
