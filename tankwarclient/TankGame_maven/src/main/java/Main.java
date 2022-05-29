@@ -25,24 +25,24 @@ public class Main {
                 .faceOrientation(FaceOrientation.UP)
                 .health(10)
                 .positionX(100)
-                .positionY(300)
+                .positionY(100)
                 .build());
 
         tanks.add(Tank.builder()
-                .playerId(2)
+                .playerId(5)
+                .gameId(1)
+                .faceOrientation(FaceOrientation.DOWN)
+                .health(10)
+                .positionX(200)
+                .positionY(200)
+                .build());
+
+        tanks.add(Tank.builder()
+                .playerId(6)
                 .gameId(1)
                 .faceOrientation(FaceOrientation.DOWN)
                 .health(10)
                 .positionX(300)
-                .positionY(300)
-                .build());
-
-        tanks.add(Tank.builder()
-                .playerId(3)
-                .gameId(1)
-                .faceOrientation(FaceOrientation.DOWN)
-                .health(10)
-                .positionX(400)
                 .positionY(300)
                 .build());
 

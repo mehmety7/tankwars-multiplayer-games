@@ -15,7 +15,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GamePanel extends JPanel implements  Runnable{
+public class GamePanel extends JPanel implements Runnable {
 
     // Screen Settings
     final int originalTileSize = 16;
@@ -43,11 +43,11 @@ public class GamePanel extends JPanel implements  Runnable{
     List<Bullet> bullets;
 
     public List<EnemyPlayer> enemyPlayers = new ArrayList<EnemyPlayer>();
-    public CurrentPlayer currentPlayer = new CurrentPlayer(this, keyHandler);;
+    public CurrentPlayer currentPlayer = new CurrentPlayer(this, keyHandler);
+    ;
 
 
-
-    public GamePanel(Integer currentPlayerId, List<Tank> tanks){
+    public GamePanel(Integer currentPlayerId, List<Tank> tanks) {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true); // to improve rendering performance
@@ -57,43 +57,39 @@ public class GamePanel extends JPanel implements  Runnable{
         this.currentPlayerId = currentPlayerId;
         this.tanks = tanks;
 
-        startGameThread();
         createPlayers();
+        startGameThread();
 
 
     }
-
-
 
 
 //    TestPlayer testPlayer1 = new TestPlayer(this, new KeyHandler());
 //    TestPlayer testPlayer2 = new TestPlayer(this, new KeyHandler());
 
 
-    public void createPlayers(){
-        for(int i=0; i<tanks.size();i++){
-            if(tanks.get(i).getPlayerId() != currentPlayerId){
+    public void createPlayers() {
+
+        for (int i = 0; i < tanks.size(); i++) {
+            if (tanks.get(i).getPlayerId() != currentPlayerId) {
                 enemyPlayers.add(new EnemyPlayer(this, tanks.get(i)));
-            }else{
+            } else {
                 currentPlayer.tank = tanks.get(i);
             }
         }
     }
 
-    public void updateGameFromServer(){
-
-        //todo socketten tanks i guncelle
-
+    public void updateGameFromServer() {
         ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
         UpdateGameRequest updateGameRequest = new UpdateGameRequest();
         updateGameRequest.setGameId(currentPlayer.tank.getGameId());
         cs.sendMessage("UG", updateGameRequest);
-        System.out.println(cs.response());
+        System.out.println("Update Game Response: " + cs.response());
 
         if (cs.response().contains("OK")) {
             UpdateGameResponse updateGameResponse;
             String playerDataString = cs.response().substring(2);
-            updateGameResponse = JsonUtil.fromJson(playerDataString,UpdateGameResponse.class);
+            updateGameResponse = JsonUtil.fromJson(playerDataString, UpdateGameResponse.class);
             tanks = updateGameResponse.getTanks();
             bullets = updateGameResponse.getBullets();
         } else {
@@ -106,13 +102,14 @@ public class GamePanel extends JPanel implements  Runnable{
 //            currentPlayer.isAlive = false;
 //        }
 
-        for(int i=0; i<tanks.size();i++){
-            if(tanks.get(i).getPlayerId() != currentPlayerId){
-                tanks.get(i).setPositionX(tanks.get(i).getPositionX()+1);
+        for (int i = 0; i < tanks.size(); i++) {
+            if (tanks.get(i).getPlayerId() != currentPlayerId) {
+                tanks.get(i).setPositionX(tanks.get(i).getPositionX() + 1);
+                System.out.println("Add enemy player called!");
                 enemyPlayers.add(new EnemyPlayer(this, tanks.get(i)));
-            }else{
-                if(currentPlayer.isAlive){
-                    currentPlayer.isAlive = false;
+            } else {
+                if (currentPlayer.isAlive) {
+//                    currentPlayer.isAlive = false;
                 }
 
             }
@@ -124,16 +121,16 @@ public class GamePanel extends JPanel implements  Runnable{
 
         switch (bullet.getFaceOrientation()) {
             case UP:
-                g2.drawLine(bullet.getPositionX()+tankSize/2, bullet.getPositionY()+tankSize/2, bullet.getPositionX()+tankSize/2, 0);
+                g2.drawLine(bullet.getPositionX() + tankSize / 2, bullet.getPositionY() + tankSize / 2, bullet.getPositionX() + tankSize / 2, 0);
                 break;
             case DOWN:
-                g2.drawLine(bullet.getPositionX()+tankSize/2, bullet.getPositionY()+tankSize/2, bullet.getPositionX()+tankSize/2, screenHeight);
+                g2.drawLine(bullet.getPositionX() + tankSize / 2, bullet.getPositionY() + tankSize / 2, bullet.getPositionX() + tankSize / 2, screenHeight);
                 break;
             case LEFT:
-                g2.drawLine(bullet.getPositionX()+tankSize/2, bullet.getPositionY()+tankSize/2, 0, bullet.getPositionY()+tankSize/2);
+                g2.drawLine(bullet.getPositionX() + tankSize / 2, bullet.getPositionY() + tankSize / 2, 0, bullet.getPositionY() + tankSize / 2);
                 break;
             case RIGHT:
-                g2.drawLine(bullet.getPositionX()+tankSize/2, bullet.getPositionY()+tankSize/2, screenWidth, bullet.getPositionY()+tankSize/2);
+                g2.drawLine(bullet.getPositionX() + tankSize / 2, bullet.getPositionY() + tankSize / 2, screenWidth, bullet.getPositionY() + tankSize / 2);
                 break;
 
 
@@ -143,8 +140,7 @@ public class GamePanel extends JPanel implements  Runnable{
     }
 
 
-
-    public void startGameThread(){
+    public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -152,14 +148,14 @@ public class GamePanel extends JPanel implements  Runnable{
     @Override
     public void run() {
 
-        double drawInterval = 1000000000/FPS;
+        double drawInterval = 1000000000 / FPS;
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
         long timer = 0;
         int drawCount = 0; //for fps
 
-        while (gameThread != null){
+        while (gameThread != null) {
 
             currentTime = System.nanoTime();
 
@@ -167,14 +163,16 @@ public class GamePanel extends JPanel implements  Runnable{
             timer += (currentTime - lastTime);
             lastTime = currentTime;
 
-            if(delta >= 1){
+            if (delta >= 1) {
+                this.removeAll();
                 update();
+                revalidate();
                 repaint(); // Swing method
                 delta--;
                 drawCount++;
             }
 
-            if(timer >= 1000000000){
+            if (timer >= 1000000000) {
 //                System.out.println("FPS:" + drawCount);
                 drawCount = 0;
                 timer = 0;
@@ -183,23 +181,14 @@ public class GamePanel extends JPanel implements  Runnable{
         }
     }
 
-    public void update(){
-
-        //todo serverdan gelen SF
-
-
-//        for(EnemyPlayer eP : enemyPlayers){
-//            eP.update();
-//        }
-
+    public void update() {
         updateGameFromServer();
 
-        if(currentPlayer.isAlive){
-            currentPlayer.update(enemyPlayers);
+        if (currentPlayer.isAlive) {
+            currentPlayer.update();
             //todo send server my position
             ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
             cs.sendMessage("UD", currentPlayer.tank);
-            System.out.println(cs.response());
 
             if (cs.response().contains("OK")) {
 
@@ -209,27 +198,24 @@ public class GamePanel extends JPanel implements  Runnable{
         }
 
 
-
-
-
     }
 
 
-
-    public void paintComponent(Graphics g){ //override JComponent
+    public void paintComponent(Graphics g) { //override JComponent
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         currentPlayer.draw(g2);
 //        player.test(g2);
-        for(EnemyPlayer eP : enemyPlayers){
+        for (EnemyPlayer eP : enemyPlayers) {
             eP.draw(g2);
         }
 
-        for(Bullet bullet : bullets){
-            bulletTrackFromServer(g2, bullet);
+        if (bullets != null) {
+            for (Bullet bullet : bullets) {
+                bulletTrackFromServer(g2, bullet);
+            }
+            bullets.clear();
         }
-        bullets.clear();
-
 
 
         g2.dispose();

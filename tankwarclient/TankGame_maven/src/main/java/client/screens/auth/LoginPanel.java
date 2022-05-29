@@ -35,14 +35,15 @@ public class LoginPanel extends JPanel {
                 Player player = Player.builder().username(usernameField.getText()).password(String.valueOf(passwordField.getPassword())).build();
                 ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
                 cs.sendMessage("LG", player);
-                System.out.println(cs.response());
 
                 if (cs.response().contains("OK")) {
                     Player playerDataFromResponse;
                     String playerDataString = cs.response().substring(2);
+
                     playerDataFromResponse = JsonUtil.fromJson(playerDataString,Player.class);
-                    LobbyPanel lobbyPanel = new LobbyPanel(parentPanel,playerDataFromResponse.getId());
+                    LobbyPanel lobbyPanel = new LobbyPanel(parentPanel,playerDataFromResponse.getId(),playerDataFromResponse.getUsername());
                     parentPanel.add(lobbyPanel,"lobbyPanel");
+
 
                     CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                     cardLayout.show(parentPanel, "lobbyPanel");
@@ -67,16 +68,18 @@ public class LoginPanel extends JPanel {
         buttonsPanel.add(loginButton);
         buttonsPanel.add(signUpButton);
 
-        //resize textFields
-        usernameField.setLayout(new FlowLayout());
-        passwordField.setLayout(new FlowLayout());
-        usernameField.setPreferredSize(new Dimension(120, 10));
-        passwordField.setPreferredSize(new Dimension(120, 10));
+        JPanel usernamePanel = new JPanel(new FlowLayout());
+        usernameField.setPreferredSize(new Dimension(400, 50));
+        usernamePanel.add(usernameLabel);
+        usernamePanel.add(usernameField);
 
-        this.add(usernameLabel);
-        this.add(usernameField);
-        this.add(passwordLabel);
-        this.add(passwordField);
+        JPanel passwordPanel = new JPanel(new FlowLayout());
+        passwordField.setPreferredSize(new Dimension(400, 50));
+        passwordPanel.add(passwordLabel);
+        passwordPanel.add(passwordField);
+
+        this.add(usernamePanel);
+        this.add(passwordPanel);
         this.add(buttonsPanel);
     }
 }

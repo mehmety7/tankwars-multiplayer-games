@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class CurrentPlayer {
+    public static String assetPath = "C:/development/tankwars/tankwarclient/TankGame_maven/src/main/java/client/assets/player/";
     public Tank tank;
     private Integer speed = 2;
     private BufferedImage up, down, left, right;
@@ -33,35 +34,36 @@ public class CurrentPlayer {
 
     public void getPlayerImage() {
         try {
-            up = ImageIO.read(new File("src/main/java/client/assets/player/blue_up.png"));
-            down = ImageIO.read(new File("src/main/java/client/assets/player/blue_down.png"));
-            left = ImageIO.read(new File("src/main/java/client/assets/player/blue_left.png"));
-            right = ImageIO.read(new File("src/main/java/client/assets/player/blue_right.png"));
+            up = ImageIO.read(new File(assetPath + "blue_up.png"));
+            down = ImageIO.read(new File(assetPath + "blue_down.png"));
+            left = ImageIO.read(new File(assetPath + "blue_left.png"));
+            right = ImageIO.read(new File(assetPath + "blue_right.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void update(List<EnemyPlayer> enemyPlayers) {
+    public void update() {
 //        System.out.println("X: " + x + "  Y: " + y);
         if (keyHandler.upPressed == true) {
             tank.setFaceOrientation(FaceOrientation.UP);
-            if(tank.getPositionY() >= 0) {
+            if (tank.getPositionY() >= 0) {
                 tank.setPositionY(tank.getPositionY() - speed);
             }
         } else if (keyHandler.downPressed == true) {
             tank.setFaceOrientation(FaceOrientation.DOWN);
-            if(tank.getPositionY() + gp.tankSize <= gp.screenHeight) {
+            if (tank.getPositionY() + gp.tankSize <= gp.screenHeight) {
                 tank.setPositionY(tank.getPositionY() + speed);
+                System.out.println("Asagi tiklandi");
             }
         } else if (keyHandler.leftPressed == true) {
             tank.setFaceOrientation(FaceOrientation.LEFT);
-            if(tank.getPositionX() >= 0) {
+            if (tank.getPositionX() >= 0) {
                 tank.setPositionX(tank.getPositionX() - speed);
             }
         } else if (keyHandler.rightPressed == true) {
             tank.setFaceOrientation(FaceOrientation.RIGHT);
-            if(tank.getPositionX() + gp.tankSize <= gp.screenWidth) {
+            if (tank.getPositionX() + gp.tankSize <= gp.screenWidth) {
                 tank.setPositionX(tank.getPositionX() + speed);
             }
         } else if (keyHandler.spacePressed == true) {
@@ -166,7 +168,7 @@ public class CurrentPlayer {
 
         g2.drawImage(image, tank.getPositionX(), tank.getPositionY(), gp.tankSize, gp.tankSize, null);
 
-        if(fire) {
+        if (fire) {
             //TODO draw bullet
             bulletTrack(g2);
 
@@ -174,7 +176,7 @@ public class CurrentPlayer {
             long diff = (long) ((currentTime - lastShot) / 1000);
 
 
-            if (diff >= shootingSpeed/2 ) {
+            if (diff >= shootingSpeed / 2) {
                 fire = false;
             }
         }
@@ -186,16 +188,16 @@ public class CurrentPlayer {
 
         switch (tank.getFaceOrientation()) {
             case UP:
-                g2.drawLine(tank.getPositionX()+gp.tankSize/2, tank.getPositionY()+gp.tankSize/2, tank.getPositionX()+gp.tankSize/2, 0);
+                g2.drawLine(tank.getPositionX() + gp.tankSize / 2, tank.getPositionY() + gp.tankSize / 2, tank.getPositionX() + gp.tankSize / 2, 0);
                 break;
             case DOWN:
-                g2.drawLine(tank.getPositionX()+gp.tankSize/2, tank.getPositionY()+gp.tankSize/2, tank.getPositionX()+gp.tankSize/2, gp.screenHeight);
+                g2.drawLine(tank.getPositionX() + gp.tankSize / 2, tank.getPositionY() + gp.tankSize / 2, tank.getPositionX() + gp.tankSize / 2, gp.screenHeight);
                 break;
             case LEFT:
-                g2.drawLine(tank.getPositionX()+gp.tankSize/2, tank.getPositionY()+gp.tankSize/2, 0, tank.getPositionY()+gp.tankSize/2);
+                g2.drawLine(tank.getPositionX() + gp.tankSize / 2, tank.getPositionY() + gp.tankSize / 2, 0, tank.getPositionY() + gp.tankSize / 2);
                 break;
             case RIGHT:
-                g2.drawLine(tank.getPositionX()+gp.tankSize/2, tank.getPositionY()+gp.tankSize/2, gp.screenWidth, tank.getPositionY()+gp.tankSize/2);
+                g2.drawLine(tank.getPositionX() + gp.tankSize / 2, tank.getPositionY() + gp.tankSize / 2, gp.screenWidth, tank.getPositionY() + gp.tankSize / 2);
                 break;
 
 
@@ -203,7 +205,6 @@ public class CurrentPlayer {
 
         g2.setColor(Color.WHITE);
     }
-
 
 
 }

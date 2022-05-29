@@ -1,9 +1,11 @@
 package client.screens.waitingroom;
 
+import client.game.GamePanel;
 import client.model.dto.Game;
 import client.model.dto.Tank;
 import client.screens.endofgame.EndOfGamePanel;
 import client.services.WaitingRoomService;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -16,21 +18,23 @@ import java.util.TimerTask;
 
 public class WaitingRoomPanel extends JPanel {
     WaitingRoomService waitingRoomService;
+    boolean isGameStarted = false;
     Timer t = new Timer();
     Game currentGame;
     List<Tank> tanks;
     JPanel parentPanel;
     Integer playerId;
     Integer gameId;
-    JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-    JPanel bodyPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+    JPanel headerPanel = new JPanel();
+    JPanel bodyPanel = new JPanel();
     JPanel playersPanel = new JPanel();
     JPanel gameDetailPanel = new JPanel();
+    JPanel gameParametersPanel = new JPanel();
+    JLabel gameParametersTitle = new JLabel("Game Parameters", SwingConstants.CENTER);
     JLabel waitingRoomTitle = new JLabel();
     JLabel isStartStatusLabel = new JLabel();
     JButton backToLobbyBtn = new JButton("Back to Lobby");
     JButton startGameBtn = new JButton("Start the Game");
-    JButton endOfGame = new JButton("endOfGame");
 
     public WaitingRoomPanel(JPanel parentPanel, Integer playerId, Integer gameId) {
         this.waitingRoomService = new WaitingRoomService();
@@ -60,31 +64,25 @@ public class WaitingRoomPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (waitingRoomService.isStartGame(gameId, playerId)) {
+                    isGameStarted = true;
                     tanks = waitingRoomService.startGame(gameId);
+                    goToGamePanel();
                 } else {
                     isStartStatusLabel.setText("You can not start the game!");
                 }
             }
         });
 
-        endOfGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                EndOfGamePanel endOfGamePanel = new EndOfGamePanel(parentPanel, gameId);
-                parentPanel.add(endOfGamePanel, "endOfGamePanel");
-                CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
-                cardLayout.show(parentPanel, "endOfGamePanel");
-            }
-        });
-
         addToMainPanel();
-        addToHeaderPanel();
-        addToBodyPanel();
         setWaitingRoomTitle();
         this.t.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 currentGame = waitingRoomService.getGame(gameId);
+                if (currentGame.getIsStarted()) {
+                    tanks = waitingRoomService.startGame(gameId);
+                    goToGamePanel();
+                }
                 if (currentGame == null) {
                     t.cancel();
                     CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
@@ -98,25 +96,53 @@ public class WaitingRoomPanel extends JPanel {
         }, 0, 1000);
     }
 
+    private void goToGamePanel() {
+        t.cancel();
+        System.out.println("Ahmetin Tanklari: " + tanks);
+        GamePanel gamePanel = new GamePanel(playerId, tanks);
+        parentPanel.add(gamePanel, "gamePanel");
+        CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
+        cardLayout.show(parentPanel, "gamePanel");
+    }
+
     private void addToMainPanel() {
-        this.setLayout(new GridLayout(2, 1));
+        this.setLayout(new GridLayout(2, 1, 0, 0));
         this.add(headerPanel);
         this.add(bodyPanel);
+        addToHeaderPanel();
+        addToBodyPanel();
+    }
+
+    private void addToGameParametersPanel() {
+        gameParametersPanel.setLayout(new BoxLayout(gameParametersPanel, BoxLayout.Y_AXIS));
+        gameParametersPanel.setBackground(Color.YELLOW);
+        gameParametersPanel.setMinimumSize(new Dimension(200, 200));
+        gameParametersPanel.setPreferredSize(new Dimension(200, 200));
+        gameParametersPanel.setMaximumSize(new Dimension(200, 200));
+        gameParametersPanel.add(gameParametersTitle);
+        gameParametersPanel.setBorder(new EmptyBorder(5, 50, 5, 0));
     }
 
     private void addToBodyPanel() {
+        bodyPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         bodyPanel.add(playersPanel);
         bodyPanel.add(Box.createHorizontalStrut(75));
         bodyPanel.add(gameDetailPanel);
-//        addToPlayersPanel();
+        bodyPanel.add(Box.createHorizontalStrut(75));
+        bodyPanel.add(startGameBtn);
+        startGameBtn.setMinimumSize(new Dimension(150, 50));
+        startGameBtn.setPreferredSize(new Dimension(200, 65));
+        startGameBtn.setMaximumSize(new Dimension(450, 150));
         addToGameDetailPanel();
     }
 
     private void addToGameDetailPanel() {
         gameDetailPanel.setLayout(new BoxLayout(gameDetailPanel, BoxLayout.Y_AXIS));
-        gameDetailPanel.add(startGameBtn);
+        gameDetailPanel.add(gameParametersPanel);
+        gameDetailPanel.add(Box.createVerticalStrut(50));
         gameDetailPanel.add(isStartStatusLabel);
-        gameDetailPanel.add(endOfGame);
+
+        addToGameParametersPanel();
     }
 
     private void addToPlayersPanel() {
@@ -138,8 +164,9 @@ public class WaitingRoomPanel extends JPanel {
     }
 
     private void addToHeaderPanel() {
+        headerPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
         headerPanel.add(backToLobbyBtn);
-        headerPanel.add(Box.createHorizontalStrut(100));
+        headerPanel.add(Box.createHorizontalStrut(600));
         headerPanel.add(waitingRoomTitle);
     }
 
