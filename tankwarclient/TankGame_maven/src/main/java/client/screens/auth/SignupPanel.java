@@ -12,7 +12,7 @@ public class SignupPanel extends JPanel {
     JButton signUpButton = new JButton("Sign up");
     JLabel usernameLabel = new JLabel("username");
     JLabel passwordLabel = new JLabel("password");
-    JLabel passwordAgainLabel = new JLabel("password again");
+    JLabel passwordAgainLabel = new JLabel("password");
     JTextField usernameField = new JTextField();
     JPasswordField passwordField = new JPasswordField();
     JPasswordField passwordAgainField = new JPasswordField();
@@ -38,12 +38,24 @@ public class SignupPanel extends JPanel {
             }
         });
 
-        this.add(usernameLabel);
-        this.add(usernameField);
-        this.add(passwordLabel);
-        this.add(passwordField);
-        this.add(passwordAgainLabel);
-        this.add(passwordAgainField);
+        JPanel usernamePanel = new JPanel(new FlowLayout());
+        usernameField.setPreferredSize(new Dimension(400, 50));
+        usernamePanel.add(usernameLabel);
+        usernamePanel.add(usernameField);
+
+        JPanel passwordPanel = new JPanel(new FlowLayout());
+        passwordField.setPreferredSize(new Dimension(400, 50));
+        passwordPanel.add(passwordLabel);
+        passwordPanel.add(passwordField);
+
+        JPanel passwordAgainPanel = new JPanel(new FlowLayout());
+        passwordAgainField.setPreferredSize(new Dimension(400, 50));
+        passwordAgainPanel.add(passwordAgainLabel);
+        passwordAgainPanel.add(passwordAgainField);
+
+        this.add(usernamePanel);
+        this.add(passwordPanel);
+        this.add(passwordAgainPanel);
         this.add(buttonsPanel);
     }
 }

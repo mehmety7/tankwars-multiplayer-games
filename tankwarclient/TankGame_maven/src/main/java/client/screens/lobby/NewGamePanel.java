@@ -65,7 +65,7 @@ public class NewGamePanel extends JPanel {
                 cs.sendMessage("CG", game);
                 if (cs.response().startsWith("OK")) {
                     System.out.println(cs.response());
-                    // TODO navigate to game room
+                    // Navigate to game room
                     WaitingRoomPanel waitingRoomPanel = new WaitingRoomPanel(parentPanel, playerId, game.getId());
                     parentPanel.add(waitingRoomPanel, "waitingRoomPanel");
                     CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
@@ -73,10 +73,6 @@ public class NewGamePanel extends JPanel {
                 } else {
                     JOptionPane.showMessageDialog(parentPanel, "Couldn't create a new game");
                 }
-                // Remove these lines after filling if-else above
-//                CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
-//                cardLayout.show(parentPanel, "lobbyPanel");
-
             }
         });
 
