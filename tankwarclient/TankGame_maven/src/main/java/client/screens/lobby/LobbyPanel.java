@@ -57,6 +57,15 @@ public class LobbyPanel extends JPanel {
 
         String columnName = "Player Username";
 
+
+        //automatically click refresh button
+        this.t.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                //refreshButton.doClick();
+            }
+        },0,1000);
+
         //open New Game
         newGameButton.addActionListener(new ActionListener() {
             @Override
