@@ -14,6 +14,7 @@ public class NewGamePanel extends JPanel {
 
     JPanel parentPanel = new JPanel();
     JPanel buttonsPanel = new JPanel();
+    JPanel contentPanel = new JPanel();
 
     //Texts
     JLabel createGameLabel = new JLabel("Create New Game");
@@ -40,10 +41,11 @@ public class NewGamePanel extends JPanel {
 
     public NewGamePanel(JPanel parentPanel, Integer playerId) {
         this.parentPanel = parentPanel;
-        GridLayout gridLayout = new GridLayout(6, 1);
+        GridLayout gridLayout = new GridLayout();
         setLayout(gridLayout);
         gridLayout.setHgap(20);
         gridLayout.setVgap(10);
+        contentPanel.setLayout(new BoxLayout(contentPanel,BoxLayout.Y_AXIS));
 
         tourNumber = new JComboBox(tourNumberValues);
         shootSpeed = new JComboBox(shootSpeedValues);
@@ -100,14 +102,45 @@ public class NewGamePanel extends JPanel {
         buttonsPanel.add(createGameButton);
         buttonsPanel.add(cancelButton);
 
-        this.add(createGameLabel);
-        this.add(roomNameField);
-        this.add(tourNumberLabel);
-        this.add(tourNumber);
+        createGameLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        tourNumberLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        mapTypeLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        speedLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
-        this.add(mapType);
-        this.add(shootSpeed);
-        this.add(buttonsPanel);
+        roomNameField.setMinimumSize(new Dimension(450,40));
+        roomNameField.setPreferredSize(new Dimension(450,40));
+        roomNameField.setMaximumSize(new Dimension(450,40));
 
+        tourNumber.setMinimumSize(new Dimension(450,40));
+        tourNumber.setPreferredSize(new Dimension(450,40));
+        tourNumber.setMaximumSize(new Dimension(450,40));
+
+        mapType.setMinimumSize(new Dimension(450,40));
+        mapType.setPreferredSize(new Dimension(450,40));
+        mapType.setMaximumSize(new Dimension(450,40));
+
+        shootSpeed.setMinimumSize(new Dimension(450,40));
+        shootSpeed.setPreferredSize(new Dimension(450,40));
+        shootSpeed.setMaximumSize(new Dimension(450,40));
+
+        contentPanel.add(Box.createVerticalStrut(80));
+        contentPanel.add(createGameLabel);
+        contentPanel.add(Box.createVerticalStrut(8));
+        contentPanel.add(roomNameField);
+        contentPanel.add(Box.createVerticalStrut(8));
+        contentPanel.add(tourNumberLabel);
+        contentPanel.add(Box.createVerticalStrut(8));
+        contentPanel.add(tourNumber);
+        contentPanel.add(Box.createVerticalStrut(8));
+        contentPanel.add(mapTypeLabel);
+        contentPanel.add(Box.createVerticalStrut(8));
+        contentPanel.add(mapType);
+        contentPanel.add(Box.createVerticalStrut(8));
+        contentPanel.add(speedLabel);
+        contentPanel.add(Box.createVerticalStrut(8));
+        contentPanel.add(shootSpeed);
+        contentPanel.add(Box.createVerticalStrut(8));
+        contentPanel.add(buttonsPanel);
+        this.add(contentPanel);
     }
 }

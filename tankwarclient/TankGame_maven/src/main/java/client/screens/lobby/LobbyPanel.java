@@ -48,7 +48,7 @@ public class LobbyPanel extends JPanel {
     JLabel gameTitleLabel = new JLabel("TankWars Games");
     JLabel activePlayersLabel = new JLabel("Active Players");
     JPanel activePlayerPanel = new JPanel();
-
+    Window activeWindow = javax.swing.FocusManager.getCurrentManager().getActiveWindow();
     public LobbyPanel(JPanel parentPanel, Integer playerId) {
         this.parentPanel = parentPanel;
         GridLayout gridLayout = new GridLayout(4,2);
@@ -58,7 +58,7 @@ public class LobbyPanel extends JPanel {
 
         String columnName = "Player Username";
 
-
+        activeWindow.setSize(new Dimension(980,720));
         //automatically click refresh button
         this.t.scheduleAtFixedRate(new TimerTask() {
             @Override
