@@ -92,6 +92,11 @@ public class GamePanel extends JPanel implements Runnable {
             updateGameResponse = JsonUtil.fromJson(playerDataString, UpdateGameResponse.class);
             tanks = updateGameResponse.getTanks();
             bullets = updateGameResponse.getBullets();
+            if (bullets.size() != 0) {
+                Bullet temp = bullets.get(bullets.size() - 1);
+                bullets.clear();
+                bullets.add(temp);
+            }
         } else {
             System.out.println("UG  failed");
         }
@@ -108,8 +113,8 @@ public class GamePanel extends JPanel implements Runnable {
                 System.out.println("Add enemy player called!");
                 enemyPlayers.add(new EnemyPlayer(this, tanks.get(i)));
             } else {
-                if (currentPlayer.isAlive) {
-//                    currentPlayer.isAlive = false;
+                if (tanks.get(i).getHealth().equals(0)) {
+                    currentPlayer.isAlive = false;
                 }
 
             }
