@@ -270,7 +270,7 @@ public class LobbyPanel extends JPanel {
         chat.setBackground(new Color(199,186,217));
         chat.setBounds(475,380,450,220);
 
-        JTextField chatInput = new JTextField("Type Message");
+        JTextField chatInput = new JTextField("");
         chatInput.setBounds(475,600,450,30);
         chatInput.setBackground(new Color(226,221,235));
         chatInput.addKeyListener(new KeyListener() {
@@ -323,7 +323,6 @@ public class LobbyPanel extends JPanel {
         buttonsPanel.add(leadershipButton);
         buttonsPanel.add(aboutUsButton);
         buttonsPanel.add(logoutButton);
-        buttonsPanel.add(refreshButton);
         buttonsPanel.setBounds(350,10,700,100);
 
 
