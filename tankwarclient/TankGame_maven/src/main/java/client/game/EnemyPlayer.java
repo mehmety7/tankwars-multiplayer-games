@@ -23,7 +23,6 @@ public class EnemyPlayer {
         getPlayerImage();
     }
 
-
     public void getPlayerImage() {
         try {
             up = ImageIO.read(new File(assetPath + "red_up.png"));

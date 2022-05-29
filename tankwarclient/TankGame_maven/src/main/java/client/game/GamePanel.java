@@ -69,6 +69,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 
     public void createPlayers() {
+
         for (int i = 0; i < tanks.size(); i++) {
             if (tanks.get(i).getPlayerId() != currentPlayerId) {
                 enemyPlayers.add(new EnemyPlayer(this, tanks.get(i)));
@@ -79,18 +80,17 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void updateGameFromServer() {
-
-        //todo socketten tanks i guncelle
-
         ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
         UpdateGameRequest updateGameRequest = new UpdateGameRequest();
         updateGameRequest.setGameId(currentPlayer.tank.getGameId());
         cs.sendMessage("UG", updateGameRequest);
+        System.out.println("Update Game Response: " + cs.response());
 
         if (cs.response().contains("OK")) {
             UpdateGameResponse updateGameResponse;
             String playerDataString = cs.response().substring(2);
             updateGameResponse = JsonUtil.fromJson(playerDataString, UpdateGameResponse.class);
+            tanks.clear();
             tanks = updateGameResponse.getTanks();
             bullets = updateGameResponse.getBullets();
         } else {
@@ -106,10 +106,11 @@ public class GamePanel extends JPanel implements Runnable {
         for (int i = 0; i < tanks.size(); i++) {
             if (tanks.get(i).getPlayerId() != currentPlayerId) {
                 tanks.get(i).setPositionX(tanks.get(i).getPositionX() + 1);
+                System.out.println("Add enemy player called!");
                 enemyPlayers.add(new EnemyPlayer(this, tanks.get(i)));
             } else {
                 if (currentPlayer.isAlive) {
-                    currentPlayer.isAlive = false;
+//                    currentPlayer.isAlive = false;
                 }
 
             }
@@ -165,6 +166,7 @@ public class GamePanel extends JPanel implements Runnable {
 
             if (delta >= 1) {
                 update();
+//                this.removeAll();
                 revalidate();
                 repaint(); // Swing method
                 delta--;
@@ -192,7 +194,7 @@ public class GamePanel extends JPanel implements Runnable {
         updateGameFromServer();
 
         if (currentPlayer.isAlive) {
-            currentPlayer.update(enemyPlayers);
+            currentPlayer.update();
             //todo send server my position
             ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
             cs.sendMessage("UD", currentPlayer.tank);

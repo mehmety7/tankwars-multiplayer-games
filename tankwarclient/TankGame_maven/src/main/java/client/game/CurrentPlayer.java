@@ -43,7 +43,7 @@ public class CurrentPlayer {
         }
     }
 
-    public void update(List<EnemyPlayer> enemyPlayers) {
+    public void update() {
 //        System.out.println("X: " + x + "  Y: " + y);
         if (keyHandler.upPressed == true) {
             tank.setFaceOrientation(FaceOrientation.UP);
