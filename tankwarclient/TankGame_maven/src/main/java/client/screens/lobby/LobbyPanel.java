@@ -125,6 +125,15 @@ public class LobbyPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                //clear panels
+                chat.removeAll();
+                activePlayerPanel.removeAll();
+                gameRooms.removeAll();
+
+                //set panels Layouts
+                activePlayerPanel.setLayout(new BoxLayout(activePlayerPanel,BoxLayout.Y_AXIS));
+                chat.setLayout(new BoxLayout(chat,BoxLayout.Y_AXIS));
+
                 ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
                 cs.sendMessage("GU", null);
                 System.out.println("SERVER RESPONSE (GU) " + cs.response());
