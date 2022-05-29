@@ -39,9 +39,11 @@ public class LoginPanel extends JPanel {
                 if (cs.response().contains("OK")) {
                     Player playerDataFromResponse;
                     String playerDataString = cs.response().substring(2);
-                    playerDataFromResponse = JsonUtil.fromJson(playerDataString, Player.class);
-                    LobbyPanel lobbyPanel = new LobbyPanel(parentPanel, playerDataFromResponse.getId());
-                    parentPanel.add(lobbyPanel, "lobbyPanel");
+
+                    playerDataFromResponse = JsonUtil.fromJson(playerDataString,Player.class);
+                    LobbyPanel lobbyPanel = new LobbyPanel(parentPanel,playerDataFromResponse.getId(),playerDataFromResponse.getUsername());
+                    parentPanel.add(lobbyPanel,"lobbyPanel");
+
 
                     CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                     cardLayout.show(parentPanel, "lobbyPanel");
