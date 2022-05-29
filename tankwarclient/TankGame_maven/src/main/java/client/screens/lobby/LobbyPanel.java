@@ -11,6 +11,7 @@ import client.socket.ClientSocket;
 import client.util.JsonUtil;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -193,7 +194,28 @@ public class LobbyPanel extends JPanel {
                     String messagesDataString = cs.response().substring(2);
 
                     List <Message> messages =  JsonUtil.fromListJson(messagesDataString, Message[].class);
-                    System.out.println("games\n" + messages);
+                    JPanel tmpPanel = new JPanel();
+                    tmpPanel.setLayout(new BoxLayout(tmpPanel,BoxLayout.Y_AXIS));
+                    for(Message msg : messages){
+                        JLabel msgLabel = new JLabel(msg.getPlayerUserName()+":"+msg.getText());
+                        msgLabel.setBackground(Color.blue);
+                        msgLabel.setForeground(Color.WHITE);
+                        msgLabel.setOpaque(true);
+                        msgLabel.setBorder(new EmptyBorder(0,10,0,0));
+                        msgLabel.setMinimumSize(new Dimension(450,25));
+                        msgLabel.setPreferredSize(new Dimension(450,25));
+                        msgLabel.setMaximumSize(new Dimension(450,25));
+                        tmpPanel.add(msgLabel);
+                        tmpPanel.add(Box.createVerticalStrut(4));
+                    }
+
+                    JScrollPane chatScroll = new JScrollPane(tmpPanel,
+                            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                    JScrollBar sb = chatScroll.getVerticalScrollBar();
+                    sb.setValue(sb.getMaximum());
+                    chat.add(chatScroll);
+                    System.out.println("Messages:\n" + messages);
                     System.out.println();
                 }else {
                     System.out.println("No available message or response error");
@@ -206,8 +228,8 @@ public class LobbyPanel extends JPanel {
                     String gamesDataString = cs.response().substring(2);
                     List <Player> activePlayersList =  JsonUtil.fromListJson(gamesDataString, Player[].class);
                     List<String> activeData = new ArrayList<>();
-                    activePlayerPanel.removeAll();
-                    activePlayerPanel.setLayout(new BoxLayout(activePlayerPanel,BoxLayout.Y_AXIS));
+                    //activePlayerPanel.removeAll();
+                    //activePlayerPanel.setLayout(new BoxLayout(activePlayerPanel,BoxLayout.Y_AXIS));
 
                     for(Player player: activePlayersList){
                         activeData.add(player.getUsername());
