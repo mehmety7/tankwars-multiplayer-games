@@ -113,15 +113,15 @@ public class WaitingRoomPanel extends JPanel {
         addToBodyPanel();
     }
 
-    private void addToGameParametersPanel() {
-        gameParametersPanel.setLayout(new BoxLayout(gameParametersPanel, BoxLayout.Y_AXIS));
-        gameParametersPanel.setBackground(Color.YELLOW);
-        gameParametersPanel.setMinimumSize(new Dimension(200, 200));
-        gameParametersPanel.setPreferredSize(new Dimension(200, 200));
-        gameParametersPanel.setMaximumSize(new Dimension(200, 200));
-        gameParametersPanel.add(gameParametersTitle);
-        gameParametersPanel.setBorder(new EmptyBorder(5, 50, 5, 0));
-    }
+//    private void addToGameParametersPanel() {
+//        gameParametersPanel.setLayout(new BoxLayout(gameParametersPanel, BoxLayout.Y_AXIS));
+//        gameParametersPanel.setBackground(Color.YELLOW);
+//        gameParametersPanel.setMinimumSize(new Dimension(200, 200));
+//        gameParametersPanel.setPreferredSize(new Dimension(200, 200));
+//        gameParametersPanel.setMaximumSize(new Dimension(200, 200));
+//        gameParametersPanel.add(gameParametersTitle);
+//        gameParametersPanel.setBorder(new EmptyBorder(5, 50, 5, 0));
+//    }
 
     private void addToBodyPanel() {
         bodyPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -142,7 +142,7 @@ public class WaitingRoomPanel extends JPanel {
         gameDetailPanel.add(Box.createVerticalStrut(50));
         gameDetailPanel.add(isStartStatusLabel);
 
-        addToGameParametersPanel();
+//        addToGameParametersPanel();
     }
 
     private void addToPlayersPanel() {
