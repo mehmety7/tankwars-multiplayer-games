@@ -35,14 +35,15 @@ public class LoginPanel extends JPanel {
                 Player player = Player.builder().username(usernameField.getText()).password(String.valueOf(passwordField.getPassword())).build();
                 ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
                 cs.sendMessage("LG", player);
-                System.out.println(cs.response());
 
                 if (cs.response().contains("OK")) {
                     Player playerDataFromResponse;
                     String playerDataString = cs.response().substring(2);
+
                     playerDataFromResponse = JsonUtil.fromJson(playerDataString,Player.class);
                     LobbyPanel lobbyPanel = new LobbyPanel(parentPanel,playerDataFromResponse.getId(),playerDataFromResponse.getUsername());
                     parentPanel.add(lobbyPanel,"lobbyPanel");
+
 
                     CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                     cardLayout.show(parentPanel, "lobbyPanel");

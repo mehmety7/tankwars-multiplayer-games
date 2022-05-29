@@ -17,7 +17,6 @@ public class WaitingRoomService {
 
     public Game getGame(Integer gameId) {
         cs.sendMessage("GG", Game.builder().id(gameId).build());
-        System.out.println("Server response: " + cs.response());
         if (cs.response().equals("FL"))
             return null;
         Game game = JsonUtil.fromJson(cs.response().substring(2), Game.class);

@@ -9,32 +9,33 @@ import java.io.File;
 import java.io.IOException;
 
 
-public class EnemyPlayer{
+public class EnemyPlayer {
+    public static String assetPath = "C:/development/tankwars/tankwarclient/TankGame_maven/src/main/java/client/assets/enemy/";
     public Tank tank;
     private Integer speed = 2;
     private BufferedImage up, down, left, right;
     private GamePanel gp;
 
 
-    public EnemyPlayer(GamePanel gp, Tank tank){
+    public EnemyPlayer(GamePanel gp, Tank tank) {
         this.gp = gp;
         this.tank = tank;
         getPlayerImage();
     }
 
 
-    public void getPlayerImage(){
+    public void getPlayerImage() {
         try {
-            up = ImageIO.read(new File("src/main/java/client/assets/enemy/red_up.png"));
-            down = ImageIO.read(new File("src/main/java/client/assets/enemy/red_down.png"));
-            left = ImageIO.read(new File("src/main/java/client/assets/enemy/red_left.png"));
-            right = ImageIO.read(new File("src/main/java/client/assets/enemy/red_right.png"));
-        }catch(IOException e){
+            up = ImageIO.read(new File(assetPath + "red_up.png"));
+            down = ImageIO.read(new File(assetPath + "red_down.png"));
+            left = ImageIO.read(new File(assetPath + "red_left.png"));
+            right = ImageIO.read(new File(assetPath + "red_right.png"));
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void update(){
+    public void update() {
 //        x+=speed;
 //        tank.setPositionX(tank.getPositionX()+1);
 
@@ -52,12 +53,13 @@ public class EnemyPlayer{
 //            x += speed;
 //        }
     }
-    public void draw(Graphics2D g2){
+
+    public void draw(Graphics2D g2) {
 //        g2.setColor(Color.white);
 //        g2.fillRect(x, y, gp.tileSize, gp.tileSize);
         BufferedImage image = null;
 
-        switch (tank.getFaceOrientation()){
+        switch (tank.getFaceOrientation()) {
             case UP:
                 image = up;
                 break;
