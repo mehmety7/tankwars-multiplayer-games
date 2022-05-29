@@ -19,6 +19,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import java.util.stream.Collectors;
 
 public class LobbyPanel extends JPanel {
@@ -29,6 +32,8 @@ public class LobbyPanel extends JPanel {
     JPanel gameRooms = new JPanel();
     JPanel chat = new JPanel(new GridLayout(0,1));
 
+    //Timer
+    Timer t = new Timer();
 
     //Buttons
     JButton newGameButton = new JButton("New Game");
