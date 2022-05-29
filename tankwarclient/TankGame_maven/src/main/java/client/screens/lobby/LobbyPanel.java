@@ -63,7 +63,7 @@ public class LobbyPanel extends JPanel {
         this.t.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                //refreshButton.doClick();
+                refreshButton.doClick();
             }
         },0,1000);
 
@@ -74,7 +74,7 @@ public class LobbyPanel extends JPanel {
                 //Lobby ekranına gelen player datası içindeki playerIdyi newGamePanelına ilet
                 NewGamePanel newGamePanel = new NewGamePanel(parentPanel, playerId);
                 parentPanel.add(newGamePanel, "newGamePanel");
-
+                t.cancel();
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                 cardLayout.show(parentPanel, "newGamePanel");
             }
@@ -85,6 +85,7 @@ public class LobbyPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //leadership panel
+                t.cancel();
                 LeadershipPanel leadershipPanel = new LeadershipPanel(parentPanel);
                 parentPanel.add(leadershipPanel, "leadershipPanel");
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
@@ -96,6 +97,7 @@ public class LobbyPanel extends JPanel {
         aboutUsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                t.cancel();
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                 cardLayout.show(parentPanel, "aboutUsPanel");
             }
@@ -106,6 +108,7 @@ public class LobbyPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //TODO perform LogOut
+                t.cancel();
                 ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
                 PlayerGameRequest request = PlayerGameRequest.builder().playerId(playerId).build();
                 cs.sendMessage("LT", request);
@@ -282,6 +285,7 @@ public class LobbyPanel extends JPanel {
                     Message message = Message.builder().playerId(playerId).playerUserName("Burak").text(chatInput.getText()).build();
                     cs.sendMessage("CM",message);
                     System.out.println("CHAT INPUT "+chatInput.getText());
+                    chatInput.setText("");
                 }
             }
 
