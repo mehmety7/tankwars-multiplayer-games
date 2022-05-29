@@ -183,12 +183,14 @@ public class TankService {
         List<Tank> allTanks = tankService.getTanksInGame(gameId);
         allTanks.forEach((tank -> {
             if(isTankGotHit(bullet, tank)){
-                tank.setHealth(tank.getHealth() - ConstantsForInnerLogic.bulletDamage);
+                int newHealth = tank.getHealth() - ConstantsForInnerLogic.bulletDamage;
+                tank.setHealth(newHealth);
                 if(tank.getHealth() < 0)
                     tank.setHealth(0);
                 hittedTankList.add(tank);
             }
         }));
+
         hittedTankList.forEach(tank -> {
             if(tank.getHealth() == 0){
                 deleteTank(tank.getPlayerId());

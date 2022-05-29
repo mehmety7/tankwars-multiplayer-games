@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class CurrentPlayer {
-    public static String assetPath = "C:/development/tankwars/tankwarclient/TankGame_maven/src/main/java/client/assets/player/";
+    public static String assetPath = "C:/Users/HUZEYFE/Desktop/tankwars/tankwarclient/TankGame_maven/src/main/java/client/assets/player/";
     public Tank tank;
     private Integer speed = 2;
     private BufferedImage up, down, left, right;

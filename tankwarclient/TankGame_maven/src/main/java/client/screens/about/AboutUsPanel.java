@@ -9,7 +9,7 @@ public class AboutUsPanel extends JPanel {
     JPanel parentPanel;
 
     JLabel heading = new JLabel("ABOUT US");
-    JLabel content = new JLabel("We are a team of 8 passionate researchers and developers. We love creating games together.");
+    JLabel content = new JLabel("<html>Welcome to Tankwars! Developed by engineers in Istanbul University Cerrahpasa within Network Programming Course <br/>We are a team of 8 passionate researchers and developers. We love creating games together.<br/> Arrow keys for movement space for shoot <br/>Enver Usta<br/>Ömer Erten<br/>Berke Yavaş<br/>Mehmet Yazıcı<br/>Ahmet Hüzeyfe Demir<br/>Edanur Var<br/>Burak Ekinci<br/>Alihan Ataş</html>");
     JButton backButton = new JButton("Back to lobby");
 
     public AboutUsPanel(JPanel parentPanel) {
