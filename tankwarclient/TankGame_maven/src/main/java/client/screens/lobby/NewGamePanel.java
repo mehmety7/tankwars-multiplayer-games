@@ -17,7 +17,10 @@ public class NewGamePanel extends JPanel {
 
     //Texts
     JLabel createGameLabel = new JLabel("Create New Game");
-    JTextField roomNameField = new JTextField();
+    JTextField roomNameField = new JTextField("RoomName");
+    JLabel tourNumberLabel = new JLabel("Select tour number");
+    JLabel mapTypeLabel = new JLabel("Select map type");
+    JLabel speedLabel = new JLabel("Select shoot speed");
     String roomName;
     int selectedTour;
     double selectedShootSpeed;
@@ -99,7 +102,9 @@ public class NewGamePanel extends JPanel {
 
         this.add(createGameLabel);
         this.add(roomNameField);
+        this.add(tourNumberLabel);
         this.add(tourNumber);
+
         this.add(mapType);
         this.add(shootSpeed);
         this.add(buttonsPanel);
