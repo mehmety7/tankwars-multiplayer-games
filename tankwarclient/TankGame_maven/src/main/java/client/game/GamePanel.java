@@ -90,7 +90,6 @@ public class GamePanel extends JPanel implements Runnable {
             UpdateGameResponse updateGameResponse;
             String playerDataString = cs.response().substring(2);
             updateGameResponse = JsonUtil.fromJson(playerDataString, UpdateGameResponse.class);
-            tanks.clear();
             tanks = updateGameResponse.getTanks();
             bullets = updateGameResponse.getBullets();
         } else {
@@ -165,8 +164,8 @@ public class GamePanel extends JPanel implements Runnable {
             lastTime = currentTime;
 
             if (delta >= 1) {
+                this.removeAll();
                 update();
-//                this.removeAll();
                 revalidate();
                 repaint(); // Swing method
                 delta--;
@@ -183,14 +182,6 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-
-        //todo serverdan gelen SF
-
-
-//        for(EnemyPlayer eP : enemyPlayers){
-//            eP.update();
-//        }
-
         updateGameFromServer();
 
         if (currentPlayer.isAlive) {

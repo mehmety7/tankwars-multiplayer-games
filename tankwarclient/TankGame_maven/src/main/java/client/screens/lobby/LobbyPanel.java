@@ -31,7 +31,7 @@ public class LobbyPanel extends JPanel {
     //Panels
     JPanel buttonsPanel = new JPanel();
     JPanel gameRooms = new JPanel();
-    JPanel chat = new JPanel(new GridLayout(0,1));
+    JPanel chat = new JPanel(new GridLayout(0, 1));
 
     //Timer
     Timer t = new Timer();
@@ -49,23 +49,24 @@ public class LobbyPanel extends JPanel {
     JLabel activePlayersLabel = new JLabel("Active Players");
     JPanel activePlayerPanel = new JPanel();
     Window activeWindow = javax.swing.FocusManager.getCurrentManager().getActiveWindow();
-    public LobbyPanel(JPanel parentPanel, Integer playerId,String playerUsername) {
+
+    public LobbyPanel(JPanel parentPanel, Integer playerId, String playerUsername) {
         this.parentPanel = parentPanel;
-        GridLayout gridLayout = new GridLayout(4,2);
+        GridLayout gridLayout = new GridLayout(4, 2);
         setLayout(null);
         gridLayout.setHgap(20);
         gridLayout.setVgap(10);
 
         String columnName = "Player Username";
 
-        activeWindow.setSize(new Dimension(980,720));
+        activeWindow.setSize(new Dimension(980, 720));
         //automatically click refresh button
         this.t.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 refreshButton.doClick();
             }
-        },0,1000);
+        }, 0, 1000);
 
         //open New Game
         newGameButton.addActionListener(new ActionListener() {
@@ -113,12 +114,12 @@ public class LobbyPanel extends JPanel {
                 PlayerGameRequest request = PlayerGameRequest.builder().playerId(playerId).build();
                 cs.sendMessage("LT", request);
 
-                if(cs.response().startsWith("OK")){
+                if (cs.response().startsWith("OK")) {
                     CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                     cardLayout.show(parentPanel, "loginPanel");
                 } else {
                     System.out.println("LogOut response hatası");
-                    JOptionPane.showMessageDialog(parentPanel,"LogOut Error");
+                    JOptionPane.showMessageDialog(parentPanel, "LogOut Error");
                 }
 
             }
@@ -135,34 +136,34 @@ public class LobbyPanel extends JPanel {
                 gameRooms.removeAll();
 
                 //set panels Layouts
-                activePlayerPanel.setLayout(new BoxLayout(activePlayerPanel,BoxLayout.Y_AXIS));
-                chat.setLayout(new BoxLayout(chat,BoxLayout.Y_AXIS));
+                activePlayerPanel.setLayout(new BoxLayout(activePlayerPanel, BoxLayout.Y_AXIS));
+                chat.setLayout(new BoxLayout(chat, BoxLayout.Y_AXIS));
 
                 ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
                 cs.sendMessage("GU", null);
 
                 //get games
-                if(cs.response().startsWith("OK")){
+                if (cs.response().startsWith("OK")) {
                     String gamesDataString = cs.response().substring(2);
                     gameRooms.removeAll();
-                    List <Game> games =  JsonUtil.fromListJson(gamesDataString, Game[].class);
+                    List<Game> games = JsonUtil.fromListJson(gamesDataString, Game[].class);
 
                     for (Game game : games) {
                         String gameInfoString = String.format("Tour:%d Speed:%.1f Map:%s", game.getTourNumber(),
                                 game.getShootingSpeed(), game.getMapType());
                         Integer gameId = game.getId();
                         JLabel gameInfo = new JLabel(gameInfoString);
-                        gameInfo.setSize(new Dimension(370,50));
+                        gameInfo.setSize(new Dimension(370, 50));
                         gameInfo.setBackground(Color.red);
 
                         //join button
-                        JButton joinButton = new JButton("JOİN"+gameId);
-                        joinButton.setSize(new Dimension(80,50));
-                        joinButton.setBackground(new Color(0,118,255));
+                        JButton joinButton = new JButton("JOİN" + gameId);
+                        joinButton.setSize(new Dimension(80, 50));
+                        joinButton.setBackground(new Color(0, 118, 255));
                         joinButton.setForeground(Color.WHITE);
 
                         JPanel gameComponent = new JPanel(new FlowLayout());
-                        gameComponent.setSize(new Dimension(450,50));
+                        gameComponent.setSize(new Dimension(450, 50));
                         gameComponent.setBackground(Color.red);
                         gameComponent.add(gameInfo);
                         gameComponent.add(joinButton);
@@ -190,22 +191,22 @@ public class LobbyPanel extends JPanel {
                 }
 
                 //get messages
-                cs.sendMessage("GM",null);
-                if(cs.response().contains("OK")){
+                cs.sendMessage("GM", null);
+                if (cs.response().contains("OK")) {
                     String messagesDataString = cs.response().substring(2);
 
-                    List <Message> messages =  JsonUtil.fromListJson(messagesDataString, Message[].class);
+                    List<Message> messages = JsonUtil.fromListJson(messagesDataString, Message[].class);
                     JPanel tmpPanel = new JPanel();
-                    tmpPanel.setLayout(new BoxLayout(tmpPanel,BoxLayout.Y_AXIS));
-                    for(Message msg : messages){
-                        JLabel msgLabel = new JLabel(msg.getPlayerUserName()+":"+msg.getText());
+                    tmpPanel.setLayout(new BoxLayout(tmpPanel, BoxLayout.Y_AXIS));
+                    for (Message msg : messages) {
+                        JLabel msgLabel = new JLabel(msg.getPlayerUserName() + ":" + msg.getText());
                         msgLabel.setBackground(Color.blue);
                         msgLabel.setForeground(Color.WHITE);
                         msgLabel.setOpaque(true);
-                        msgLabel.setBorder(new EmptyBorder(0,10,0,0));
-                        msgLabel.setMinimumSize(new Dimension(450,25));
-                        msgLabel.setPreferredSize(new Dimension(450,25));
-                        msgLabel.setMaximumSize(new Dimension(450,25));
+                        msgLabel.setBorder(new EmptyBorder(0, 10, 0, 0));
+                        msgLabel.setMinimumSize(new Dimension(450, 25));
+                        msgLabel.setPreferredSize(new Dimension(450, 25));
+                        msgLabel.setMaximumSize(new Dimension(450, 25));
                         tmpPanel.add(msgLabel);
                         tmpPanel.add(Box.createVerticalStrut(4));
                     }
@@ -218,21 +219,21 @@ public class LobbyPanel extends JPanel {
                     chat.add(chatScroll);
                     System.out.println("Messages:\n" + messages);
                     System.out.println();
-                }else {
+                } else {
                     System.out.println("No available message or response error");
                     // JOptionPane.showMessageDialog(parentPanel, "No message or Response error");
                 }
 
                 //get active players
-                cs.sendMessage("AG",null);
-                if(cs.response().contains("OK")){
+                cs.sendMessage("AG", null);
+                if (cs.response().contains("OK")) {
                     String gamesDataString = cs.response().substring(2);
-                    List <Player> activePlayersList =  JsonUtil.fromListJson(gamesDataString, Player[].class);
+                    List<Player> activePlayersList = JsonUtil.fromListJson(gamesDataString, Player[].class);
                     List<String> activeData = new ArrayList<>();
                     //activePlayerPanel.removeAll();
                     //activePlayerPanel.setLayout(new BoxLayout(activePlayerPanel,BoxLayout.Y_AXIS));
 
-                    for(Player player: activePlayersList){
+                    for (Player player : activePlayersList) {
                         activeData.add(player.getUsername());
 
                     }
@@ -249,28 +250,29 @@ public class LobbyPanel extends JPanel {
                     activePlayerPanel.add(activePlayersLabel);
                     activePlayerPanel.add(scrollPane);
                     System.out.println(activeData);
-                }else {
+                } else {
                     System.out.println("No available active players or error");
                     // JOptionPane.showMessageDialog(parentPanel, "No available active players or Response error");
                 }
                 activePlayerPanel.updateUI();
                 gameRooms.updateUI();
 
-            };
+            }
 
+            ;
 
 
         });
 
-        gameRooms.setBounds(15,110,450,520);
-        gameRooms.setBackground(new Color(216,229,241));
+        gameRooms.setBounds(15, 110, 450, 520);
+        gameRooms.setBackground(new Color(216, 229, 241));
 
-        chat.setBackground(new Color(199,186,217));
-        chat.setBounds(475,380,450,220);
+        chat.setBackground(new Color(199, 186, 217));
+        chat.setBounds(475, 380, 450, 220);
 
         JTextField chatInput = new JTextField("");
-        chatInput.setBounds(475,600,450,30);
-        chatInput.setBackground(new Color(226,221,235));
+        chatInput.setBounds(475, 600, 450, 30);
+        chatInput.setBackground(new Color(226, 221, 235));
         chatInput.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -281,8 +283,8 @@ public class LobbyPanel extends JPanel {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
                     Message message = Message.builder().playerId(playerId).playerUserName(playerUsername).text(chatInput.getText()).build();
-                    cs.sendMessage("CM",message);
-                    System.out.println("CHAT INPUT "+chatInput.getText());
+                    cs.sendMessage("CM", message);
+                    System.out.println("CHAT INPUT " + chatInput.getText());
                     chatInput.setText("");
                 }
             }
@@ -293,35 +295,35 @@ public class LobbyPanel extends JPanel {
         });
 
         //Customize Buttons
-        newGameButton.setBackground(new Color(0,118,255));
+        newGameButton.setBackground(new Color(0, 118, 255));
         newGameButton.setForeground(Color.WHITE);
         newGameButton.setFocusable(false);
 
-        leadershipButton.setBackground(new Color(0,118,255));
+        leadershipButton.setBackground(new Color(0, 118, 255));
         leadershipButton.setForeground(Color.WHITE);
         leadershipButton.setFocusable(false);
 
-        aboutUsButton.setBackground(new Color(0,118,255));
+        aboutUsButton.setBackground(new Color(0, 118, 255));
         aboutUsButton.setForeground(Color.WHITE);
         aboutUsButton.setFocusable(false);
 
-        logoutButton.setBackground(new Color(0,118,255));
+        logoutButton.setBackground(new Color(0, 118, 255));
         logoutButton.setForeground(Color.WHITE);
         logoutButton.setFocusable(false);
 
-        refreshButton.setBackground(new Color(0,118,255));
+        refreshButton.setBackground(new Color(0, 118, 255));
         refreshButton.setForeground(Color.WHITE);
         refreshButton.setFocusable(false);
 
-        gameTitleLabel.setFont(new Font("Verdana", Font.PLAIN,24));
-        gameTitleLabel.setBounds(10,10,400,75);
+        gameTitleLabel.setFont(new Font("Verdana", Font.PLAIN, 24));
+        gameTitleLabel.setBounds(10, 10, 400, 75);
 
         //Add buttons to the buttonsPanel
         buttonsPanel.add(newGameButton);
         buttonsPanel.add(leadershipButton);
         buttonsPanel.add(aboutUsButton);
         buttonsPanel.add(logoutButton);
-        buttonsPanel.setBounds(350,10,700,100);
+        buttonsPanel.setBounds(350, 10, 700, 100);
 
 
         this.add(gameTitleLabel);
