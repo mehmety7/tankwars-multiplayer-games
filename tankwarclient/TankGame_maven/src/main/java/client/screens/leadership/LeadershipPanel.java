@@ -1,9 +1,11 @@
 package client.screens.leadership;
 
 
+import client.model.dto.Game;
 import client.model.dto.Statistic;
 import client.services.SingletonSocketService;
 import client.socket.ClientSocket;
+import client.util.JsonUtil;
 
 
 import javax.swing.*;
@@ -20,9 +22,11 @@ public class LeadershipPanel extends JPanel {
     JLabel heading = new JLabel("Leaderships");
     JButton backButton = new JButton("Back to lobby");
     JTable scoreTable = new JTable();
+
+    String[] columnNames = {"Player", "Total Score"};
     DefaultTableModel model = new DefaultTableModel();
     JScrollPane scrollPane;
-    String[] columnNames = {"Player", "Total Score"};
+
 
     List<Statistic> listOfStatistics;
 
@@ -35,6 +39,7 @@ public class LeadershipPanel extends JPanel {
 
         if (cs.response().contains("OK")) {
             listOfStatistics = new ArrayList<Statistic>();
+            listOfStatistics = JsonUtil.fromListJson(cs.response().substring(2), Statistic[].class);
             for (int i = 0; i < listOfStatistics.size(); i++) {
                 model.addRow(new Object[] { listOfStatistics.get(i).getPlayerUserName(),
                         listOfStatistics.get(i).getScore() });
@@ -46,7 +51,7 @@ public class LeadershipPanel extends JPanel {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        model.setColumnIdentifiers(columnNames);
+
         scoreTable.setModel(model);
         scrollPane = new JScrollPane(scoreTable);
 
@@ -59,7 +64,6 @@ public class LeadershipPanel extends JPanel {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //TODO perform LogOut
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                 cardLayout.show(parentPanel, "lobbyPanel");
             }
