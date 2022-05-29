@@ -11,6 +11,7 @@ import client.socket.ClientSocket;
 import client.util.JsonUtil;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,6 +20,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import java.util.stream.Collectors;
 
 public class LobbyPanel extends JPanel {
@@ -29,6 +33,8 @@ public class LobbyPanel extends JPanel {
     JPanel gameRooms = new JPanel();
     JPanel chat = new JPanel(new GridLayout(0,1));
 
+    //Timer
+    Timer t = new Timer();
 
     //Buttons
     JButton newGameButton = new JButton("New Game");
@@ -42,7 +48,7 @@ public class LobbyPanel extends JPanel {
     JLabel gameTitleLabel = new JLabel("TankWars Games");
     JLabel activePlayersLabel = new JLabel("Active Players");
     JPanel activePlayerPanel = new JPanel();
-
+    Window activeWindow = javax.swing.FocusManager.getCurrentManager().getActiveWindow();
     public LobbyPanel(JPanel parentPanel, Integer playerId) {
         this.parentPanel = parentPanel;
         GridLayout gridLayout = new GridLayout(4,2);
@@ -52,6 +58,15 @@ public class LobbyPanel extends JPanel {
 
         String columnName = "Player Username";
 
+        activeWindow.setSize(new Dimension(980,720));
+        //automatically click refresh button
+        this.t.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                refreshButton.doClick();
+            }
+        },0,1000);
+
         //open New Game
         newGameButton.addActionListener(new ActionListener() {
             @Override
@@ -59,7 +74,7 @@ public class LobbyPanel extends JPanel {
                 //Lobby ekranına gelen player datası içindeki playerIdyi newGamePanelına ilet
                 NewGamePanel newGamePanel = new NewGamePanel(parentPanel, playerId);
                 parentPanel.add(newGamePanel, "newGamePanel");
-
+                t.cancel();
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                 cardLayout.show(parentPanel, "newGamePanel");
             }
@@ -70,6 +85,7 @@ public class LobbyPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //leadership panel
+                t.cancel();
                 LeadershipPanel leadershipPanel = new LeadershipPanel(parentPanel);
                 parentPanel.add(leadershipPanel, "leadershipPanel");
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
@@ -81,6 +97,7 @@ public class LobbyPanel extends JPanel {
         aboutUsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                t.cancel();
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                 cardLayout.show(parentPanel, "aboutUsPanel");
             }
@@ -91,6 +108,7 @@ public class LobbyPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //TODO perform LogOut
+                t.cancel();
                 ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
                 PlayerGameRequest request = PlayerGameRequest.builder().playerId(playerId).build();
                 cs.sendMessage("LT", request);
@@ -110,6 +128,15 @@ public class LobbyPanel extends JPanel {
         refreshButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                //clear panels
+                chat.removeAll();
+                activePlayerPanel.removeAll();
+                gameRooms.removeAll();
+
+                //set panels Layouts
+                activePlayerPanel.setLayout(new BoxLayout(activePlayerPanel,BoxLayout.Y_AXIS));
+                chat.setLayout(new BoxLayout(chat,BoxLayout.Y_AXIS));
 
                 ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
                 cs.sendMessage("GU", null);
@@ -167,7 +194,28 @@ public class LobbyPanel extends JPanel {
                     String messagesDataString = cs.response().substring(2);
 
                     List <Message> messages =  JsonUtil.fromListJson(messagesDataString, Message[].class);
-                    System.out.println("games\n" + messages);
+                    JPanel tmpPanel = new JPanel();
+                    tmpPanel.setLayout(new BoxLayout(tmpPanel,BoxLayout.Y_AXIS));
+                    for(Message msg : messages){
+                        JLabel msgLabel = new JLabel(msg.getPlayerUserName()+":"+msg.getText());
+                        msgLabel.setBackground(Color.blue);
+                        msgLabel.setForeground(Color.WHITE);
+                        msgLabel.setOpaque(true);
+                        msgLabel.setBorder(new EmptyBorder(0,10,0,0));
+                        msgLabel.setMinimumSize(new Dimension(450,25));
+                        msgLabel.setPreferredSize(new Dimension(450,25));
+                        msgLabel.setMaximumSize(new Dimension(450,25));
+                        tmpPanel.add(msgLabel);
+                        tmpPanel.add(Box.createVerticalStrut(4));
+                    }
+
+                    JScrollPane chatScroll = new JScrollPane(tmpPanel,
+                            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                    JScrollBar sb = chatScroll.getVerticalScrollBar();
+                    sb.setValue(sb.getMaximum());
+                    chat.add(chatScroll);
+                    System.out.println("Messages:\n" + messages);
                     System.out.println();
                 }else {
                     System.out.println("No available message or response error");
@@ -180,8 +228,8 @@ public class LobbyPanel extends JPanel {
                     String gamesDataString = cs.response().substring(2);
                     List <Player> activePlayersList =  JsonUtil.fromListJson(gamesDataString, Player[].class);
                     List<String> activeData = new ArrayList<>();
-                    activePlayerPanel.removeAll();
-                    activePlayerPanel.setLayout(new BoxLayout(activePlayerPanel,BoxLayout.Y_AXIS));
+                    //activePlayerPanel.removeAll();
+                    //activePlayerPanel.setLayout(new BoxLayout(activePlayerPanel,BoxLayout.Y_AXIS));
 
                     for(Player player: activePlayersList){
                         activeData.add(player.getUsername());
@@ -219,7 +267,7 @@ public class LobbyPanel extends JPanel {
         chat.setBackground(new Color(199,186,217));
         chat.setBounds(475,380,450,220);
 
-        JTextField chatInput = new JTextField("Type Message");
+        JTextField chatInput = new JTextField("");
         chatInput.setBounds(475,600,450,30);
         chatInput.setBackground(new Color(226,221,235));
         chatInput.addKeyListener(new KeyListener() {
@@ -234,6 +282,7 @@ public class LobbyPanel extends JPanel {
                     Message message = Message.builder().playerId(playerId).playerUserName("Burak").text(chatInput.getText()).build();
                     cs.sendMessage("CM",message);
                     System.out.println("CHAT INPUT "+chatInput.getText());
+                    chatInput.setText("");
                 }
             }
 
@@ -271,7 +320,6 @@ public class LobbyPanel extends JPanel {
         buttonsPanel.add(leadershipButton);
         buttonsPanel.add(aboutUsButton);
         buttonsPanel.add(logoutButton);
-        buttonsPanel.add(refreshButton);
         buttonsPanel.setBounds(350,10,700,100);
 
 
