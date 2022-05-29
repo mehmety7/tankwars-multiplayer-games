@@ -2,6 +2,7 @@ package client.screens.waitingroom;
 
 import client.model.dto.Game;
 import client.model.dto.Tank;
+import client.screens.endofgame.EndOfGamePanel;
 import client.services.WaitingRoomService;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -29,6 +30,7 @@ public class WaitingRoomPanel extends JPanel {
     JLabel isStartStatusLabel = new JLabel();
     JButton backToLobbyBtn = new JButton("Back to Lobby");
     JButton startGameBtn = new JButton("Start the Game");
+    JButton endOfGame = new JButton("endOfGame");
 
     public WaitingRoomPanel(JPanel parentPanel, Integer playerId, Integer gameId) {
         this.waitingRoomService = new WaitingRoomService();
@@ -62,6 +64,16 @@ public class WaitingRoomPanel extends JPanel {
                 } else {
                     isStartStatusLabel.setText("You can not start the game!");
                 }
+            }
+        });
+
+        endOfGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                EndOfGamePanel endOfGamePanel = new EndOfGamePanel(parentPanel, gameId);
+                parentPanel.add(endOfGamePanel, "endOfGamePanel");
+                CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
+                cardLayout.show(parentPanel, "endOfGamePanel");
             }
         });
 
@@ -104,6 +116,7 @@ public class WaitingRoomPanel extends JPanel {
         gameDetailPanel.setLayout(new BoxLayout(gameDetailPanel, BoxLayout.Y_AXIS));
         gameDetailPanel.add(startGameBtn);
         gameDetailPanel.add(isStartStatusLabel);
+        gameDetailPanel.add(endOfGame);
     }
 
     private void addToPlayersPanel() {

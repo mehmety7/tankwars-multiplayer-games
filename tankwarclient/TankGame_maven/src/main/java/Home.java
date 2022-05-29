@@ -32,11 +32,6 @@ public class Home {
         AboutUsPanel aboutUsPanel = new AboutUsPanel(basePanel);
         basePanel.add(aboutUsPanel, "aboutUsPanel");
 
-        /*
-        //end of game panel
-        EndOfGamePanel endOfGamePanel = new EndOfGamePanel(basePanel, 1);
-        basePanel.add(endOfGamePanel, "endOfGamePanel");
-        */
 
 
 

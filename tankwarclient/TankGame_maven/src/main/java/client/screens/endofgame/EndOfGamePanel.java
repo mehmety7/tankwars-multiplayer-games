@@ -13,16 +13,18 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class EndOfGamePanel extends JPanel {
     JPanel parentPanel;
     WaitingRoomService waitingRoomService;
     Game currentGame;
     JLabel heading = new JLabel("Game Statistics");
+    JLabel winner = new JLabel();
     JTable scoreTable = new JTable();
     String[] columnNames = { "Player", "Score"};
     DefaultTableModel model = new DefaultTableModel(columnNames, 0);
@@ -50,12 +52,18 @@ public class EndOfGamePanel extends JPanel {
         usernames = getUsernames();
         scores = getScores();
 
-        //code to delete later
-        //usernames.add("Eda");
-        //scores.add(5);
+        cs.sendMessage("AS", currentGame);
+        System.out.println(cs.response());
 
-        for (int i = 0; i < usernames.size(); i++) {
-            model.addRow(new Object[] { String.valueOf(usernames.get(i)), String.valueOf(usernames.get(i)) });
+        Map<String, Integer> statMap = IntStream.range(0, Math.min(usernames.size(), scores.size()))
+                .boxed()
+                .collect(Collectors.toMap(usernames::get, scores::get));
+
+        TreeMap<String, Integer> sortedStats = new TreeMap<String, Integer>(statMap);
+
+        for (Map.Entry<String, Integer> stat :
+                sortedStats.entrySet()) {
+            model.addRow(new Object[] { stat.getKey(), stat.getValue() });
         }
 
 
@@ -83,8 +91,12 @@ public class EndOfGamePanel extends JPanel {
         backButton.setFocusable(false);
         backButton.setAlignmentX(JButton.CENTER_ALIGNMENT);
 
-        heading.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        winner.setText(sortedStats.firstKey() + " won!!");
 
+        heading.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        winner.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+
+        this.add(winner);
         this.add(heading);
         this.add(scrollPane);
         this.add(backButton);
