@@ -113,15 +113,12 @@ public class LobbyPanel extends JPanel {
 
                 ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
                 cs.sendMessage("GU", null);
-                System.out.println("SERVER RESPONSE (GU) " + cs.response());
 
                 //get games
                 if(cs.response().startsWith("OK")){
                     String gamesDataString = cs.response().substring(2);
                     gameRooms.removeAll();
                     List <Game> games =  JsonUtil.fromListJson(gamesDataString, Game[].class);
-                    System.out.println("games\n" + games);
-                    System.out.println();
 
                     for (Game game : games) {
                         String gameInfoString = String.format("Tour:%d Speed:%.1f Map:%s", game.getTourNumber(),

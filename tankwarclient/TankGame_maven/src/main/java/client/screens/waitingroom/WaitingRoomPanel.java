@@ -1,5 +1,6 @@
 package client.screens.waitingroom;
 
+import client.game.GamePanel;
 import client.model.dto.Game;
 import client.model.dto.Tank;
 import client.services.WaitingRoomService;
@@ -16,6 +17,7 @@ import java.util.TimerTask;
 
 public class WaitingRoomPanel extends JPanel {
     WaitingRoomService waitingRoomService;
+    boolean isGameStarted = false;
     Timer t = new Timer();
     Game currentGame;
     List<Tank> tanks;
@@ -61,7 +63,9 @@ public class WaitingRoomPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (waitingRoomService.isStartGame(gameId, playerId)) {
+                    isGameStarted = true;
                     tanks = waitingRoomService.startGame(gameId);
+                    goToGamePanel();
                 } else {
                     isStartStatusLabel.setText("You can not start the game!");
                 }
@@ -74,6 +78,10 @@ public class WaitingRoomPanel extends JPanel {
             @Override
             public void run() {
                 currentGame = waitingRoomService.getGame(gameId);
+                if (currentGame.getIsStarted()) {
+                    tanks = waitingRoomService.startGame(gameId);
+                    goToGamePanel();
+                }
                 if (currentGame == null) {
                     t.cancel();
                     CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
@@ -85,6 +93,15 @@ public class WaitingRoomPanel extends JPanel {
                 playersPanel.repaint();
             }
         }, 0, 1000);
+    }
+
+    private void goToGamePanel() {
+        t.cancel();
+        System.out.println("Ahmetin Tanklari: " + tanks);
+        GamePanel gamePanel = new GamePanel(playerId, tanks);
+        parentPanel.add(gamePanel, "gamePanel");
+        CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
+        cardLayout.show(parentPanel, "gamePanel");
     }
 
     private void addToMainPanel() {
