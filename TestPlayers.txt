@@ -8,3 +8,7 @@ Account2:
 	username: player2
 	password: test
 
+Account3:
+
+	username: player3
+	password: test
