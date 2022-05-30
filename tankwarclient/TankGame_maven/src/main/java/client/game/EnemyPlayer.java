@@ -7,15 +7,17 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Collectors;
 
 
 public class EnemyPlayer {
-    public static String assetPath = "C:/Users/HUZEYFE/Desktop/tankwars/tankwarclient/TankGame_maven/src/main/java/client/assets/enemy/";
     public Tank tank;
     private Integer speed = 2;
     private BufferedImage up, down, left, right;
     private GamePanel gp;
-
 
     public EnemyPlayer(GamePanel gp, Tank tank) {
         this.gp = gp;
@@ -25,10 +27,10 @@ public class EnemyPlayer {
 
     public void getPlayerImage() {
         try {
-            up = ImageIO.read(new File(assetPath + "red_up.png"));
-            down = ImageIO.read(new File(assetPath + "red_down.png"));
-            left = ImageIO.read(new File(assetPath + "red_left.png"));
-            right = ImageIO.read(new File(assetPath + "red_right.png"));
+            up = ImageIO.read(new File(readFileFromResourcesAsString("red_up.png")));
+            down = ImageIO.read(new File(readFileFromResourcesAsString("red_down.png")));
+            left = ImageIO.read(new File(readFileFromResourcesAsString("red_left.png")));
+            right = ImageIO.read(new File(readFileFromResourcesAsString("red_right.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -77,4 +79,10 @@ public class EnemyPlayer {
 
 
     }
+
+    private String readFileFromResourcesAsString(String fileName) throws IOException {
+        Path filePath = Paths.get("./src/main/resources/enemy/" + fileName);
+        return filePath.toString();
+    }
+
 }

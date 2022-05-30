@@ -11,7 +11,11 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CurrentPlayer {
     public static String assetPath = "C:/Users/HUZEYFE/Desktop/tankwars/tankwarclient/TankGame_maven/src/main/java/client/assets/player/";
@@ -34,10 +38,10 @@ public class CurrentPlayer {
 
     public void getPlayerImage() {
         try {
-            up = ImageIO.read(new File(assetPath + "blue_up.png"));
-            down = ImageIO.read(new File(assetPath + "blue_down.png"));
-            left = ImageIO.read(new File(assetPath + "blue_left.png"));
-            right = ImageIO.read(new File(assetPath + "blue_right.png"));
+            up = ImageIO.read(new File(readFileFromResourcesAsString("blue_up.png")));
+            down = ImageIO.read(new File(readFileFromResourcesAsString("blue_down.png")));
+            left = ImageIO.read(new File(readFileFromResourcesAsString("blue_left.png")));
+            right = ImageIO.read(new File(readFileFromResourcesAsString("blue_right.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -206,5 +210,9 @@ public class CurrentPlayer {
         g2.setColor(Color.WHITE);
     }
 
+    private String readFileFromResourcesAsString(String fileName) throws IOException {
+        Path filePath = Paths.get("./src/main/resources/player/" + fileName);
+        return filePath.toString();
+    }
 
 }
