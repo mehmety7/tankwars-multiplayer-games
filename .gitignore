@@ -30,3 +30,4 @@ replay_pid*
 tankwarserver/target/maven-archiver/pom.properties
 tankwarserver/.idea/sonarlint/issuestore/index.pb
 tankwarserver/tankwarserver.iml
+/tankwarclient/TankGame_maven/target/
