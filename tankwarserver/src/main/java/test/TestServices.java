@@ -1,7 +1,9 @@
 package test;
 
 
+import server.dao.InMemoryDao;
 import server.model.dto.Game;
+import server.model.dto.Tank;
 import server.model.entity.Player;
 import server.service.GameService;
 import server.service.PlayerService;
@@ -27,6 +29,14 @@ public class TestServices {
         System.out.println(playerService.getPlayer(1).getIsActive());
         playerService.logout(1);
         System.out.println(playerService.getPlayer(1).getIsActive());
+
+
+        InMemoryDao inMemoryDao = InMemoryDao.getInstance();
+        inMemoryDao.tanks.put(1, Tank.builder().playerId(1).build());
+        inMemoryDao.tanks.put(1, Tank.builder().playerId(2).build());
+        inMemoryDao.tanks.put(1, Tank.builder().playerId(8).build());
+        inMemoryDao.tanks.put(1, Tank.builder().playerId(7).build());
+        System.out.println(inMemoryDao.tanks.get(1));
 
     }
 

@@ -32,9 +32,7 @@ public class TankService {
     }
 
     private final InMemoryDao inMemoryDao;
-    //private final BulletService bulletService;
     private final PlayerService playerService;
-
 
     public List<Tank> createTanksForNewGame(Integer gameId) {
         Game game = inMemoryDao.games.get(gameId);
