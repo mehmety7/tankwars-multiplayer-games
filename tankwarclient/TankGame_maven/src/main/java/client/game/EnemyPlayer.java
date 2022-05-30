@@ -10,7 +10,7 @@ import java.io.IOException;
 
 
 public class EnemyPlayer {
-    public static String assetPath = "C:/development/tankwars/tankwarclient/TankGame_maven/src/main/java/client/assets/enemy/";
+    public static String assetPath = "C:/Users/HUZEYFE/Desktop/tankwars/tankwarclient/TankGame_maven/src/main/java/client/assets/enemy/";
     public Tank tank;
     private Integer speed = 2;
     private BufferedImage up, down, left, right;
