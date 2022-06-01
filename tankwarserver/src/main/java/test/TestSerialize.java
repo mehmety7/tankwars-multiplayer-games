@@ -2,7 +2,6 @@ package test;
 
 import server.model.dto.Bullet;
 import server.model.dto.Tank;
-import server.model.entity.Player;
 import server.model.enumerated.FaceOrientation;
 import server.model.response.UpdateGameResponse;
 import server.utilization.JsonUtil;
