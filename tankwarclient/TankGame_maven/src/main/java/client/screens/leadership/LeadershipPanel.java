@@ -1,8 +1,8 @@
 package client.screens.leadership;
 
 
-import client.model.dto.Game;
 import client.model.dto.Statistic;
+import client.rabbitmq.RPCClient;
 import client.services.SingletonSocketService;
 import client.socket.ClientSocket;
 import client.util.JsonUtil;
@@ -33,7 +33,7 @@ public class LeadershipPanel extends JPanel {
     public LeadershipPanel(JPanel parentPanel) {
         this.parentPanel = parentPanel;
 
-        ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
+        RPCClient cs = SingletonSocketService.getInstance().rpcClient;
         cs.sendMessage("GL", null);
         System.out.println(cs.response());
 

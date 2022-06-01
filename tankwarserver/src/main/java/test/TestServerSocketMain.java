@@ -2,7 +2,7 @@ package test;
 
 import server.socket.Server;
 
-public class TestMain {
+public class TestServerSocketMain {
 
     public static void main(String[] args) {
 

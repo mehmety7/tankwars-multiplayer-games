@@ -1,12 +1,10 @@
 package client.screens.endofgame;
 
 import client.model.dto.Game;
-import client.model.dto.Statistic;
-import client.model.entity.Player;
+import client.rabbitmq.RPCClient;
 import client.services.SingletonSocketService;
 import client.services.WaitingRoomService;
 import client.socket.ClientSocket;
-import client.util.JsonUtil;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -17,7 +15,6 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class EndOfGamePanel extends JPanel {
     JPanel parentPanel;
@@ -45,7 +42,7 @@ public class EndOfGamePanel extends JPanel {
 
         this.parentPanel = parentPanel;
 
-        ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
+        RPCClient cs = SingletonSocketService.getInstance().rpcClient;
 
         this.currentGame = waitingRoomService.getGame(gameId);
 

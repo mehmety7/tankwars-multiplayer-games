@@ -4,8 +4,7 @@ import client.model.dto.Game;
 import client.model.dto.Tank;
 import client.model.entity.Player;
 import client.model.request.PlayerGameRequest;
-import client.model.request.PlayerGameRequest.PlayerGameRequestBuilder;
-import client.screens.waitingroom.WaitingRoomPanel;
+import client.rabbitmq.RPCClient;
 import client.socket.ClientSocket;
 import client.util.JsonUtil;
 
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WaitingRoomService {
-    ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
+    RPCClient cs = SingletonSocketService.getInstance().rpcClient;
 
     public Game getGame(Integer gameId) {
         cs.sendMessage("GG", Game.builder().id(gameId).build());

@@ -1,8 +1,8 @@
 package client.screens.auth;
 
 import client.model.entity.Player;
+import client.rabbitmq.RPCClient;
 import client.screens.lobby.LobbyPanel;
-import client.screens.waitingroom.WaitingRoomPanel;
 import client.services.SingletonSocketService;
 import client.socket.ClientSocket;
 import client.util.JsonUtil;
@@ -33,7 +33,7 @@ public class LoginPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Player player = Player.builder().username(usernameField.getText()).password(String.valueOf(passwordField.getPassword())).build();
-                ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
+                RPCClient cs = SingletonSocketService.getInstance().rpcClient;
                 cs.sendMessage("LG", player);
 
                 if (cs.response().contains("OK")) {

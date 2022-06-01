@@ -1,12 +1,12 @@
 package server;
 
-import server.socket.Server;
+import server.rabbitmq.RPCServer;
 
 public class MainApplication {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
-        Server.startServer(12345);
+        RPCServer.run();
 
     }
 }

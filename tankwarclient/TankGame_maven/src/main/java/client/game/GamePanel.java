@@ -2,10 +2,9 @@ package client.game;
 
 import client.model.dto.Bullet;
 import client.model.dto.Tank;
-import client.model.entity.Player;
 import client.model.request.UpdateGameRequest;
 import client.model.response.UpdateGameResponse;
-import client.screens.lobby.LobbyPanel;
+import client.rabbitmq.RPCClient;
 import client.services.SingletonSocketService;
 import client.socket.ClientSocket;
 import client.util.JsonUtil;
@@ -80,7 +79,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void updateGameFromServer() {
-        ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
+        RPCClient cs = SingletonSocketService.getInstance().rpcClient;
         UpdateGameRequest updateGameRequest = new UpdateGameRequest();
         updateGameRequest.setGameId(currentPlayer.tank.getGameId());
         cs.sendMessage("UG", updateGameRequest);
@@ -192,7 +191,7 @@ public class GamePanel extends JPanel implements Runnable {
         if (currentPlayer.isAlive) {
             currentPlayer.update();
             //todo send server my position
-            ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
+            RPCClient cs = SingletonSocketService.getInstance().rpcClient;
             cs.sendMessage("UD", currentPlayer.tank);
 
             if (cs.response().contains("OK")) {

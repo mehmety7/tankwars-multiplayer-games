@@ -1,18 +1,14 @@
 package client.services;
 
-import client.socket.ClientSocket;
+import client.rabbitmq.RPCClient;
 
 public class SingletonSocketService {
     private static SingletonSocketService socket_instance = null;
 
-    private static final String host = "localhost";
-
-    private static final Integer port = 12345;
-
-    public ClientSocket clientSocket;
+    public RPCClient rpcClient;
 
     private SingletonSocketService() {
-        this.clientSocket = new ClientSocket(host, port);
+        this.rpcClient = new RPCClient();
     }
 
     public static SingletonSocketService getInstance() {

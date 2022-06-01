@@ -3,6 +3,7 @@ package client.game;
 
 import client.model.dto.Tank;
 import client.model.enumerated.FaceOrientation;
+import client.rabbitmq.RPCClient;
 import client.services.SingletonSocketService;
 import client.socket.ClientSocket;
 
@@ -80,7 +81,7 @@ public class CurrentPlayer {
 
                 //TODO send bullet to server
 
-                ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
+                RPCClient cs = SingletonSocketService.getInstance().rpcClient;
                 cs.sendMessage("SF", this.tank);
                 System.out.println(cs.response());
 

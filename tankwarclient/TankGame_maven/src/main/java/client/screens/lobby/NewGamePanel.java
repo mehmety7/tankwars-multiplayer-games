@@ -1,6 +1,7 @@
 package client.screens.lobby;
 
 import client.model.dto.Game;
+import client.rabbitmq.RPCClient;
 import client.screens.waitingroom.WaitingRoomPanel;
 import client.services.SingletonSocketService;
 import client.socket.ClientSocket;
@@ -66,7 +67,7 @@ public class NewGamePanel extends JPanel {
 
                 //Player Id'si ile yeni oyun build et
                 Game game = Game.builder().tourNumber(selectedTour).mapType(String.valueOf(selectedMapType)).shootingSpeed(selectedShootSpeed).id(playerId).build();
-                ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
+                RPCClient cs = SingletonSocketService.getInstance().rpcClient;
                 cs.sendMessage("CG", game);
                 if (cs.response().startsWith("OK")) {
                     System.out.println(cs.response());

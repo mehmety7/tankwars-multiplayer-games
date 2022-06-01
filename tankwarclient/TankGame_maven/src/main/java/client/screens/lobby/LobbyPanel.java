@@ -4,6 +4,7 @@ import client.model.dto.Game;
 import client.model.dto.Message;
 import client.model.entity.Player;
 import client.model.request.PlayerGameRequest;
+import client.rabbitmq.RPCClient;
 import client.screens.leadership.LeadershipPanel;
 import client.screens.waitingroom.WaitingRoomPanel;
 import client.services.SingletonSocketService;
@@ -22,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import java.util.stream.Collectors;
 
 public class LobbyPanel extends JPanel {
     JPanel parentPanel = new JPanel();
@@ -110,7 +109,7 @@ public class LobbyPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 //TODO perform LogOut
                 t.cancel();
-                ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
+                RPCClient cs = SingletonSocketService.getInstance().rpcClient;
                 PlayerGameRequest request = PlayerGameRequest.builder().playerId(playerId).build();
                 cs.sendMessage("LT", request);
 
@@ -139,7 +138,7 @@ public class LobbyPanel extends JPanel {
                 activePlayerPanel.setLayout(new BoxLayout(activePlayerPanel, BoxLayout.Y_AXIS));
                 chat.setLayout(new BoxLayout(chat, BoxLayout.Y_AXIS));
 
-                ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
+                RPCClient cs = SingletonSocketService.getInstance().rpcClient;
                 cs.sendMessage("GU", null);
 
                 //get games
@@ -281,7 +280,7 @@ public class LobbyPanel extends JPanel {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    ClientSocket cs = SingletonSocketService.getInstance().clientSocket;
+                    RPCClient cs = SingletonSocketService.getInstance().rpcClient;
                     Message message = Message.builder().playerId(playerId).playerUserName(playerUsername).text(chatInput.getText()).build();
                     cs.sendMessage("CM", message);
                     System.out.println("CHAT INPUT " + chatInput.getText());
