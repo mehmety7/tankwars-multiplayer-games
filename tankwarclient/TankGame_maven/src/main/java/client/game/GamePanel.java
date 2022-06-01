@@ -109,7 +109,7 @@ public class GamePanel extends JPanel implements Runnable {
         for (int i = 0; i < tanks.size(); i++) {
             if (tanks.get(i).getPlayerId() != currentPlayerId) {
                 tanks.get(i).setPositionX(tanks.get(i).getPositionX() + 1);
-                System.out.println("Add enemy player called!");
+                // System.out.println("Add enemy player called!");
                 enemyPlayers.add(new EnemyPlayer(this, tanks.get(i)));
             } else {
                 if (tanks.get(i).getHealth().equals(0)) {
@@ -190,9 +190,11 @@ public class GamePanel extends JPanel implements Runnable {
 
         if (currentPlayer.isAlive) {
             currentPlayer.update();
-            //todo send server my position
+
             RPCClient cs = SingletonSocketService.getInstance().rpcClient;
             cs.sendMessage("UD", currentPlayer.tank);
+
+            // System.out.println("UpdateDataRequest:" + currentPlayer.tank);
 
             if (cs.response().contains("OK")) {
 

@@ -75,12 +75,13 @@ public class TankService {
                     .positionX(newX)
                     .positionY(newY)
                     .build();
-            createOrUpdateTank(tank);
+            createOrUpdateTank(tank, "Inner createTanksForNewGame");
         }
         return getTanksInGame(gameId);
     }
 
-    public void createOrUpdateTank(Tank tank) {
+    public void createOrUpdateTank(Tank tank, String methodType) {
+        System.out.println("Tank Update Health: " + tank.getHealth() + " from " + methodType);
         inMemoryDao.tanks.put(tank.getPlayerId(), tank);
     }
 
@@ -196,8 +197,7 @@ public class TankService {
                 deleteTank(tankIn.getPlayerId());
                 score.getAndSet(score.get() + 1);
             } else {
-                createOrUpdateTank(tankIn);
-                System.out.println(tankIn);
+                createOrUpdateTank(tankIn, "Inner tanksThatGotHit");
             }
         });
         return score;

@@ -193,7 +193,10 @@ public class ServiceOperationNavigator {
         }
 
         else if (isEqual(protocol, MethodType.UD)){
-            tankService.createOrUpdateTank(JsonUtil.fromJson(protocol.getMessage(), Tank.class));
+            Tank tank = JsonUtil.fromJson(protocol.getMessage(), Tank.class);
+            Tank record = tankService.getTank(tank.getPlayerId());
+            tank.setHealth(record.getHealth());
+            tankService.createOrUpdateTank(tank, "UD");
             return OK;
         }
 

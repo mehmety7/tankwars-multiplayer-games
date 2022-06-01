@@ -5,21 +5,17 @@ import client.model.dto.Tank;
 import client.model.enumerated.FaceOrientation;
 import client.rabbitmq.RPCClient;
 import client.services.SingletonSocketService;
-import client.socket.ClientSocket;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CurrentPlayer {
-    public static String assetPath = "C:/Users/HUZEYFE/Desktop/tankwars/tankwarclient/TankGame_maven/src/main/java/client/assets/player/";
     public Tank tank;
     private Integer speed = 2;
     private BufferedImage up, down, left, right;
@@ -59,7 +55,7 @@ public class CurrentPlayer {
             tank.setFaceOrientation(FaceOrientation.DOWN);
             if (tank.getPositionY() + gp.tankSize <= gp.screenHeight) {
                 tank.setPositionY(tank.getPositionY() + speed);
-                System.out.println("Asagi tiklandi");
+                // System.out.println("Asagi tiklandi");
             }
         } else if (keyHandler.leftPressed == true) {
             tank.setFaceOrientation(FaceOrientation.LEFT);

@@ -42,7 +42,7 @@ public class WaitingRoomService {
 
     public boolean isStartGame(Integer gameId, Integer playerId) {
         cs.sendMessage("SG", Game.builder().id(gameId).build());
-        System.out.println("Response Status: " + cs.response());
+        // System.out.println("Response Status: " + cs.response());
         String responseStatus = cs.response().substring(0, 2);
         if (responseStatus.equals("FL") || !gameId.equals(playerId))
             return false;
@@ -52,6 +52,7 @@ public class WaitingRoomService {
     public List<Tank> startGame(Integer gameId) {
         cs.sendMessage("SG", Game.builder().id(gameId).build());
         String response = cs.response().substring(2);
+        System.out.println("Response Start Game: " + cs.response());
         List<Tank> tanks = JsonUtil.fromListJson(response, Tank[].class);
         return tanks;
     }
