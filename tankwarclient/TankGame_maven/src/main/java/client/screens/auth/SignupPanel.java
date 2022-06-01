@@ -1,5 +1,11 @@
 package client.screens.auth;
 
+import client.model.entity.Player;
+import client.rabbitmq.RPCClient;
+import client.screens.lobby.LobbyPanel;
+import client.services.SingletonSocketService;
+import client.util.JsonUtil;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -29,6 +35,24 @@ public class SignupPanel extends JPanel {
         signUpButton.setFocusable(false);
         buttonsPanel.add(signUpButton);
         buttonsPanel.add(loginButton);
+
+        signUpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Player player = Player.builder().username(usernameField.getText()).password(String.valueOf(passwordField.getPassword())).build();
+                RPCClient cs = SingletonSocketService.getInstance().rpcClient;
+                cs.sendMessage("SU", player);
+
+                if (cs.response().contains("OK")) {
+
+                    CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
+                    cardLayout.show(parentPanel, "loginPanel");
+                } else {
+                    System.out.println("Fail create account");
+                }
+
+            }
+        });
 
         loginButton.addActionListener(new ActionListener() {
             @Override

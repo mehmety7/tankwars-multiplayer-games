@@ -1,6 +1,7 @@
 package test;
 
 
+import server.bean.BeanHandler;
 import server.dao.InMemoryDao;
 import server.model.dto.Game;
 import server.model.dto.Tank;
@@ -37,6 +38,8 @@ public class TestServices {
         inMemoryDao.tanks.put(1, Tank.builder().playerId(8).build());
         inMemoryDao.tanks.put(1, Tank.builder().playerId(7).build());
         System.out.println(inMemoryDao.tanks.get(1));
+
+        System.out.println(BeanHandler.playerService.testPlayers.size());
 
     }
 
