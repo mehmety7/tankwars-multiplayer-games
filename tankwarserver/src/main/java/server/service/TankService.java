@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -176,26 +177,30 @@ public class TankService {
         return false;
     }
 
-    public void tanksThatGotHit(Integer gameId, Bullet bullet){
+    public AtomicReference<Integer> tanksThatGotHit(Tank tank, Bullet bullet){
+        AtomicReference<Integer> score = new AtomicReference<>(0);
         List<Tank> hittedTankList = new ArrayList<>();
-        List<Tank> allTanks = tankService.getTanksInGame(gameId);
-        allTanks.forEach((tank -> {
-            if(isTankGotHit(bullet, tank)){
-                int newHealth = tank.getHealth() - ConstantsForInnerLogic.bulletDamage;
-                tank.setHealth(newHealth);
-                if(tank.getHealth() < 0)
-                    tank.setHealth(0);
-                hittedTankList.add(tank);
+        List<Tank> allTanks = tankService.getTanksInGame(tank.getGameId());
+        allTanks.forEach((tankIn -> {
+            if(isTankGotHit(bullet, tankIn)){
+                int newHealth = tankIn.getHealth() - ConstantsForInnerLogic.bulletDamage;
+                tankIn.setHealth(newHealth);
+                if(tankIn.getHealth() < 0)
+                    tankIn.setHealth(0);
+                hittedTankList.add(tankIn);
             }
         }));
 
-        hittedTankList.forEach(tank -> {
-            if(tank.getHealth() == 0){
-                deleteTank(tank.getPlayerId());
+        hittedTankList.forEach(tankIn -> {
+            if(tankIn.getHealth() == 0){
+                deleteTank(tankIn.getPlayerId());
+                score.getAndSet(score.get() + 1);
             } else {
-                createOrUpdateTank(tank);
+                createOrUpdateTank(tankIn);
+                System.out.println(tankIn);
             }
         });
+        return score;
     }
 
     public List<Bullet> getBullets(Integer gameId){

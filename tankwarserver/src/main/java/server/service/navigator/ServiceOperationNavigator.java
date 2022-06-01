@@ -17,6 +17,7 @@ import server.utilization.JsonUtil;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -167,8 +168,9 @@ public class ServiceOperationNavigator {
         else if (isEqual(protocol, MethodType.SF)){
             Tank tank = JsonUtil.fromJson(protocol.getMessage(), Tank.class);
             Bullet bullet = tankService.createBullet(tank);
-            tankService.tanksThatGotHit(tank.getGameId(), bullet);
+            AtomicReference<Integer> score = tankService.tanksThatGotHit(tank, bullet);
             tankService.removeBullet(bullet);
+            gameService.updatePlayerPoint(tank.getGameId(), tank.getPlayerId(), score.get());
             return OK;
         }
 
