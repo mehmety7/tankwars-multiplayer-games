@@ -151,8 +151,6 @@ public class TankService {
     }
 
     private boolean isTankGotHit(Bullet bullet, Tank tank){
-        //Tankın x ve y noktaları tankın namlusunun x ve y koordinatlarını temsil ediyor.
-        //Buradaki hesapta birden fazla tankı aynı anda vurmak mümkün, baya kolay bir hesap :D
         switch (bullet.getFaceOrientation()){
             case UP:
                 if ((tank.getPositionX() + ConstantsForInnerLogic.tankSize / 2 >= bullet.getPositionX() && tank.getPositionX() - ConstantsForInnerLogic.tankSize / 2 <= bullet.getPositionX() + 1) && tank.getPositionY() <= bullet.getPositionY()) {

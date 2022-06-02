@@ -14,7 +14,7 @@ public class Game extends BaseDto {
     private static final long serialVersionUID = 1833262976822214071L;
 
     private Integer id;
-    private Map<Integer, Integer> players; // playerId - point
+    private Map<Integer, Integer> players;
     private Integer tourNumber;
     private Double shootingSpeed;
     private String mapType;

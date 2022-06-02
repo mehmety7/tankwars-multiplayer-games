@@ -21,8 +21,3 @@ public class Bullet extends BaseDto {
     private FaceOrientation faceOrientation;
 }
 
-/* Tanklar ateş ederken mermilerin çarptığı yere göre serverin aksiyon alması gerek,
- *  Bu yüzden bir mermi sınıfı oluşturdum.*/
-// Mermiler sınırsız hızda düz bir çizgi olacaklarından refactor atıyorum. Bulletların Id'si olmasına gerek yok çünkü
-// çıktıkları anda yok olacaklar. Biz clienta bullet listesini yollayacağız onlar animasyonu yapcak.
-

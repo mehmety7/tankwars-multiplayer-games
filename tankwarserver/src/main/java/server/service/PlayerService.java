@@ -38,17 +38,14 @@ public class PlayerService {
 
     public Player getPlayer(Integer playerId) {
         return getDummyPlayer(playerId);
-        // return playerDao.getPlayer(playerId);
     }
 
     private Player getPlayer(String username) {
         return getDummyPlayer(username);
-        // return playerDao.getPlayer(username);
     }
 
     public List<Player> getActivePlayers() {
         return getDummyActivePlayers();
-        // return playerDao.getActivePlayers();
     }
 
     public Player login (Player player) {
@@ -64,9 +61,6 @@ public class PlayerService {
     }
 
     public Boolean logout (Integer playerId) {
-        /* if (Boolean.TRUE.equals(playerDao.updateActive(player.getId()))) {
-            return Boolean.TRUE;
-        } */
 
         Player result = getPlayer(playerId);
 
@@ -83,18 +77,6 @@ public class PlayerService {
     public Player createPlayer(Player player) {
 
         return createDummyPlayer(player);
-/*
-        player.setPassword(HashUtil.hashValue(player.getPassword()));
-        player.setIsActive(Boolean.FALSE);
-        //Integer newPlayerId = playerDao.createPlayer(player);
-        Integer newPlayerId = 0;
-        if (newPlayerId.equals(CREATE_ERROR_RETURN_VALUE)) {
-            System.out.println("Create player operation is failed");
-            return null;
-        }
-        player.setId(newPlayerId);
-        return player;
- */
     }
 
     private Player createDummyPlayer(Player player) {
@@ -137,12 +119,10 @@ public class PlayerService {
     }
 
     private boolean updatePlayerActivate(Integer playerId) {
-        // return playerDao.updateActive(playerId);
         return true;
     }
 
     public boolean deletePlayer(Integer playerId) {
-        // return playerDao.deletePlayer(playerId);
         return true;
     }
 
