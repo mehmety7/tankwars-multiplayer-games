@@ -48,13 +48,13 @@ public class Main {
                 .positionY(300)
                 .build());
 
-        GamePanel gamePanel = new GamePanel(1, tanks);
+//        GamePanel gamePanel = new GamePanel(1, tanks);
 
 
         //todo  ====================================
 
 
-        window.add(gamePanel);
+//        window.add(gamePanel);
 
         window.pack(); //fit
 

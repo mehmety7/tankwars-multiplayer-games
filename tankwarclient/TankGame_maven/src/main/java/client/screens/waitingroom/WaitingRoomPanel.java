@@ -99,7 +99,7 @@ public class WaitingRoomPanel extends JPanel {
     private void goToGamePanel() {
         t.cancel();
         System.out.println("Ahmetin Tanklari: " + tanks);
-        GamePanel gamePanel = new GamePanel(playerId, tanks);
+        GamePanel gamePanel = new GamePanel(parentPanel, playerId, tanks);
         parentPanel.add(gamePanel, "gamePanel");
         CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
         cardLayout.show(parentPanel, "gamePanel");

@@ -35,10 +35,18 @@ public class CurrentPlayer {
 
     public void getPlayerImage() {
         try {
-            up = ImageIO.read(new File(readFileFromResourcesAsString("blue_up.png")));
-            down = ImageIO.read(new File(readFileFromResourcesAsString("blue_down.png")));
-            left = ImageIO.read(new File(readFileFromResourcesAsString("blue_left.png")));
-            right = ImageIO.read(new File(readFileFromResourcesAsString("blue_right.png")));
+            if(isAlive){
+                up = ImageIO.read(new File(readFileFromResourcesAsString("blue_up.png")));
+                down = ImageIO.read(new File(readFileFromResourcesAsString("blue_down.png")));
+                left = ImageIO.read(new File(readFileFromResourcesAsString("blue_left.png")));
+                right = ImageIO.read(new File(readFileFromResourcesAsString("blue_right.png")));
+            }else{
+                up = ImageIO.read(new File(readFileFromResourcesAsString("grey_up.png")));
+                down = ImageIO.read(new File(readFileFromResourcesAsString("grey_down.png")));
+                left = ImageIO.read(new File(readFileFromResourcesAsString("grey_left.png")));
+                right = ImageIO.read(new File(readFileFromResourcesAsString("grey_right.png")));
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -168,6 +176,19 @@ public class CurrentPlayer {
         }
 
         g2.drawImage(image, tank.getPositionX(), tank.getPositionY(), gp.tankSize, gp.tankSize, null);
+
+        g2.setColor(Color.YELLOW);
+        int hp;
+        if(isAlive){
+            hp = tank.getHealth()/10;
+        }else{
+            hp = 0;
+        }
+        String heathBar = "[" + Integer.toString(hp) + "]";
+        g2.drawString(heathBar, tank.getPositionX()+20, tank.getPositionY()+60);
+        g2.setColor(Color.GREEN);
+
+
 
         if (fire) {
             //TODO draw bullet

@@ -5,6 +5,7 @@ import client.model.dto.Tank;
 import client.model.request.UpdateGameRequest;
 import client.model.response.UpdateGameResponse;
 import client.rabbitmq.RPCClient;
+import client.screens.endofgame.EndOfGamePanel;
 import client.services.SingletonSocketService;
 import client.socket.ClientSocket;
 import client.util.JsonUtil;
@@ -26,6 +27,9 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenWidth = tankSize * maxScreenCol;
     public final int screenHeight = tankSize * maxScreenRow;
 
+    public int aliveTankCounter;
+    JPanel parentPanel;
+
 
     int FPS = 60;
 
@@ -46,7 +50,8 @@ public class GamePanel extends JPanel implements Runnable {
     ;
 
 
-    public GamePanel(Integer currentPlayerId, List<Tank> tanks) {
+    public GamePanel(JPanel parentPanel,Integer currentPlayerId, List<Tank> tanks) {
+        this.parentPanel = parentPanel;
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true); // to improve rendering performance
@@ -58,6 +63,8 @@ public class GamePanel extends JPanel implements Runnable {
 
         createPlayers();
         startGameThread();
+
+        aliveTankCounter = tanks.size();
 
 
     }
@@ -90,6 +97,7 @@ public class GamePanel extends JPanel implements Runnable {
             String playerDataString = cs.response().substring(2);
             updateGameResponse = JsonUtil.fromJson(playerDataString, UpdateGameResponse.class);
             tanks = updateGameResponse.getTanks();
+
             bullets = updateGameResponse.getBullets();
             if (bullets.size() != 0) {
                 Bullet temp = bullets.get(bullets.size() - 1);
@@ -105,19 +113,38 @@ public class GamePanel extends JPanel implements Runnable {
 //        if(!tanks.contains(currentPlayer.tank)){//todo bu calisir mi?
 //            currentPlayer.isAlive = false;
 //        }
+        System.out.println(tanks);
+
+        boolean isCurrentPlayerFound = false;
+
+        aliveTankCounter = 0;
 
         for (int i = 0; i < tanks.size(); i++) {
-            if (tanks.get(i).getPlayerId() != currentPlayerId) {
-                tanks.get(i).setPositionX(tanks.get(i).getPositionX() + 1);
-                // System.out.println("Add enemy player called!");
-                enemyPlayers.add(new EnemyPlayer(this, tanks.get(i)));
-            } else {
-                if (tanks.get(i).getHealth().equals(0)) {
-                    currentPlayer.isAlive = false;
-                }
+            if(tanks.get(i) != null){
+                if (tanks.get(i).getPlayerId() != currentPlayerId) {
+                    tanks.get(i).setPositionX(tanks.get(i).getPositionX() + 1);
+                    // System.out.println("Add enemy player called!");
+                    enemyPlayers.add(new EnemyPlayer(this, tanks.get(i)));
+                } else {
+                    isCurrentPlayerFound = true;
+                    currentPlayer.tank.setHealth(tanks.get(i).getHealth());
 
+//                    if (tanks.get(i).getHealth().equals(0)) {
+//                        currentPlayer.isAlive = false;
+//                    }
+                }
+                aliveTankCounter++;
+            }else{
+                continue;
             }
         }
+
+        if(isCurrentPlayerFound == false){
+            currentPlayer.getPlayerImage();
+            currentPlayer.isAlive = false;
+        }
+
+
     }
 
     public void bulletTrackFromServer(Graphics2D g2, Bullet bullet) {
@@ -174,6 +201,13 @@ public class GamePanel extends JPanel implements Runnable {
                 repaint(); // Swing method
                 delta--;
                 drawCount++;
+
+                if(aliveTankCounter < 2){
+                    EndOfGamePanel endOfGamePanel = new EndOfGamePanel(parentPanel, currentPlayer.tank.getGameId());
+                    parentPanel.add(endOfGamePanel,"endOfGamePanel");
+                    CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
+                    cardLayout.show(parentPanel, "endOfGamePanel");
+                }
             }
 
             if (timer >= 1000000000) {

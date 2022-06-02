@@ -78,6 +78,15 @@ public class EnemyPlayer {
         g2.drawImage(image, tank.getPositionX(), tank.getPositionY(), gp.tankSize, gp.tankSize, null);
 
 
+        g2.setColor(Color.YELLOW);
+        int hp;
+         hp = tank.getHealth()/10;
+
+        String heathBar = "[" + Integer.toString(hp) + "]";
+        g2.drawString(heathBar, tank.getPositionX()+20, tank.getPositionY()+60);
+        g2.setColor(Color.GREEN);
+
+
     }
 
     private String readFileFromResourcesAsString(String fileName) throws IOException {
