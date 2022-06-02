@@ -12,10 +12,7 @@ import server.model.entity.Player;
 import server.model.enumerated.FaceOrientation;
 import server.utilization.Pair;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -75,13 +72,12 @@ public class TankService {
                     .positionX(newX)
                     .positionY(newY)
                     .build();
-            createOrUpdateTank(tank, "Inner createTanksForNewGame");
+            createOrUpdateTank(tank);
         }
         return getTanksInGame(gameId);
     }
 
-    public void createOrUpdateTank(Tank tank, String methodType) {
-        System.out.println("Tank Update Health: " + tank.getHealth() + " from " + methodType);
+    public void createOrUpdateTank(Tank tank) {
         inMemoryDao.tanks.put(tank.getPlayerId(), tank);
     }
 
@@ -176,8 +172,8 @@ public class TankService {
         return false;
     }
 
-    public AtomicReference<Integer> tanksThatGotHit(Tank tank, Bullet bullet){
-        AtomicReference<Integer> score = new AtomicReference<>(0);
+    public Integer tanksThatGotHit(Tank tank, Bullet bullet){
+        Integer score = 0;
         List<Tank> hittedTankList = new ArrayList<>();
         List<Tank> allTanks = tankService.getTanksInGame(tank.getGameId());
         allTanks.forEach((tankIn -> {
@@ -193,11 +189,15 @@ public class TankService {
         hittedTankList.forEach(tankIn -> {
             if(tankIn.getHealth() == 0){
                 deleteTank(tankIn.getPlayerId());
-                score.getAndSet(score.get() + 1);
             } else {
-                createOrUpdateTank(tankIn, "Inner tanksThatGotHit");
+                createOrUpdateTank(tankIn);
             }
         });
+
+        if (Boolean.FALSE.equals(hittedTankList.isEmpty())) {
+            score = 1;
+        }
+
         return score;
     }
 

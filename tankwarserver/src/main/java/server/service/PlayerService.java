@@ -110,7 +110,7 @@ public class PlayerService {
         List<Player> response = new ArrayList<>();
 
         for (Player player : testPlayers) {
-            if (player.getIsActive()) {
+            if (Boolean.TRUE.equals(player.getIsActive())) {
                 response.add(player);
             }
         }

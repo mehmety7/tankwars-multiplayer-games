@@ -168,9 +168,9 @@ public class ServiceOperationNavigator {
         else if (isEqual(protocol, MethodType.SF)){
             Tank tank = JsonUtil.fromJson(protocol.getMessage(), Tank.class);
             Bullet bullet = tankService.createBullet(tank);
-            AtomicReference<Integer> score = tankService.tanksThatGotHit(tank, bullet);
+            Integer score = tankService.tanksThatGotHit(tank, bullet);
             tankService.removeBullet(bullet);
-            gameService.updatePlayerPoint(tank.getGameId(), tank.getPlayerId(), score.get());
+            gameService.updatePlayerPoint(tank.getGameId(), tank.getPlayerId(), score);
             return OK;
         }
 
@@ -196,7 +196,7 @@ public class ServiceOperationNavigator {
             Tank tank = JsonUtil.fromJson(protocol.getMessage(), Tank.class);
             Tank record = tankService.getTank(tank.getPlayerId());
             tank.setHealth(record.getHealth());
-            tankService.createOrUpdateTank(tank, "UD");
+            tankService.createOrUpdateTank(tank);
             return OK;
         }
 
