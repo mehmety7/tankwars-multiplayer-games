@@ -74,7 +74,7 @@ public class LobbyPanel extends JPanel {
                 //Lobby ekranına gelen player datası içindeki playerIdyi newGamePanelına ilet
                 NewGamePanel newGamePanel = new NewGamePanel(parentPanel, playerId);
                 parentPanel.add(newGamePanel, "newGamePanel");
-                t.cancel();
+//                t.cancel();
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                 cardLayout.show(parentPanel, "newGamePanel");
             }
@@ -85,7 +85,7 @@ public class LobbyPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //leadership panel
-                t.cancel();
+//                t.cancel();
                 LeadershipPanel leadershipPanel = new LeadershipPanel(parentPanel);
                 parentPanel.add(leadershipPanel, "leadershipPanel");
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
@@ -97,7 +97,7 @@ public class LobbyPanel extends JPanel {
         aboutUsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                t.cancel();
+//                t.cancel();
                 CardLayout cardLayout = (CardLayout) parentPanel.getLayout();
                 cardLayout.show(parentPanel, "aboutUsPanel");
             }
@@ -108,7 +108,7 @@ public class LobbyPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //TODO perform LogOut
-                t.cancel();
+//                t.cancel();
                 RPCClient cs = SingletonSocketService.getInstance().rpcClient;
                 PlayerGameRequest request = PlayerGameRequest.builder().playerId(playerId).build();
                 cs.sendMessage("LT", request);
@@ -169,7 +169,7 @@ public class LobbyPanel extends JPanel {
                         joinButton.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                t.cancel();
+//                                t.cancel();
                                 PlayerGameRequest playerGameRequest = PlayerGameRequest.builder().gameId(gameId).playerId(playerId).build();
                                 cs.sendMessage("JG", playerGameRequest);
                                 System.out.println(gameId);

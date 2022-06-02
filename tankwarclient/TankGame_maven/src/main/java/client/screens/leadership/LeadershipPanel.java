@@ -24,7 +24,8 @@ public class LeadershipPanel extends JPanel {
     JTable scoreTable = new JTable();
 
     String[] columnNames = {"Player", "Total Score"};
-    DefaultTableModel model = new DefaultTableModel();
+//    DefaultTableModel model = new DefaultTableModel();
+    DefaultTableModel model = new DefaultTableModel(columnNames, 0);
     JScrollPane scrollPane;
 
 
