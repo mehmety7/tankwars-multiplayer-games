@@ -39,7 +39,7 @@ public class StatisticService {
         }
 
         for (Player player : players) {
-            addStatistic(player.getId(), player.getUsername(), game.getPlayers().get(player));
+            addStatistic(player.getId(), player.getUsername(), game.getPlayers().get(player.getId()));
         }
 
         gameService.deleteGame(game.getId());
