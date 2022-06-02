@@ -22,13 +22,14 @@ public class StatisticService {
 
     public static StatisticService getInstance() {
         if (Objects.isNull(statisticService)) {
-            statisticService = new StatisticService(BeanHandler.inMemoryDao, BeanHandler.playerService);
+            statisticService = new StatisticService(BeanHandler.inMemoryDao, BeanHandler.playerService, BeanHandler.gameService);
         }
         return statisticService;
     }
 
     private final InMemoryDao inMemoryDao;
     private final PlayerService playerService;
+    private final GameService gameService;
 
     public Boolean addStatisticsInEndOfGame(Game game) {
         List<Player> players = new ArrayList<>();
@@ -40,6 +41,8 @@ public class StatisticService {
         for (Player player : players) {
             addStatistic(player.getId(), player.getUsername(), game.getPlayers().get(player));
         }
+
+        gameService.deleteGame(game.getId());
 
         return Boolean.TRUE;
     }
