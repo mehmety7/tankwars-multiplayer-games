@@ -1,7 +1,6 @@
 package test;
 
 
-import server.bean.BeanHandler;
 import server.dao.InMemoryDao;
 import server.model.dto.Game;
 import server.model.dto.Tank;
