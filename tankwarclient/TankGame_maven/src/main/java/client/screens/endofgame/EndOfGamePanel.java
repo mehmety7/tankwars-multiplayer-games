@@ -49,6 +49,14 @@ public class EndOfGamePanel extends JPanel {
         usernames = getUsernames();
         scores = getScores();
 
+//        for (Integer score : scores) {
+//            score *= scores.size();
+//        }
+
+        for (int i = 0; i < scores.size(); i++) {
+            scores.set(i, scores.get(i)*scores.size());
+        }
+
 
 
 
