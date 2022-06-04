@@ -4,9 +4,7 @@ package client.screens.leadership;
 import client.model.dto.Statistic;
 import client.rabbitmq.RPCClient;
 import client.services.SingletonSocketService;
-import client.socket.ClientSocket;
 import client.util.JsonUtil;
-
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

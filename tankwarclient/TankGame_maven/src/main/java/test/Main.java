@@ -1,6 +1,5 @@
 package test;
 
-import client.game.GamePanel;
 import client.model.dto.Tank;
 import client.model.enumerated.FaceOrientation;
 

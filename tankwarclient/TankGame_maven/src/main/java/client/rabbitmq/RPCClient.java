@@ -1,13 +1,10 @@
 package client.rabbitmq;
 
-import client.model.dto.Message;
+import client.util.JsonUtil;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import client.model.entity.Player;
-import client.util.JsonUtil;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

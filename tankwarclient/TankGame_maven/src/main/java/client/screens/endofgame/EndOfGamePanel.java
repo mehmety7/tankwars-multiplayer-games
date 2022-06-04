@@ -4,17 +4,15 @@ import client.model.dto.Game;
 import client.rabbitmq.RPCClient;
 import client.services.SingletonSocketService;
 import client.services.WaitingRoomService;
-import client.socket.ClientSocket;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.Map;
 
 public class EndOfGamePanel extends JPanel {
     JPanel parentPanel;

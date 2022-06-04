@@ -3,7 +3,6 @@ package client;
 import client.screens.about.AboutUsPanel;
 import client.screens.auth.LoginPanel;
 import client.screens.auth.SignupPanel;
-import client.screens.leadership.LeadershipPanel;
 
 import javax.swing.*;
 import java.awt.*;

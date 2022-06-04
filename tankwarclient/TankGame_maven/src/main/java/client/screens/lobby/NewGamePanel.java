@@ -4,7 +4,6 @@ import client.model.dto.Game;
 import client.rabbitmq.RPCClient;
 import client.screens.waitingroom.WaitingRoomPanel;
 import client.services.SingletonSocketService;
-import client.socket.ClientSocket;
 
 import javax.swing.*;
 import java.awt.*;

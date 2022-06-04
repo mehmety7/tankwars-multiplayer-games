@@ -4,7 +4,6 @@ import client.model.entity.Player;
 import client.rabbitmq.RPCClient;
 import client.screens.lobby.LobbyPanel;
 import client.services.SingletonSocketService;
-import client.socket.ClientSocket;
 import client.util.JsonUtil;
 
 import javax.swing.*;

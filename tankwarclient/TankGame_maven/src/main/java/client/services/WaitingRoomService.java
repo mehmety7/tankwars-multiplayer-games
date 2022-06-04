@@ -5,7 +5,6 @@ import client.model.dto.Tank;
 import client.model.entity.Player;
 import client.model.request.PlayerGameRequest;
 import client.rabbitmq.RPCClient;
-import client.socket.ClientSocket;
 import client.util.JsonUtil;
 
 import java.util.ArrayList;

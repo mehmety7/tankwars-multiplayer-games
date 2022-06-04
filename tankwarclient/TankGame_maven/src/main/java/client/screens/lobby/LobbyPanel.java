@@ -8,7 +8,6 @@ import client.rabbitmq.RPCClient;
 import client.screens.leadership.LeadershipPanel;
 import client.screens.waitingroom.WaitingRoomPanel;
 import client.services.SingletonSocketService;
-import client.socket.ClientSocket;
 import client.util.JsonUtil;
 
 import javax.swing.*;

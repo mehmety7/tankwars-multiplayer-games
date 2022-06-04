@@ -2,9 +2,7 @@ package client.screens.auth;
 
 import client.model.entity.Player;
 import client.rabbitmq.RPCClient;
-import client.screens.lobby.LobbyPanel;
 import client.services.SingletonSocketService;
-import client.util.JsonUtil;
 
 import javax.swing.*;
 import java.awt.*;

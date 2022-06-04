@@ -7,7 +7,6 @@ import client.model.response.UpdateGameResponse;
 import client.rabbitmq.RPCClient;
 import client.screens.endofgame.EndOfGamePanel;
 import client.services.SingletonSocketService;
-import client.socket.ClientSocket;
 import client.util.JsonUtil;
 
 import javax.swing.*;

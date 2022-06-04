@@ -3,7 +3,6 @@ package client.screens.waitingroom;
 import client.game.GamePanel;
 import client.model.dto.Game;
 import client.model.dto.Tank;
-import client.screens.endofgame.EndOfGamePanel;
 import client.services.WaitingRoomService;
 
 import javax.swing.*;
